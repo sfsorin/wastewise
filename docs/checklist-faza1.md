@@ -48,11 +48,13 @@
 
 ### 1.1.5 Documentare workflow Git în README.md 🟢 (1 zi) ✅
 
-- [x] Documentare structură branch-uri (GitFlow)
+- [x] Documentare structură branch-uri (Strategie de branching pe faze)
 - [x] Documentare proces de creare branch-uri
 - [x] Documentare proces de creare pull requests
 - [x] Documentare convenții de commit
 - [x] Documentare proces de review și merge
+- [x] Creare document detaliat cu strategia de branching (BRANCHING-STRATEGY.md)
+- [x] Creare document cu instrucțiuni Git pentru echipă (GIT-INSTRUCTIONS.md)
 
 ## 1.2 Setup Proiect Backend (NestJS) (4.5 zile)
 
