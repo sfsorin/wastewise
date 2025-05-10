@@ -28,16 +28,16 @@
   - [x] Line endings (LF vs. CRLF)
   - [x] Trailing whitespace
 
-### 1.1.3 Configurare branch protection rules 🟡 (0.5 zile)
+### 1.1.3 Configurare branch protection rules 🟡 (0.5 zile) ✅
 
-- [ ] Configurare protecție pentru branch-ul main:
-  - [ ] Require pull request reviews
-  - [ ] Require status checks to pass
-  - [ ] Require linear history
-  - [ ] Include administrators
-- [ ] Configurare protecție pentru branch-ul develop:
-  - [ ] Require pull request reviews
-  - [ ] Require status checks to pass
+- [x] Configurare protecție pentru branch-ul main:
+  - [x] Require pull request reviews
+  - [x] Require status checks to pass
+  - [x] Require linear history
+  - [x] Include administrators
+- [x] Configurare protecție pentru branch-ul develop:
+  - [x] Require pull request reviews
+  - [x] Require status checks to pass
 
 ### 1.1.4 Configurare conventional commits 🟡 (0.5 zile)
 
