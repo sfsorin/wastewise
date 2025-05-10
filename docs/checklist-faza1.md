@@ -96,13 +96,13 @@
 - [x] Configurare migrări
 - [x] Testare conexiune și operațiuni CRUD de bază
 
-### 1.2.6 Configurare Swagger pentru documentație API 🟡 (1 zi)
+### 1.2.6 Configurare Swagger pentru documentație API 🟡 (1 zi) ✅
 
-- [ ] Instalare și configurare Swagger
-- [ ] Configurare decoratori pentru endpoint-uri
-- [ ] Configurare decoratori pentru DTO-uri
-- [ ] Configurare autentificare Swagger
-- [ ] Testare documentație generată
+- [x] Instalare și configurare Swagger
+- [x] Configurare decoratori pentru endpoint-uri
+- [x] Configurare decoratori pentru DTO-uri
+- [x] Configurare autentificare Swagger
+- [x] Testare documentație generată
 
 ## 1.3 Setup Proiect Frontend (React + Vite) (4.5 zile)
 
