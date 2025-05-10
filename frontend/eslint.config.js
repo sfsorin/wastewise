@@ -1,5 +1,6 @@
 import js from '@eslint/js';
 import globals from 'globals';
+import reactPlugin from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
@@ -13,14 +14,21 @@ export default tseslint.config(
     languageOptions: {
       ecmaVersion: 2023,
       globals: globals.browser,
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
     },
     plugins: {
+      react: reactPlugin,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
       prettier: eslintPluginPrettier,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      ...reactPlugin.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       'prettier/prettier': [
         'error',
@@ -52,6 +60,14 @@ export default tseslint.config(
       'prefer-template': 'warn',
       quotes: ['error', 'single', { avoidEscape: true }],
       semi: ['error', 'always'],
+
+      // React specific rules
+      'react/jsx-uses-react': 'error',
+      'react/jsx-uses-vars': 'error',
+      'react/no-unused-state': 'warn',
+      'react/prop-types': 'off',
+      'react/react-in-jsx-scope': 'off',
+      'react/self-closing-comp': 'warn',
     },
   },
 );

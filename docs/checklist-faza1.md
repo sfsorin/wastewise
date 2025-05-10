@@ -122,13 +122,13 @@
   - [x] Path aliases
   - [x] React JSX
 
-### 1.3.3 Configurare ESLint și Prettier 🟢 (0.5 zile)
+### 1.3.3 Configurare ESLint și Prettier 🟢 (0.5 zile) ✅
 
-- [ ] Instalare și configurare ESLint
-- [ ] Instalare și configurare Prettier
-- [ ] Configurare reguli ESLint specifice pentru React
-- [ ] Configurare integrare ESLint-Prettier
-- [ ] Adăugare script-uri pentru linting și formatare
+- [x] Instalare și configurare ESLint
+- [x] Instalare și configurare Prettier
+- [x] Configurare reguli ESLint specifice pentru React
+- [x] Configurare integrare ESLint-Prettier
+- [x] Adăugare script-uri pentru linting și formatare
 
 ### 1.3.4 Configurare Jest și React Testing Library 🟡 (1 zi)
 
