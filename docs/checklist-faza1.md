@@ -152,13 +152,13 @@
 - [x] Creare componente de bază cu Tailwind (Button, Card, ThemeToggle, ResponsiveContainer)
 - [x] Testare funcționalitate Tailwind
 
-### 1.3.6 Configurare React Router 🟢 (0.5 zile)
+### 1.3.6 Configurare React Router 🟢 (0.5 zile) ✅
 
-- [ ] Instalare React Router
-- [ ] Configurare router de bază
-- [ ] Creare componente pentru pagini de exemplu
-- [ ] Configurare rute protejate
-- [ ] Testare navigare
+- [x] Instalare React Router
+- [x] Configurare router de bază
+- [x] Creare componente pentru pagini de exemplu
+- [x] Configurare rute protejate
+- [x] Testare navigare
 
 ### 1.3.7 Configurare Zustand pentru state management 🟡 (1 zi)
 
