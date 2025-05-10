@@ -63,14 +63,14 @@
 - [x] Configurare structură de directoare
 - [x] Configurare package.json cu script-uri necesare
 
-### 1.2.2 Configurare TypeScript și tsconfig.json 🟢 (0.5 zile)
+### 1.2.2 Configurare TypeScript și tsconfig.json 🟢 (0.5 zile) ✅
 
-- [ ] Configurare tsconfig.json pentru:
-  - [ ] Target ES2020 sau mai recent
-  - [ ] Module CommonJS
-  - [ ] Strict type checking
-  - [ ] Path aliases
-  - [ ] Source maps pentru debugging
+- [x] Configurare tsconfig.json pentru:
+  - [x] Target ES2020 sau mai recent
+  - [x] Module CommonJS
+  - [x] Strict type checking
+  - [x] Path aliases
+  - [x] Source maps pentru debugging
 
 ### 1.2.3 Configurare ESLint și Prettier 🟢 (0.5 zile)
 
