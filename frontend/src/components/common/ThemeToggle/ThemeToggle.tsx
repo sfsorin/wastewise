@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useTheme } from '../../../store/hooks';
 
 interface ThemeToggleProps {
   /**
@@ -9,61 +10,47 @@ interface ThemeToggleProps {
 
 /**
  * Componenta ThemeToggle pentru comutarea între modurile light și dark
+ * Folosește Zustand pentru gestionarea stării
  */
 export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '' }) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { darkMode, toggleDarkMode, setDarkMode } = useTheme();
 
-  // Verifică tema la încărcarea componentei
+  // Aplicăm tema la încărcarea componentei
   useEffect(() => {
-    // Verifică preferința salvată în localStorage
-    const savedTheme = localStorage.getItem('theme');
-
-    // Verifică preferința sistemului
+    // Verificăm preferința sistemului
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-    // Setează tema inițială
-    const initialDarkMode = savedTheme === 'dark' || (!savedTheme && prefersDark);
-    setIsDarkMode(initialDarkMode);
+    // Verificăm preferința salvată în localStorage
+    const savedTheme = localStorage.getItem('theme');
 
-    // Aplică tema inițială
-    if (initialDarkMode) {
+    // Setăm tema în funcție de preferința salvată, starea din store sau preferința sistemului
+    if (savedTheme === 'dark' || (savedTheme === null && prefersDark)) {
       document.documentElement.classList.add('dark');
-    } else {
+      setDarkMode(true);
+    } else if (savedTheme === 'light') {
       document.documentElement.classList.remove('dark');
+      setDarkMode(false);
     }
-  }, []);
+  }, [setDarkMode]);
 
-  // Comută tema
-  const toggleTheme = () => {
-    setIsDarkMode(prev => {
-      const newDarkMode = !prev;
-
-      // Salvează preferința în localStorage
-      localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');
-
-      // Aplică tema
-      if (newDarkMode) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-
-      return newDarkMode;
-    });
+  // Comută tema și salvează preferința
+  const handleToggleTheme = () => {
+    toggleDarkMode();
+    localStorage.setItem('theme', !darkMode ? 'dark' : 'light');
   };
 
   return (
     <button
       type="button"
-      onClick={toggleTheme}
+      onClick={handleToggleTheme}
       className={`p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${
-        isDarkMode
+        darkMode
           ? 'bg-gray-800 text-accent-400 hover:bg-gray-700 focus:ring-accent-500'
           : 'bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-primary-500'
       } ${className}`}
-      aria-label={isDarkMode ? 'Comută la modul light' : 'Comută la modul dark'}
+      aria-label={darkMode ? 'Comută la modul light' : 'Comută la modul dark'}
     >
-      {isDarkMode ? (
+      {darkMode ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-5 w-5"
