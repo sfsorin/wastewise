@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="100" cy="100" r="90" fill="#16a34a" />
+  
+  <!-- Recycling Symbol -->
+  <g fill="white">
+    <!-- Arrow 1 -->
+    <path d="M100 40C77.909 40 60 57.909 60 80H40C40 46.863 66.863 20 100 20V40Z" />
+    <path d="M60 80C60 102.091 77.909 120 100 120V140C66.863 140 40 113.137 40 80H60Z" />
+    
+    <!-- Arrow 2 -->
+    <path d="M100 120C122.091 120 140 102.091 140 80H160C160 113.137 133.137 140 100 140V120Z" />
+    <path d="M140 80C140 57.909 122.091 40 100 40V20C133.137 20 160 46.863 160 80H140Z" />
+    
+    <!-- Arrow 3 -->
+    <path d="M100 160C122.091 160 140 142.091 140 120H160C160 153.137 133.137 180 100 180V160Z" />
+    <path d="M100 180C66.863 180 40 153.137 40 120H60C60 142.091 77.909 160 100 160V180Z" />
+  </g>
+  
+  <!-- Center Circle -->
+  <circle cx="100" cy="100" r="20" fill="white" />
+  
+  <!-- Letter W -->
+  <path d="M90 95L95 105L100 95L105 105L110 95" stroke="#16a34a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+</svg>
