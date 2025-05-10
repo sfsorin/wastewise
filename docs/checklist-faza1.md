@@ -113,14 +113,14 @@
 - [x] Configurare structură de directoare
 - [x] Configurare package.json cu script-uri necesare
 
-### 1.3.2 Configurare TypeScript și tsconfig.json 🟢 (0.5 zile)
+### 1.3.2 Configurare TypeScript și tsconfig.json 🟢 (0.5 zile) ✅
 
-- [ ] Configurare tsconfig.json pentru:
-  - [ ] Target ES2020 sau mai recent
-  - [ ] Module ESNext
-  - [ ] Strict type checking
-  - [ ] Path aliases
-  - [ ] React JSX
+- [x] Configurare tsconfig.json pentru:
+  - [x] Target ES2020 sau mai recent
+  - [x] Module ESNext
+  - [x] Strict type checking
+  - [x] Path aliases
+  - [x] React JSX
 
 ### 1.3.3 Configurare ESLint și Prettier 🟢 (0.5 zile)
 
