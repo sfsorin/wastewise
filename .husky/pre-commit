@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Adăugați aici comenzile de linting pentru backend și frontend
+# De exemplu:
+# cd backend && npm run lint
+# cd frontend && npm run lint

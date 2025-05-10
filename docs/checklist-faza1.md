@@ -39,12 +39,12 @@
   - [x] Require pull request reviews
   - [x] Require status checks to pass
 
-### 1.1.4 Configurare conventional commits 🟡 (0.5 zile)
+### 1.1.4 Configurare conventional commits 🟡 (0.5 zile) ✅
 
-- [ ] Instalare și configurare commitlint
-- [ ] Configurare husky pentru pre-commit hooks
-- [ ] Creare fișier de configurare commitlint.config.js
-- [ ] Documentare convenții de commit în CONTRIBUTING.md
+- [x] Instalare și configurare commitlint
+- [x] Configurare husky pentru pre-commit hooks
+- [x] Creare fișier de configurare commitlint.config.js
+- [x] Documentare convenții de commit în CONTRIBUTING.md
 
 ### 1.1.5 Documentare workflow Git în README.md 🟢 (1 zi)
 
