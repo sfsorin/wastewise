@@ -28,81 +28,81 @@
   - [x] Line endings (LF vs. CRLF)
   - [x] Trailing whitespace
 
-### 1.1.3 Configurare branch protection rules 🟡 (0.5 zile)
+### 1.1.3 Configurare branch protection rules 🟡 (0.5 zile) ✅
 
-- [ ] Configurare protecție pentru branch-ul main:
-  - [ ] Require pull request reviews
-  - [ ] Require status checks to pass
-  - [ ] Require linear history
-  - [ ] Include administrators
-- [ ] Configurare protecție pentru branch-ul develop:
-  - [ ] Require pull request reviews
-  - [ ] Require status checks to pass
+- [x] Configurare protecție pentru branch-ul main:
+  - [x] Require pull request reviews
+  - [x] Require status checks to pass
+  - [x] Require linear history
+  - [x] Include administrators
+- [x] Configurare protecție pentru branch-ul develop:
+  - [x] Require pull request reviews
+  - [x] Require status checks to pass
 
-### 1.1.4 Configurare conventional commits 🟡 (0.5 zile)
+### 1.1.4 Configurare conventional commits 🟡 (0.5 zile) ✅
 
-- [ ] Instalare și configurare commitlint
-- [ ] Configurare husky pentru pre-commit hooks
-- [ ] Creare fișier de configurare commitlint.config.js
-- [ ] Documentare convenții de commit în CONTRIBUTING.md
+- [x] Instalare și configurare commitlint
+- [x] Configurare husky pentru pre-commit hooks
+- [x] Creare fișier de configurare commitlint.config.js
+- [x] Documentare convenții de commit în CONTRIBUTING.md
 
-### 1.1.5 Documentare workflow Git în README.md 🟢 (1 zi)
+### 1.1.5 Documentare workflow Git în README.md 🟢 (1 zi) ✅
 
-- [ ] Documentare structură branch-uri (GitFlow)
-- [ ] Documentare proces de creare branch-uri
-- [ ] Documentare proces de creare pull requests
-- [ ] Documentare convenții de commit
-- [ ] Documentare proces de review și merge
+- [x] Documentare structură branch-uri (GitFlow)
+- [x] Documentare proces de creare branch-uri
+- [x] Documentare proces de creare pull requests
+- [x] Documentare convenții de commit
+- [x] Documentare proces de review și merge
 
 ## 1.2 Setup Proiect Backend (NestJS) (4.5 zile)
 
-### 1.2.1 Inițializare proiect NestJS 🟢 (0.5 zile)
+### 1.2.1 Inițializare proiect NestJS 🟢 (0.5 zile) ✅
 
-- [ ] Instalare Nest CLI
-- [ ] Creare proiect NestJS
-- [ ] Configurare structură de directoare
-- [ ] Configurare package.json cu script-uri necesare
+- [x] Instalare Nest CLI
+- [x] Creare proiect NestJS
+- [x] Configurare structură de directoare
+- [x] Configurare package.json cu script-uri necesare
 
-### 1.2.2 Configurare TypeScript și tsconfig.json 🟢 (0.5 zile)
+### 1.2.2 Configurare TypeScript și tsconfig.json 🟢 (0.5 zile) ✅
 
-- [ ] Configurare tsconfig.json pentru:
-  - [ ] Target ES2020 sau mai recent
-  - [ ] Module CommonJS
-  - [ ] Strict type checking
-  - [ ] Path aliases
-  - [ ] Source maps pentru debugging
+- [x] Configurare tsconfig.json pentru:
+  - [x] Target ES2020 sau mai recent
+  - [x] Module CommonJS
+  - [x] Strict type checking
+  - [x] Path aliases
+  - [x] Source maps pentru debugging
 
-### 1.2.3 Configurare ESLint și Prettier 🟢 (0.5 zile)
+### 1.2.3 Configurare ESLint și Prettier 🟢 (0.5 zile) ✅
 
-- [ ] Instalare și configurare ESLint
-- [ ] Instalare și configurare Prettier
-- [ ] Configurare reguli ESLint specifice pentru NestJS
-- [ ] Configurare integrare ESLint-Prettier
-- [ ] Adăugare script-uri pentru linting și formatare
+- [x] Instalare și configurare ESLint
+- [x] Instalare și configurare Prettier
+- [x] Configurare reguli ESLint specifice pentru NestJS
+- [x] Configurare integrare ESLint-Prettier
+- [x] Adăugare script-uri pentru linting și formatare
 
-### 1.2.4 Configurare Jest pentru teste 🟡 (1 zi)
+### 1.2.4 Configurare Jest pentru teste 🟡 (1 zi) ✅
 
-- [ ] Configurare Jest pentru TypeScript
-- [ ] Configurare Jest pentru NestJS
-- [ ] Creare fișiere de test de exemplu
-- [ ] Configurare coverage reporting
-- [ ] Adăugare script-uri pentru rulare teste
+- [x] Configurare Jest pentru TypeScript
+- [x] Configurare Jest pentru NestJS
+- [x] Creare fișiere de test de exemplu
+- [x] Configurare coverage reporting
+- [x] Adăugare script-uri pentru rulare teste
 
-### 1.2.5 Configurare TypeORM și conexiune bază de date 🟡 (1 zi)
+### 1.2.5 Configurare TypeORM și conexiune bază de date 🟡 (1 zi) ✅
 
-- [ ] Instalare TypeORM și driver PostgreSQL
-- [ ] Configurare conexiune bază de date
-- [ ] Configurare entități de bază
-- [ ] Configurare migrări
-- [ ] Testare conexiune și operațiuni CRUD de bază
+- [x] Instalare TypeORM și driver PostgreSQL
+- [x] Configurare conexiune bază de date
+- [x] Configurare entități de bază
+- [x] Configurare migrări
+- [x] Testare conexiune și operațiuni CRUD de bază
 
-### 1.2.6 Configurare Swagger pentru documentație API 🟡 (1 zi)
+### 1.2.6 Configurare Swagger pentru documentație API 🟡 (1 zi) ✅
 
-- [ ] Instalare și configurare Swagger
-- [ ] Configurare decoratori pentru endpoint-uri
-- [ ] Configurare decoratori pentru DTO-uri
-- [ ] Configurare autentificare Swagger
-- [ ] Testare documentație generată
+- [x] Instalare și configurare Swagger
+- [x] Configurare decoratori pentru endpoint-uri
+- [x] Configurare decoratori pentru DTO-uri
+- [x] Configurare autentificare Swagger
+- [x] Testare documentație generată
 
 ## 1.3 Setup Proiect Frontend (React + Vite) (4.5 zile)
 

@@ -49,16 +49,19 @@ wastewise/
 ### Instalare cu Docker
 
 1. Clonează repository-ul:
+
    ```
    git clone https://github.com/your-username/wastewise.git
    cd wastewise
    ```
 
 2. Configurează fișierele de mediu:
+
    - Copiază `backend/.env.example` în `backend/.env`
    - Copiază `frontend/.env.example` în `frontend/.env`
 
 3. Construiește și pornește containerele:
+
    ```
    docker compose up --build
    ```
@@ -73,16 +76,19 @@ wastewise/
 #### Backend
 
 1. Navighează în directorul backend:
+
    ```
    cd backend
    ```
 
 2. Instalează dependențele:
+
    ```
    npm install
    ```
 
 3. Configurează variabilele de mediu:
+
    ```
    cp .env.example .env
    ```
@@ -95,16 +101,19 @@ wastewise/
 #### Frontend
 
 1. Navighează în directorul frontend:
+
    ```
    cd frontend
    ```
 
 2. Instalează dependențele:
+
    ```
    npm install
    ```
 
 3. Configurează variabilele de mediu:
+
    ```
    cp .env.example .env
    ```
@@ -128,12 +137,14 @@ wastewise/
 ### Proces de Creare Branch-uri
 
 1. Sincronizează branch-ul develop:
+
    ```
    git checkout develop
    git pull origin develop
    ```
 
 2. Creează un branch nou:
+
    ```
    git checkout -b feature/nume-functionalitate
    ```
@@ -143,6 +154,7 @@ wastewise/
 ### Proces de Creare Pull Requests
 
 1. Asigură-te că branch-ul tău este actualizat cu develop:
+
    ```
    git checkout develop
    git pull origin develop
@@ -153,6 +165,59 @@ wastewise/
 2. Rezolvă orice conflicte de merge.
 
 3. Creează un Pull Request pe GitHub/GitLab.
+
+### Convenții de Commit
+
+Folosim [Conventional Commits](https://www.conventionalcommits.org/) pentru mesajele de commit:
+
+```
+<tip>(<scop>): <descriere>
+
+[corp opțional]
+
+[footer opțional]
+```
+
+Tipuri de commit:
+
+- `feat`: O nouă funcționalitate
+- `fix`: Rezolvarea unui bug
+- `docs`: Modificări doar în documentație
+- `style`: Modificări care nu afectează sensul codului (spații, formatare, etc.)
+- `refactor`: Modificări de cod care nu rezolvă bug-uri și nu adaugă funcționalități
+- `perf`: Modificări care îmbunătățesc performanța
+- `test`: Adăugarea sau corectarea testelor
+- `chore`: Modificări în procesul de build sau în unelte auxiliare
+
+Exemplu:
+
+```
+feat(auth): adăugare autentificare cu Google
+
+Implementare autentificare cu Google OAuth 2.0 pentru a oferi utilizatorilor o metodă alternativă de autentificare.
+
+Closes #123
+```
+
+### Proces de Review și Merge
+
+1. **Verificare automată**: Asigură-te că toate verificările automate (CI/CD) au trecut cu succes.
+
+2. **Code Review**:
+
+   - Pull Request-urile necesită cel puțin o aprobare înainte de merge
+   - Reviewerii vor verifica calitatea codului, respectarea convențiilor și funcționalitatea
+   - Feedback-ul trebuie adresat prin commit-uri adiționale
+
+3. **Merge**:
+
+   - După aprobare, un maintainer va face merge-ul modificărilor
+   - Pentru branch-ul `main`, se folosește "Squash and merge" pentru a păstra un istoric curat
+   - Pentru branch-ul `develop`, se folosește "Merge commit" pentru a păstra istoricul detaliat
+
+4. **Post-Merge**:
+   - Branch-urile feature/bugfix sunt șterse după merge
+   - Verifică că funcționalitatea merge corect în mediul de dezvoltare
 
 ## Licență
 
