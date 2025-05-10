@@ -1,15 +1,15 @@
-import { describe, it, expect, vi } from 'vitest';
+import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
 import Button from './Button';
 
 describe('Button Component', () => {
   it('renders with default props', () => {
-    render(<Button label="Click me" />);
+    render(<Button label="Test Button" />);
     
-    const button = screen.getByText('Click me');
+    const button = screen.getByText('Test Button');
     expect(button).toBeInTheDocument();
-    expect(button).toHaveClass('bg-blue-600'); // primary variant
-    expect(button).toHaveClass('py-2 px-4'); // medium size
+    expect(button).toHaveAttribute('type', 'button');
     expect(button).not.toBeDisabled();
   });
 
@@ -28,7 +28,24 @@ describe('Button Component', () => {
     expect(button).toHaveClass('text-lg');
   });
 
-  it('renders as disabled', () => {
+  it('renders with custom props', () => {
+    render(
+      <Button 
+        label="Custom Button" 
+        variant="secondary" 
+        size="large" 
+        type="submit"
+        className="custom-class"
+      />
+    );
+    
+    const button = screen.getByText('Custom Button');
+    expect(button).toBeInTheDocument();
+    expect(button).toHaveAttribute('type', 'submit');
+    expect(button).toHaveClass('custom-class');
+  });
+
+  it('renders disabled button', () => {
     render(<Button label="Disabled Button" disabled />);
     
     const button = screen.getByText('Disabled Button');

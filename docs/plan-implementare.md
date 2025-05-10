@@ -806,22 +806,22 @@ Toate răspunsurile API vor urma un format standard:
 ```typescript
 // common/dto/api-response.dto.ts
 export class ApiResponseDto<T> {
-	success: boolean;
-	data?: T;
-	error?: {
-		code: string;
-		message: string;
-		details?: Record<string, string[]>;
-	};
-	meta?: {
-		timestamp: Date;
-		pagination?: {
-			page: number;
-			pageSize: number;
-			total: number;
-			totalPages: number;
-		};
-	};
+  success: boolean;
+  data?: T;
+  error?: {
+    code: string;
+    message: string;
+    details?: Record<string, string[]>;
+  };
+  meta?: {
+    timestamp: Date;
+    pagination?: {
+      page: number;
+      pageSize: number;
+      total: number;
+      totalPages: number;
+    };
+  };
 }
 ```
 
@@ -833,28 +833,28 @@ Implementarea unui sistem centralizat de gestionare a erorilor:
 // common/filters/http-exception.filter.ts
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
-	catch(exception: HttpException, host: ArgumentsHost) {
-		const ctx = host.switchToHttp();
-		const response = ctx.getResponse<Response>();
-		const request = ctx.getRequest<Request>();
-		const status = exception.getStatus();
-		const exceptionResponse = exception.getResponse() as any;
+  catch(exception: HttpException, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse<Response>();
+    const request = ctx.getRequest<Request>();
+    const status = exception.getStatus();
+    const exceptionResponse = exception.getResponse() as any;
 
-		const errorResponse = {
-			success: false,
-			error: {
-				code: exceptionResponse.error || 'HTTP_ERROR',
-				message: exceptionResponse.message || 'A apărut o eroare',
-				details: exceptionResponse.details,
-			},
-			meta: {
-				timestamp: new Date(),
-				path: request.url,
-			},
-		};
+    const errorResponse = {
+      success: false,
+      error: {
+        code: exceptionResponse.error || "HTTP_ERROR",
+        message: exceptionResponse.message || "A apărut o eroare",
+        details: exceptionResponse.details,
+      },
+      meta: {
+        timestamp: new Date(),
+        path: request.url,
+      },
+    };
 
-		response.status(status).json(errorResponse);
-	}
+    response.status(status).json(errorResponse);
+  }
 }
 ```
 
@@ -866,39 +866,39 @@ Utilizarea class-validator și class-transformer pentru validarea datelor:
 // common/pipes/validation.pipe.ts
 @Injectable()
 export class ValidationPipe implements PipeTransform<any> {
-	async transform(value: any, { metatype }: ArgumentMetadata) {
-		if (!metatype || !this.toValidate(metatype)) {
-			return value;
-		}
-		const object = plainToClass(metatype, value);
-		const errors = await validate(object);
-		if (errors.length > 0) {
-			const details = this.formatErrors(errors);
-			throw new BadRequestException({
-				error: 'VALIDATION_ERROR',
-				message: 'Eroare de validare',
-				details,
-			});
-		}
-		return object;
-	}
+  async transform(value: any, { metatype }: ArgumentMetadata) {
+    if (!metatype || !this.toValidate(metatype)) {
+      return value;
+    }
+    const object = plainToClass(metatype, value);
+    const errors = await validate(object);
+    if (errors.length > 0) {
+      const details = this.formatErrors(errors);
+      throw new BadRequestException({
+        error: "VALIDATION_ERROR",
+        message: "Eroare de validare",
+        details,
+      });
+    }
+    return object;
+  }
 
-	private toValidate(metatype: Function): boolean {
-		const types: Function[] = [String, Boolean, Number, Array, Object];
-		return !types.includes(metatype);
-	}
+  private toValidate(metatype: Function): boolean {
+    const types: Function[] = [String, Boolean, Number, Array, Object];
+    return !types.includes(metatype);
+  }
 
-	private formatErrors(errors: ValidationError[]) {
-		const result: Record<string, string[]> = {};
-		errors.forEach((error) => {
-			const property = error.property;
-			const constraints = error.constraints;
-			if (constraints) {
-				result[property] = Object.values(constraints);
-			}
-		});
-		return result;
-	}
+  private formatErrors(errors: ValidationError[]) {
+    const result: Record<string, string[]> = {};
+    errors.forEach((error) => {
+      const property = error.property;
+      const constraints = error.constraints;
+      if (constraints) {
+        result[property] = Object.values(constraints);
+      }
+    });
+    return result;
+  }
 }
 ```
 
@@ -1029,75 +1029,75 @@ features/[feature-name]/
 
 ```typescript
 // store/auth.store.ts
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { AuthService } from '../services/auth.service';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { AuthService } from "../services/auth.service";
 
 interface AuthState {
-	user: User | null;
-	token: string | null;
-	isAuthenticated: boolean;
-	isLoading: boolean;
-	error: string | null;
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
 
-	login: (email: string, password: string) => Promise<void>;
-	logout: () => void;
-	checkAuth: () => Promise<void>;
-	clearError: () => void;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => void;
+  checkAuth: () => Promise<void>;
+  clearError: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
-	persist(
-		(set, get) => ({
-			user: null,
-			token: null,
-			isAuthenticated: false,
-			isLoading: false,
-			error: null,
+  persist(
+    (set, get) => ({
+      user: null,
+      token: null,
+      isAuthenticated: false,
+      isLoading: false,
+      error: null,
 
-			login: async (email, password) => {
-				set({ isLoading: true, error: null });
-				try {
-					const { user, token } = await AuthService.login(email, password);
-					set({ user, token, isAuthenticated: true, isLoading: false });
-				} catch (error) {
-					set({
-						error:
-							error instanceof Error
-								? error.message
-								: 'Eroare de autentificare',
-						isLoading: false,
-					});
-				}
-			},
+      login: async (email, password) => {
+        set({ isLoading: true, error: null });
+        try {
+          const { user, token } = await AuthService.login(email, password);
+          set({ user, token, isAuthenticated: true, isLoading: false });
+        } catch (error) {
+          set({
+            error:
+              error instanceof Error
+                ? error.message
+                : "Eroare de autentificare",
+            isLoading: false,
+          });
+        }
+      },
 
-			logout: () => {
-				AuthService.logout();
-				set({ user: null, token: null, isAuthenticated: false });
-			},
+      logout: () => {
+        AuthService.logout();
+        set({ user: null, token: null, isAuthenticated: false });
+      },
 
-			checkAuth: async () => {
-				set({ isLoading: true });
-				try {
-					const { user } = await AuthService.checkAuth();
-					set({ user, isAuthenticated: true, isLoading: false });
-				} catch (error) {
-					set({
-						user: null,
-						token: null,
-						isAuthenticated: false,
-						isLoading: false,
-					});
-				}
-			},
+      checkAuth: async () => {
+        set({ isLoading: true });
+        try {
+          const { user } = await AuthService.checkAuth();
+          set({ user, isAuthenticated: true, isLoading: false });
+        } catch (error) {
+          set({
+            user: null,
+            token: null,
+            isAuthenticated: false,
+            isLoading: false,
+          });
+        }
+      },
 
-			clearError: () => set({ error: null }),
-		}),
-		{
-			name: 'auth-storage',
-			partialize: (state) => ({ token: state.token }),
-		}
-	)
+      clearError: () => set({ error: null }),
+    }),
+    {
+      name: "auth-storage",
+      partialize: (state) => ({ token: state.token }),
+    }
+  )
 );
 ```
 
@@ -1105,91 +1105,91 @@ export const useAuthStore = create<AuthState>()(
 
 ```typescript
 // services/api.service.ts
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { useAuthStore } from '../store/auth.store';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import { useAuthStore } from "../store/auth.store";
 
 class ApiService {
-	private api: AxiosInstance;
+  private api: AxiosInstance;
 
-	constructor() {
-		this.api = axios.create({
-			baseURL: import.meta.env.VITE_API_URL,
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		});
+  constructor() {
+    this.api = axios.create({
+      baseURL: import.meta.env.VITE_API_URL,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-		this.api.interceptors.request.use(
-			(config) => {
-				const token = useAuthStore.getState().token;
-				if (token) {
-					config.headers.Authorization = `Bearer ${token}`;
-				}
-				return config;
-			},
-			(error) => Promise.reject(error)
-		);
+    this.api.interceptors.request.use(
+      (config) => {
+        const token = useAuthStore.getState().token;
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => Promise.reject(error)
+    );
 
-		this.api.interceptors.response.use(
-			(response) => response,
-			(error) => {
-				if (error.response?.status === 401) {
-					useAuthStore.getState().logout();
-				}
-				return Promise.reject(error);
-			}
-		);
-	}
+    this.api.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401) {
+          useAuthStore.getState().logout();
+        }
+        return Promise.reject(error);
+      }
+    );
+  }
 
-	async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-		const response: AxiosResponse<ApiResponse<T>> = await this.api.get(
-			url,
-			config
-		);
-		return this.handleResponse(response);
-	}
+  async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    const response: AxiosResponse<ApiResponse<T>> = await this.api.get(
+      url,
+      config
+    );
+    return this.handleResponse(response);
+  }
 
-	async post<T>(
-		url: string,
-		data?: any,
-		config?: AxiosRequestConfig
-	): Promise<T> {
-		const response: AxiosResponse<ApiResponse<T>> = await this.api.post(
-			url,
-			data,
-			config
-		);
-		return this.handleResponse(response);
-	}
+  async post<T>(
+    url: string,
+    data?: any,
+    config?: AxiosRequestConfig
+  ): Promise<T> {
+    const response: AxiosResponse<ApiResponse<T>> = await this.api.post(
+      url,
+      data,
+      config
+    );
+    return this.handleResponse(response);
+  }
 
-	async put<T>(
-		url: string,
-		data?: any,
-		config?: AxiosRequestConfig
-	): Promise<T> {
-		const response: AxiosResponse<ApiResponse<T>> = await this.api.put(
-			url,
-			data,
-			config
-		);
-		return this.handleResponse(response);
-	}
+  async put<T>(
+    url: string,
+    data?: any,
+    config?: AxiosRequestConfig
+  ): Promise<T> {
+    const response: AxiosResponse<ApiResponse<T>> = await this.api.put(
+      url,
+      data,
+      config
+    );
+    return this.handleResponse(response);
+  }
 
-	async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-		const response: AxiosResponse<ApiResponse<T>> = await this.api.delete(
-			url,
-			config
-		);
-		return this.handleResponse(response);
-	}
+  async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    const response: AxiosResponse<ApiResponse<T>> = await this.api.delete(
+      url,
+      config
+    );
+    return this.handleResponse(response);
+  }
 
-	private handleResponse<T>(response: AxiosResponse<ApiResponse<T>>): T {
-		const { data } = response;
-		if (!data.success) {
-			throw new Error(data.error?.message || 'A apărut o eroare');
-		}
-		return data.data as T;
-	}
+  private handleResponse<T>(response: AxiosResponse<ApiResponse<T>>): T {
+    const { data } = response;
+    if (!data.success) {
+      throw new Error(data.error?.message || "A apărut o eroare");
+    }
+    return data.data as T;
+  }
 }
 
 export default new ApiService();
@@ -1202,188 +1202,188 @@ export default new ApiService();
 ```typescript
 // design-system/tokens.ts
 export const colors = {
-	// Culori primare
-	primary: {
-		50: '#e6f7ff',
-		100: '#bae7ff',
-		200: '#91d5ff',
-		300: '#69c0ff',
-		400: '#40a9ff',
-		500: '#1890ff', // Culoare principală
-		600: '#096dd9',
-		700: '#0050b3',
-		800: '#003a8c',
-		900: '#002766',
-	},
+  // Culori primare
+  primary: {
+    50: "#e6f7ff",
+    100: "#bae7ff",
+    200: "#91d5ff",
+    300: "#69c0ff",
+    400: "#40a9ff",
+    500: "#1890ff", // Culoare principală
+    600: "#096dd9",
+    700: "#0050b3",
+    800: "#003a8c",
+    900: "#002766",
+  },
 
-	// Culori secundare
-	secondary: {
-		50: '#f0f5ff',
-		100: '#d6e4ff',
-		200: '#adc6ff',
-		300: '#85a5ff',
-		400: '#597ef7',
-		500: '#2f54eb', // Culoare secundară
-		600: '#1d39c4',
-		700: '#10239e',
-		800: '#061178',
-		900: '#030852',
-	},
+  // Culori secundare
+  secondary: {
+    50: "#f0f5ff",
+    100: "#d6e4ff",
+    200: "#adc6ff",
+    300: "#85a5ff",
+    400: "#597ef7",
+    500: "#2f54eb", // Culoare secundară
+    600: "#1d39c4",
+    700: "#10239e",
+    800: "#061178",
+    900: "#030852",
+  },
 
-	// Culori neutre
-	neutral: {
-		50: '#fafafa',
-		100: '#f5f5f5',
-		200: '#e8e8e8',
-		300: '#d9d9d9',
-		400: '#bfbfbf',
-		500: '#8c8c8c',
-		600: '#595959',
-		700: '#434343',
-		800: '#262626',
-		900: '#141414',
-	},
+  // Culori neutre
+  neutral: {
+    50: "#fafafa",
+    100: "#f5f5f5",
+    200: "#e8e8e8",
+    300: "#d9d9d9",
+    400: "#bfbfbf",
+    500: "#8c8c8c",
+    600: "#595959",
+    700: "#434343",
+    800: "#262626",
+    900: "#141414",
+  },
 
-	// Culori semantice
-	success: {
-		50: '#f6ffed',
-		100: '#d9f7be',
-		200: '#b7eb8f',
-		300: '#95de64',
-		400: '#73d13d',
-		500: '#52c41a', // Success
-		600: '#389e0d',
-		700: '#237804',
-		800: '#135200',
-		900: '#092b00',
-	},
+  // Culori semantice
+  success: {
+    50: "#f6ffed",
+    100: "#d9f7be",
+    200: "#b7eb8f",
+    300: "#95de64",
+    400: "#73d13d",
+    500: "#52c41a", // Success
+    600: "#389e0d",
+    700: "#237804",
+    800: "#135200",
+    900: "#092b00",
+  },
 
-	warning: {
-		50: '#fffbe6',
-		100: '#fff1b8',
-		200: '#ffe58f',
-		300: '#ffd666',
-		400: '#ffc53d',
-		500: '#faad14', // Warning
-		600: '#d48806',
-		700: '#ad6800',
-		800: '#874d00',
-		900: '#613400',
-	},
+  warning: {
+    50: "#fffbe6",
+    100: "#fff1b8",
+    200: "#ffe58f",
+    300: "#ffd666",
+    400: "#ffc53d",
+    500: "#faad14", // Warning
+    600: "#d48806",
+    700: "#ad6800",
+    800: "#874d00",
+    900: "#613400",
+  },
 
-	error: {
-		50: '#fff1f0',
-		100: '#ffccc7',
-		200: '#ffa39e',
-		300: '#ff7875',
-		400: '#ff4d4f',
-		500: '#f5222d', // Error
-		600: '#cf1322',
-		700: '#a8071a',
-		800: '#820014',
-		900: '#5c0011',
-	},
+  error: {
+    50: "#fff1f0",
+    100: "#ffccc7",
+    200: "#ffa39e",
+    300: "#ff7875",
+    400: "#ff4d4f",
+    500: "#f5222d", // Error
+    600: "#cf1322",
+    700: "#a8071a",
+    800: "#820014",
+    900: "#5c0011",
+  },
 
-	info: {
-		50: '#e6f7ff',
-		100: '#bae7ff',
-		200: '#91d5ff',
-		300: '#69c0ff',
-		400: '#40a9ff',
-		500: '#1890ff', // Info
-		600: '#096dd9',
-		700: '#0050b3',
-		800: '#003a8c',
-		900: '#002766',
-	},
+  info: {
+    50: "#e6f7ff",
+    100: "#bae7ff",
+    200: "#91d5ff",
+    300: "#69c0ff",
+    400: "#40a9ff",
+    500: "#1890ff", // Info
+    600: "#096dd9",
+    700: "#0050b3",
+    800: "#003a8c",
+    900: "#002766",
+  },
 };
 
 // Tipografie
 export const typography = {
-	fontFamily: {
-		base: '"Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-		heading: '"Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-		monospace: 'SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace',
-	},
-	fontSize: {
-		xs: '0.75rem', // 12px
-		sm: '0.875rem', // 14px
-		md: '1rem', // 16px
-		lg: '1.125rem', // 18px
-		xl: '1.25rem', // 20px
-		'2xl': '1.5rem', // 24px
-		'3xl': '1.875rem', // 30px
-		'4xl': '2.25rem', // 36px
-		'5xl': '3rem', // 48px
-	},
-	fontWeight: {
-		normal: 400,
-		medium: 500,
-		semibold: 600,
-		bold: 700,
-	},
-	lineHeight: {
-		none: 1,
-		tight: 1.25,
-		normal: 1.5,
-		loose: 2,
-	},
+  fontFamily: {
+    base: '"Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+    heading: '"Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+    monospace: 'SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace',
+  },
+  fontSize: {
+    xs: "0.75rem", // 12px
+    sm: "0.875rem", // 14px
+    md: "1rem", // 16px
+    lg: "1.125rem", // 18px
+    xl: "1.25rem", // 20px
+    "2xl": "1.5rem", // 24px
+    "3xl": "1.875rem", // 30px
+    "4xl": "2.25rem", // 36px
+    "5xl": "3rem", // 48px
+  },
+  fontWeight: {
+    normal: 400,
+    medium: 500,
+    semibold: 600,
+    bold: 700,
+  },
+  lineHeight: {
+    none: 1,
+    tight: 1.25,
+    normal: 1.5,
+    loose: 2,
+  },
 };
 
 // Spațiere
 export const spacing = {
-	0: '0',
-	1: '0.25rem', // 4px
-	2: '0.5rem', // 8px
-	3: '0.75rem', // 12px
-	4: '1rem', // 16px
-	5: '1.25rem', // 20px
-	6: '1.5rem', // 24px
-	8: '2rem', // 32px
-	10: '2.5rem', // 40px
-	12: '3rem', // 48px
-	16: '4rem', // 64px
-	20: '5rem', // 80px
-	24: '6rem', // 96px
-	32: '8rem', // 128px
-	40: '10rem', // 160px
-	48: '12rem', // 192px
-	56: '14rem', // 224px
-	64: '16rem', // 256px
+  0: "0",
+  1: "0.25rem", // 4px
+  2: "0.5rem", // 8px
+  3: "0.75rem", // 12px
+  4: "1rem", // 16px
+  5: "1.25rem", // 20px
+  6: "1.5rem", // 24px
+  8: "2rem", // 32px
+  10: "2.5rem", // 40px
+  12: "3rem", // 48px
+  16: "4rem", // 64px
+  20: "5rem", // 80px
+  24: "6rem", // 96px
+  32: "8rem", // 128px
+  40: "10rem", // 160px
+  48: "12rem", // 192px
+  56: "14rem", // 224px
+  64: "16rem", // 256px
 };
 
 // Umbre
 export const shadows = {
-	sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-	md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-	lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-	xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-	'2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-	inner: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
-	none: 'none',
+  sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+  md: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+  lg: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+  xl: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+  "2xl": "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+  inner: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
+  none: "none",
 };
 
 // Border Radius
 export const borderRadius = {
-	none: '0',
-	sm: '0.125rem', // 2px
-	md: '0.25rem', // 4px
-	lg: '0.5rem', // 8px
-	xl: '0.75rem', // 12px
-	'2xl': '1rem', // 16px
-	'3xl': '1.5rem', // 24px
-	full: '9999px',
+  none: "0",
+  sm: "0.125rem", // 2px
+  md: "0.25rem", // 4px
+  lg: "0.5rem", // 8px
+  xl: "0.75rem", // 12px
+  "2xl": "1rem", // 16px
+  "3xl": "1.5rem", // 24px
+  full: "9999px",
 };
 
 // Z-Index
 export const zIndex = {
-	0: 0,
-	10: 10,
-	20: 20,
-	30: 30,
-	40: 40,
-	50: 50,
-	auto: 'auto',
+  0: 0,
+  10: 10,
+  20: 20,
+  30: 30,
+  40: 40,
+  50: 50,
+  auto: "auto",
 };
 ```
 
@@ -1392,39 +1392,39 @@ export const zIndex = {
 ```javascript
 // tailwind.config.js
 const {
-	colors,
-	spacing,
-	borderRadius,
-	typography,
-	shadows,
-} = require('./src/design-system/tokens');
+  colors,
+  spacing,
+  borderRadius,
+  typography,
+  shadows,
+} = require("./src/design-system/tokens");
 
 module.exports = {
-	content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
-	theme: {
-		colors,
-		spacing,
-		borderRadius,
-		fontFamily: typography.fontFamily,
-		fontSize: typography.fontSize,
-		fontWeight: typography.fontWeight,
-		lineHeight: typography.lineHeight,
-		boxShadow: shadows,
-		extend: {
-			zIndex: {
-				'-1': '-1',
-			},
-			transitionProperty: {
-				height: 'height',
-				spacing: 'margin, padding',
-			},
-		},
-	},
-	plugins: [
-		require('@tailwindcss/forms'),
-		require('@tailwindcss/typography'),
-		require('@tailwindcss/aspect-ratio'),
-	],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  theme: {
+    colors,
+    spacing,
+    borderRadius,
+    fontFamily: typography.fontFamily,
+    fontSize: typography.fontSize,
+    fontWeight: typography.fontWeight,
+    lineHeight: typography.lineHeight,
+    boxShadow: shadows,
+    extend: {
+      zIndex: {
+        "-1": "-1",
+      },
+      transitionProperty: {
+        height: "height",
+        spacing: "margin, padding",
+      },
+    },
+  },
+  plugins: [
+    require("@tailwindcss/forms"),
+    require("@tailwindcss/typography"),
+    require("@tailwindcss/aspect-ratio"),
+  ],
 };
 ```
 
@@ -1483,7 +1483,7 @@ CMD ["nginx", "-g", "daemon off;"]
 
 ```yaml
 # docker-compose.yml
-version: '3.8'
+version: "3.8"
 
 services:
   postgres:
@@ -1491,15 +1491,15 @@ services:
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_DB: wastewise
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - '5432:5432'
+      - "5432:5432"
     networks:
       - app-network
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_NAME}']
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -1507,11 +1507,11 @@ services:
   redis:
     image: redis:alpine
     ports:
-      - '6379:6379'
+      - "6379:6379"
     networks:
       - app-network
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
+      test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -1519,12 +1519,12 @@ services:
   rabbitmq:
     image: rabbitmq:3-management-alpine
     ports:
-      - '5672:5672'
-      - '15672:15672'
+      - "5672:5672"
+      - "15672:15672"
     networks:
       - app-network
     healthcheck:
-      test: ['CMD', 'rabbitmqctl', 'status']
+      test: ["CMD", "rabbitmqctl", "status"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -1547,7 +1547,7 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       PORT: 3000
     ports:
-      - '3000:3000'
+      - "3000:3000"
     depends_on:
       postgres:
         condition: service_healthy
@@ -1563,7 +1563,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - '80:80'
+      - "80:80"
     depends_on:
       - backend
     networks:
@@ -1604,7 +1604,7 @@ spec:
             - containerPort: 3000
           env:
             - name: NODE_ENV
-              value: 'production'
+              value: "production"
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
@@ -1647,11 +1647,11 @@ spec:
                   key: jwt_secret
           resources:
             limits:
-              cpu: '500m'
-              memory: '512Mi'
+              cpu: "500m"
+              memory: "512Mi"
             requests:
-              cpu: '100m'
-              memory: '256Mi'
+              cpu: "100m"
+              memory: "256Mi"
           livenessProbe:
             httpGet:
               path: /health
