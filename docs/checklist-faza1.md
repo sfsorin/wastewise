@@ -14,19 +14,19 @@
 - [x] Configurare .gitignore pentru Node.js, React, și IDE-uri comune
 - [x] Primul commit cu structura de bază a proiectului
 
-### 1.1.2 Configurare .gitignore și .editorconfig 🟢 (0.5 zile)
+### 1.1.2 Configurare .gitignore și .editorconfig 🟢 (0.5 zile) ✅
 
-- [ ] Configurare .gitignore pentru:
-  - [ ] Node.js (node_modules, npm-debug.log, etc.)
-  - [ ] React/Vite (dist, build, etc.)
-  - [ ] IDE-uri (VS Code, IntelliJ, etc.)
-  - [ ] Fișiere de configurare locale (.env, etc.)
-- [ ] Configurare .editorconfig pentru:
-  - [ ] Indentare (spații vs. tabs)
-  - [ ] Dimensiune indentare (2 sau 4 spații)
-  - [ ] Encoding (UTF-8)
-  - [ ] Line endings (LF vs. CRLF)
-  - [ ] Trailing whitespace
+- [x] Configurare .gitignore pentru:
+  - [x] Node.js (node_modules, npm-debug.log, etc.)
+  - [x] React/Vite (dist, build, etc.)
+  - [x] IDE-uri (VS Code, IntelliJ, etc.)
+  - [x] Fișiere de configurare locale (.env, etc.)
+- [x] Configurare .editorconfig pentru:
+  - [x] Indentare (spații vs. tabs)
+  - [x] Dimensiune indentare (2 sau 4 spații)
+  - [x] Encoding (UTF-8)
+  - [x] Line endings (LF vs. CRLF)
+  - [x] Trailing whitespace
 
 ### 1.1.3 Configurare branch protection rules 🟡 (0.5 zile)
 
