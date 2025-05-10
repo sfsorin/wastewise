@@ -112,6 +112,7 @@ Folosim [Conventional Commits](https://www.conventionalcommits.org/) pentru mesa
 ```
 
 Tipuri de commit:
+
 - `feat`: O nouă funcționalitate
 - `fix`: Rezolvarea unui bug
 - `docs`: Modificări doar în documentație
@@ -138,7 +139,7 @@ wastewise/
 │   ├── src/
 │   │   ├── config/        # Configurații
 │   │   ├── modules/       # Module NestJS
-│   │   ├── shared/        # Cod partajat
+│   │   ├── common/        # Componente comune (guards, filters, etc.)
 │   │   └── main.ts        # Punct de intrare
 │   ├── test/              # Teste
 │   └── package.json
