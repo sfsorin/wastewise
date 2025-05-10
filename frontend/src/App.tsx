@@ -58,7 +58,7 @@ function App() {
               <Button
                 label="Află mai mult"
                 variant="primary"
-                size="medium"
+                size="md"
                 onClick={() => window.open('https://tailwindcss.com', '_blank')}
               />
             </div>

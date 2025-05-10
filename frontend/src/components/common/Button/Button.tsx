@@ -1,26 +1,26 @@
 import React from 'react';
 
-interface ButtonProps {
+export interface ButtonProps {
   /**
-   * Textul afișat pe buton
+   * Textul butonului
    */
   label: string;
   /**
-   * Funcția apelată la click
-   */
-  onClick?: () => void;
-  /**
    * Tipul butonului
    */
-  variant?: 'primary' | 'secondary' | 'outline' | 'text';
+  variant?: 'primary' | 'secondary' | 'accent' | 'outline';
   /**
    * Dimensiunea butonului
    */
-  size?: 'small' | 'medium' | 'large';
+  size?: 'sm' | 'md' | 'lg';
   /**
    * Dezactivează butonul
    */
   disabled?: boolean;
+  /**
+   * Funcția apelată la click
+   */
+  onClick?: () => void;
   /**
    * Clasa CSS personalizată
    */
@@ -32,42 +32,27 @@ interface ButtonProps {
 }
 
 /**
- * Componenta Button pentru acțiuni în interfață
+ * Componenta Button reutilizabilă care folosește clasele Tailwind CSS
  */
 export const Button: React.FC<ButtonProps> = ({
   label,
-  onClick,
   variant = 'primary',
-  size = 'medium',
+  size = 'md',
   disabled = false,
+  onClick,
   className = '',
   type = 'button',
 }) => {
-  // Clase de bază pentru toate variantele
-  const baseClasses = 'rounded font-medium focus:outline-none transition-colors';
+  // Folosim clasele predefinite din index.css
+  const baseClass = 'btn';
+  const variantClass = `btn-${variant}`;
+  const sizeClass = size === 'md' ? '' : `btn-${size}`;
 
-  // Clase pentru variante
-  const variantClasses = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700',
-    secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300',
-    outline: 'bg-transparent border border-blue-600 text-blue-600 hover:bg-blue-50',
-    text: 'bg-transparent text-blue-600 hover:bg-blue-50',
-  };
+  // Adăugăm clasa disabled dacă butonul este dezactivat
+  const disabledClass = disabled ? 'opacity-50 cursor-not-allowed' : '';
 
-  // Clase pentru dimensiuni
-  const sizeClasses = {
-    small: 'py-1 px-3 text-sm',
-    medium: 'py-2 px-4 text-base',
-    large: 'py-3 px-6 text-lg',
-  };
-
-  // Clase pentru starea disabled
-  const disabledClasses = disabled
-    ? 'opacity-50 cursor-not-allowed'
-    : 'cursor-pointer';
-
-  // Combinarea tuturor claselor
-  const buttonClasses = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${disabledClasses} ${className}`;
+  // Combinăm toate clasele
+  const buttonClasses = `${baseClass} ${variantClass} ${sizeClass} ${disabledClass} ${className}`;
 
   return (
     <button
@@ -75,6 +60,7 @@ export const Button: React.FC<ButtonProps> = ({
       className={buttonClasses}
       onClick={onClick}
       disabled={disabled}
+      data-testid="button"
     >
       {label}
     </button>
