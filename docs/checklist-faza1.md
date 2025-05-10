@@ -106,12 +106,12 @@
 
 ## 1.3 Setup Proiect Frontend (React + Vite) (4.5 zile)
 
-### 1.3.1 Inițializare proiect React cu Vite 🟢 (0.5 zile)
+### 1.3.1 Inițializare proiect React cu Vite 🟢 (0.5 zile) ✅
 
-- [ ] Instalare Vite
-- [ ] Creare proiect React + TypeScript
-- [ ] Configurare structură de directoare
-- [ ] Configurare package.json cu script-uri necesare
+- [x] Instalare Vite
+- [x] Creare proiect React + TypeScript
+- [x] Configurare structură de directoare
+- [x] Configurare package.json cu script-uri necesare
 
 ### 1.3.2 Configurare TypeScript și tsconfig.json 🟢 (0.5 zile)
 
