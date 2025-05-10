@@ -26,9 +26,39 @@ export default tseslint.config(
   },
   {
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
+      // TypeScript specific rules
+      '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-floating-promises': 'warn',
-      '@typescript-eslint/no-unsafe-argument': 'warn'
+      '@typescript-eslint/no-unsafe-argument': 'warn',
+      '@typescript-eslint/explicit-function-return-type': [
+        'warn',
+        {
+          allowExpressions: true,
+          allowTypedFunctionExpressions: true,
+        },
+      ],
+      '@typescript-eslint/explicit-module-boundary-types': 'warn',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+        },
+      ],
+
+      // General code style
+      'no-console': ['warn', { allow: ['warn', 'error', 'info', 'debug'] }],
+      'no-duplicate-imports': 'error',
+      'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 1 }],
+      'no-var': 'error',
+      'prefer-const': 'error',
+      'prefer-template': 'warn',
+      quotes: ['error', 'single', { avoidEscape: true }],
+      semi: ['error', 'always'],
+
+      // NestJS specific
+      'max-classes-per-file': ['error', 1],
+      'no-useless-constructor': 'off',
     },
   },
 );

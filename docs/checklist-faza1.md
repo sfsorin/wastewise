@@ -72,13 +72,13 @@
   - [x] Path aliases
   - [x] Source maps pentru debugging
 
-### 1.2.3 Configurare ESLint și Prettier 🟢 (0.5 zile)
+### 1.2.3 Configurare ESLint și Prettier 🟢 (0.5 zile) ✅
 
-- [ ] Instalare și configurare ESLint
-- [ ] Instalare și configurare Prettier
-- [ ] Configurare reguli ESLint specifice pentru NestJS
-- [ ] Configurare integrare ESLint-Prettier
-- [ ] Adăugare script-uri pentru linting și formatare
+- [x] Instalare și configurare ESLint
+- [x] Instalare și configurare Prettier
+- [x] Configurare reguli ESLint specifice pentru NestJS
+- [x] Configurare integrare ESLint-Prettier
+- [x] Adăugare script-uri pentru linting și formatare
 
 ### 1.2.4 Configurare Jest pentru teste 🟡 (1 zi)
 
