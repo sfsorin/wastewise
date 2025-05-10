@@ -60,7 +60,7 @@ This project provides a full-stack setup with a TypeScript/NestJS backend, a Rea
 - **PostgreSQL:**
   - `POSTGRES_USER=postgres`
   - `POSTGRES_PASSWORD=postgres`
-  - `POSTGRES_DB=management_deseuri`
+  - `POSTGRES_DB=wastewise`
 
 ### Exposed Ports
 
