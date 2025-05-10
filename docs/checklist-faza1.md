@@ -80,13 +80,13 @@
 - [x] Configurare integrare ESLint-Prettier
 - [x] Adăugare script-uri pentru linting și formatare
 
-### 1.2.4 Configurare Jest pentru teste 🟡 (1 zi)
+### 1.2.4 Configurare Jest pentru teste 🟡 (1 zi) ✅
 
-- [ ] Configurare Jest pentru TypeScript
-- [ ] Configurare Jest pentru NestJS
-- [ ] Creare fișiere de test de exemplu
-- [ ] Configurare coverage reporting
-- [ ] Adăugare script-uri pentru rulare teste
+- [x] Configurare Jest pentru TypeScript
+- [x] Configurare Jest pentru NestJS
+- [x] Creare fișiere de test de exemplu
+- [x] Configurare coverage reporting
+- [x] Adăugare script-uri pentru rulare teste
 
 ### 1.2.5 Configurare TypeORM și conexiune bază de date 🟡 (1 zi)
 

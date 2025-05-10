@@ -18,8 +18,10 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
+    "test:cov:html": "jest --coverage --coverageReporters=html",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:e2e:cov": "jest --config ./test/jest-e2e.json --coverage"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -70,6 +72,41 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/",
+      "main.ts",
+      ".module.ts",
+      ".dto.ts",
+      ".entity.ts",
+      ".interface.ts"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 70,
+        "branches": 60,
+        "functions": 70,
+        "lines": 70
+      }
+    },
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@app/(.*)$": "<rootDir>/$1",
+      "^@modules/(.*)$": "<rootDir>/modules/$1",
+      "^@common/(.*)$": "<rootDir>/common/$1",
+      "^@config/(.*)$": "<rootDir>/config/$1",
+      "^@utils/(.*)$": "<rootDir>/common/utils/$1",
+      "^@decorators/(.*)$": "<rootDir>/common/decorators/$1",
+      "^@filters/(.*)$": "<rootDir>/common/filters/$1",
+      "^@guards/(.*)$": "<rootDir>/common/guards/$1",
+      "^@interceptors/(.*)$": "<rootDir>/common/interceptors/$1",
+      "^@pipes/(.*)$": "<rootDir>/common/pipes/$1"
+    },
+    "preset": "ts-jest",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/"
+    ],
+    "verbose": true
   }
 }
