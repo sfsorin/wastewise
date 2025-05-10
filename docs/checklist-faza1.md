@@ -56,12 +56,12 @@
 
 ## 1.2 Setup Proiect Backend (NestJS) (4.5 zile)
 
-### 1.2.1 Inițializare proiect NestJS 🟢 (0.5 zile)
+### 1.2.1 Inițializare proiect NestJS 🟢 (0.5 zile) ✅
 
-- [ ] Instalare Nest CLI
-- [ ] Creare proiect NestJS
-- [ ] Configurare structură de directoare
-- [ ] Configurare package.json cu script-uri necesare
+- [x] Instalare Nest CLI
+- [x] Creare proiect NestJS
+- [x] Configurare structură de directoare
+- [x] Configurare package.json cu script-uri necesare
 
 ### 1.2.2 Configurare TypeScript și tsconfig.json 🟢 (0.5 zile)
 
