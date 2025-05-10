@@ -46,13 +46,13 @@
 - [x] Creare fișier de configurare commitlint.config.js
 - [x] Documentare convenții de commit în CONTRIBUTING.md
 
-### 1.1.5 Documentare workflow Git în README.md 🟢 (1 zi)
+### 1.1.5 Documentare workflow Git în README.md 🟢 (1 zi) ✅
 
-- [ ] Documentare structură branch-uri (GitFlow)
-- [ ] Documentare proces de creare branch-uri
-- [ ] Documentare proces de creare pull requests
-- [ ] Documentare convenții de commit
-- [ ] Documentare proces de review și merge
+- [x] Documentare structură branch-uri (GitFlow)
+- [x] Documentare proces de creare branch-uri
+- [x] Documentare proces de creare pull requests
+- [x] Documentare convenții de commit
+- [x] Documentare proces de review și merge
 
 ## 1.2 Setup Proiect Backend (NestJS) (4.5 zile)
 
