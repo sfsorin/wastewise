@@ -88,13 +88,13 @@
 - [x] Configurare coverage reporting
 - [x] Adăugare script-uri pentru rulare teste
 
-### 1.2.5 Configurare TypeORM și conexiune bază de date 🟡 (1 zi)
+### 1.2.5 Configurare TypeORM și conexiune bază de date 🟡 (1 zi) ✅
 
-- [ ] Instalare TypeORM și driver PostgreSQL
-- [ ] Configurare conexiune bază de date
-- [ ] Configurare entități de bază
-- [ ] Configurare migrări
-- [ ] Testare conexiune și operațiuni CRUD de bază
+- [x] Instalare TypeORM și driver PostgreSQL
+- [x] Configurare conexiune bază de date
+- [x] Configurare entități de bază
+- [x] Configurare migrări
+- [x] Testare conexiune și operațiuni CRUD de bază
 
 ### 1.2.6 Configurare Swagger pentru documentație API 🟡 (1 zi)
 
