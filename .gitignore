@@ -1,0 +1,140 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+.pnpm-debug.log
+.npm
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# Build directories
+dist/
+build/
+out/
+.next/
+.nuxt/
+.cache/
+.output/
+.vite/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Testing
+coverage/
+.nyc_output/
+.jest/
+.cypress/
+cypress/videos/
+cypress/screenshots/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Database
+*.sqlite
+*.sqlite3
+*.db
+
+# Backend specific
+backend/dist/
+backend/node_modules/
+backend/coverage/
+backend/.env
+
+# Frontend specific
+frontend/dist/
+frontend/node_modules/
+frontend/coverage/
+frontend/.env
+frontend/stats.html
+
+# ML Service specific
+ml-service/__pycache__/
+ml-service/*.py[cod]
+ml-service/*$py.class
+ml-service/.env
+ml-service/venv/
+ml-service/.venv/
+ml-service/ENV/
+ml-service/env/
+ml-service/.Python
+ml-service/build/
+ml-service/develop-eggs/
+ml-service/dist/
+ml-service/downloads/
+ml-service/eggs/
+ml-service/.eggs/
+ml-service/lib/
+ml-service/lib64/
+ml-service/parts/
+ml-service/sdist/
+ml-service/var/
+ml-service/wheels/
+ml-service/*.egg-info/
+ml-service/.installed.cfg
+ml-service/*.egg
+
+# Temporary files
+*.tmp
+*.temp
+.temp/
+.tmp/
+tmp/
+temp/
+
+# Misc
+.eslintcache
+.stylelintcache
+.prettierignore
+.prettierrc
+.eslintignore
+.eslintrc
