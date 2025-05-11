@@ -8,16 +8,8 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  Query,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiParam,
-  ApiBody,
-  ApiQuery,
-} from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
 import { JudeteService } from '../services/judete.service';
 import { CreateJudetDto } from '../dto/create-judet.dto';
 import { UpdateJudetDto } from '../dto/update-judet.dto';
@@ -112,10 +104,7 @@ export class JudeteController {
     status: HttpStatus.CONFLICT,
     description: 'Există deja un județ cu același cod SIRUTA sau cod auto.',
   })
-  update(
-    @Param('id') id: string,
-    @Body() updateJudetDto: UpdateJudetDto,
-  ): Promise<Judet> {
+  update(@Param('id') id: string, @Body() updateJudetDto: UpdateJudetDto): Promise<Judet> {
     return this.judeteService.update(id, updateJudetDto);
   }
 

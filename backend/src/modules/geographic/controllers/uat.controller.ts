@@ -8,16 +8,8 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  Query,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiParam,
-  ApiBody,
-  ApiQuery,
-} from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
 import { UATService } from '../services/uat.service';
 import { CreateUATDto } from '../dto/create-uat.dto';
 import { UpdateUATDto } from '../dto/update-uat.dto';
@@ -116,10 +108,7 @@ export class UATController {
     status: HttpStatus.CONFLICT,
     description: 'Există deja un UAT cu același cod SIRUTA.',
   })
-  update(
-    @Param('id') id: string,
-    @Body() updateUATDto: UpdateUATDto,
-  ): Promise<UAT> {
+  update(@Param('id') id: string, @Body() updateUATDto: UpdateUATDto): Promise<UAT> {
     return this.uatService.update(id, updateUATDto);
   }
 

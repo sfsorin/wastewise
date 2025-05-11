@@ -8,16 +8,8 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  Query,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiParam,
-  ApiBody,
-  ApiQuery,
-} from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
 import { LocalitatiService } from '../services/localitati.service';
 import { CreateLocalitateDto } from '../dto/create-localitate.dto';
 import { UpdateLocalitateDto } from '../dto/update-localitate.dto';

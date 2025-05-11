@@ -27,7 +27,8 @@ export class CreateSchemasAndUsers1746973160488 implements MigrationInterface {
     } catch (error) {
       console.error('Eroare la crearea schemelor și utilizatorilor:', error);
 
-      if (error.message && error.message.includes('database "wastewise" does not exist')) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      if (errorMessage.includes('database "wastewise" does not exist')) {
         console.error(
           '\nBaza de date "wastewise" nu există. Trebuie să o creați manual înainte de a rula migrările.',
         );
