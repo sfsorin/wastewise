@@ -171,12 +171,12 @@
 
 ## 1.4 Configurare Bază de Date (3 zile)
 
-### 1.4.1 Instalare și configurare PostgreSQL 🟢 (0.5 zile)
+### 1.4.1 Instalare și configurare PostgreSQL 🟢 (0.5 zile) ✅
 
-- [ ] Instalare PostgreSQL
-- [ ] Configurare parametri de bază
-- [ ] Configurare acces și securitate
-- [ ] Testare conexiune
+- [x] Instalare PostgreSQL
+- [x] Configurare parametri de bază
+- [x] Configurare acces și securitate
+- [x] Testare conexiune
 
 ### 1.4.2 Creare scheme și utilizatori 🟢 (0.5 zile)
 
