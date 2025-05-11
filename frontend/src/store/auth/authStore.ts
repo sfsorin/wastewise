@@ -1,6 +1,47 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { AuthState, RegisterData } from './types';
+
+// Definim tipurile direct în fișier pentru a evita probleme de import
+/**
+ * Tipul pentru utilizator
+ */
+export interface User {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * Tipul pentru datele de înregistrare
+ */
+export interface RegisterData {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+}
+
+/**
+ * Tipul pentru starea de autentificare
+ */
+export interface AuthState {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+
+  // Acțiuni
+  login: (email: string, password: string) => Promise<void>;
+  register: (userData: RegisterData) => Promise<void>;
+  logout: () => void;
+  checkAuth: () => Promise<void>;
+  clearError: () => void;
+}
 
 /**
  * Serviciu pentru autentificare (simulat)
@@ -10,7 +51,7 @@ const AuthService = {
   login: async (email: string, password: string) => {
     // Simulăm un apel către API
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     // Verificăm credențialele (simulat)
     if (email === 'test@example.com' && password === 'password') {
       return {
@@ -26,14 +67,14 @@ const AuthService = {
         token: 'dummy_token',
       };
     }
-    
+
     throw new Error('Credențiale invalide');
   },
-  
+
   register: async (userData: RegisterData) => {
     // Simulăm un apel către API
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     // Simulăm înregistrarea reușită
     return {
       user: {
@@ -48,21 +89,21 @@ const AuthService = {
       token: 'dummy_token',
     };
   },
-  
+
   logout: () => {
     // Simulăm un logout
     localStorage.removeItem('auth_token');
   },
-  
+
   checkAuth: async () => {
     // Simulăm verificarea autentificării
     await new Promise(resolve => setTimeout(resolve, 500));
-    
+
     const token = localStorage.getItem('auth_token');
     if (!token) {
       throw new Error('Nu sunteți autentificat');
     }
-    
+
     return {
       user: {
         id: '1',
@@ -104,7 +145,7 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      register: async (userData) => {
+      register: async userData => {
         set({ isLoading: true, error: null });
         try {
           const { user, token } = await AuthService.register(userData);
@@ -137,7 +178,11 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'auth-storage', // Numele pentru localStorage
-      partialize: (state) => ({ user: state.user, token: state.token, isAuthenticated: state.isAuthenticated }),
-    }
-  )
+      partialize: state => ({
+        user: state.user,
+        token: state.token,
+        isAuthenticated: state.isAuthenticated,
+      }),
+    },
+  ),
 );

@@ -3,7 +3,7 @@
  */
 
 // Store-uri principale
-export { useAuthStore } from './auth/authStore';
+export { useAuthStore, User, AuthState, RegisterData } from './auth/authStore';
 export { useThemeStore } from './ui/themeStore';
 
 // Slice-uri
