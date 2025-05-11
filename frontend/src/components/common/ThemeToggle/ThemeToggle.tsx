@@ -1,5 +1,5 @@
-import React from 'react';
-import { useTheme } from '../../../store/hooks/useTheme';
+import React, { useEffect } from 'react';
+import { useThemeStore } from '../../../store';
 
 interface ThemeToggleProps {
   /**
@@ -10,23 +10,41 @@ interface ThemeToggleProps {
 
 /**
  * Componenta ThemeToggle pentru comutarea între modurile light și dark
- * Folosește Zustand pentru state management
+ * Folosește Zustand pentru gestionarea stării temei
  */
 export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '' }) => {
-  const { darkMode, toggleDarkMode } = useTheme();
+  const { isDarkMode, toggleTheme, setDarkMode } = useThemeStore();
+
+  // Verifică tema la încărcarea componentei
+  useEffect(() => {
+    // Verifică preferința sistemului
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // Setează tema inițială dacă nu există deja în store
+    if (isDarkMode === undefined) {
+      setDarkMode(prefersDark);
+    }
+
+    // Aplică tema inițială
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode, setDarkMode]);
 
   return (
     <button
       type="button"
-      onClick={toggleDarkMode}
+      onClick={toggleTheme}
       className={`p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${
-        darkMode
+        isDarkMode
           ? 'bg-gray-800 text-accent-400 hover:bg-gray-700 focus:ring-accent-500'
           : 'bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-primary-500'
       } ${className}`}
-      aria-label={darkMode ? 'Comută la modul light' : 'Comută la modul dark'}
+      aria-label={isDarkMode ? 'Comută la modul light' : 'Comută la modul dark'}
     >
-      {darkMode ? (
+      {isDarkMode ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-5 w-5"

@@ -1,120 +1,66 @@
-import { type StateCreator } from 'zustand';
-import { type StoreState } from '../types';
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-// Define user profile type
-export interface UserProfile {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  avatar?: string;
-  phone?: string;
-  company?: string;
-  address?: string;
-}
-
-// Define the user slice state and actions
-export interface UserSlice {
-  // State
-  profile: UserProfile | null;
-  loading: boolean;
-  error: string | null;
-
-  // Actions
-  loadUserProfile: () => Promise<void>;
-  setUserProfile: (profile: UserProfile) => void;
-  updateUserProfile: (updates: Partial<UserProfile>) => Promise<boolean>;
-  clearUserProfile: () => void;
+/**
+ * Tipul pentru preferințele utilizatorului
+ */
+interface UserPreferences {
+  language: string;
+  notifications: boolean;
+  theme: 'light' | 'dark' | 'system';
 }
 
 /**
- * Create the user slice
+ * Tipul pentru starea utilizatorului
  */
-export const createUserSlice: StateCreator<
-  StoreState,
-  [['zustand/immer', never]],
-  [],
-  UserSlice
-> = set => ({
-  // Initial state
-  profile: null,
-  loading: false,
-  error: null,
+interface UserState {
+  preferences: UserPreferences;
+  setLanguage: (language: string) => void;
+  setNotifications: (enabled: boolean) => void;
+  setTheme: (theme: 'light' | 'dark' | 'system') => void;
+}
 
-  // Actions
-  loadUserProfile: async () => {
-    try {
-      set(state => {
-        state.loading = true;
-        state.error = null;
-      });
+/**
+ * Store pentru preferințele utilizatorului
+ */
+export const useUserStore = create<UserState>()(
+  persist(
+    (set) => ({
+      preferences: {
+        language: 'ro',
+        notifications: true,
+        theme: 'system',
+      },
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      setLanguage: (language) => {
+        set((state) => ({
+          preferences: {
+            ...state.preferences,
+            language,
+          },
+        }));
+      },
 
-      // Mock user data
-      const userData: UserProfile = {
-        id: '1',
-        name: 'John Smith',
-        email: 'demo@example.com',
-        role: 'admin',
-        avatar: 'https://i.pravatar.cc/150?u=demo@example.com',
-        phone: '+40 123 456 789',
-        company: 'WasteWise SRL',
-        address: 'Strada Exemplu 123, București',
-      };
+      setNotifications: (enabled) => {
+        set((state) => ({
+          preferences: {
+            ...state.preferences,
+            notifications: enabled,
+          },
+        }));
+      },
 
-      set(state => {
-        state.profile = userData;
-        state.loading = false;
-      });
-    } catch (error) {
-      set(state => {
-        state.error = 'Eroare la încărcarea profilului';
-        state.loading = false;
-      });
+      setTheme: (theme) => {
+        set((state) => ({
+          preferences: {
+            ...state.preferences,
+            theme,
+          },
+        }));
+      },
+    }),
+    {
+      name: 'user-preferences', // Numele pentru localStorage
     }
-  },
-
-  setUserProfile: (profile: UserProfile) => {
-    set(state => {
-      state.profile = profile;
-    });
-  },
-
-  updateUserProfile: async (updates: Partial<UserProfile>) => {
-    try {
-      set(state => {
-        state.loading = true;
-        state.error = null;
-      });
-
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      set(state => {
-        if (state.profile) {
-          state.profile = {
-            ...state.profile,
-            ...updates,
-          };
-        }
-        state.loading = false;
-      });
-
-      return true;
-    } catch (error) {
-      set(state => {
-        state.error = 'Eroare la actualizarea profilului';
-        state.loading = false;
-      });
-      return false;
-    }
-  },
-
-  clearUserProfile: () => {
-    set(state => {
-      state.profile = null;
-    });
-  },
-});
+  )
+);

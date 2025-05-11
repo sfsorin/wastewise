@@ -164,8 +164,8 @@
 
 - [x] Instalare Zustand
 - [x] Configurare store de bază
-- [x] Creare store-uri pentru funcționalități comune (auth, theme, user, waste, ui)
-- [x] Configurare middleware (persist, devtools, immer)
+- [x] Creare store-uri pentru funcționalități comune (auth, theme, user)
+- [x] Configurare middleware (persist)
 - [x] Testare funcționalitate state management
 - [x] Implementare hook personalizat pentru gestionarea temei
 
