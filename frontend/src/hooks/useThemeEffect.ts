@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useTheme } from '@store/hooks/useTheme';
+import useTheme from './useTheme';
 
 /**
  * Hook personalizat pentru gestionarea temei aplicației
@@ -9,12 +9,12 @@ import { useTheme } from '@store/hooks/useTheme';
  */
 export const useThemeEffect = () => {
   const { darkMode, setDarkMode } = useTheme();
-  
+
   // Efect pentru inițializarea temei
   useEffect(() => {
     // Verifică dacă există o temă salvată în localStorage
     const savedTheme = localStorage.getItem('theme');
-    
+
     if (savedTheme) {
       // Aplică tema salvată
       setDarkMode(savedTheme === 'dark');
@@ -24,7 +24,7 @@ export const useThemeEffect = () => {
       setDarkMode(prefersDark);
     }
   }, [setDarkMode]);
-  
+
   // Efect pentru aplicarea temei când se schimbă
   useEffect(() => {
     // Aplică tema la elementul HTML
@@ -36,7 +36,7 @@ export const useThemeEffect = () => {
       localStorage.setItem('theme', 'light');
     }
   }, [darkMode]);
-  
+
   return null; // Hook-ul nu returnează nimic, doar are efecte secundare
 };
 
