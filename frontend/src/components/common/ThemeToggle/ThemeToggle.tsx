@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useTheme } from '../../../store/hooks/useTheme';
 
 interface ThemeToggleProps {
   /**
@@ -9,61 +10,34 @@ interface ThemeToggleProps {
 
 /**
  * Componenta ThemeToggle pentru comutarea între modurile light și dark
+ * Folosește Zustand pentru state management
  */
 export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '' }) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { darkMode, toggleDarkMode, setDarkMode } = useTheme();
 
   // Verifică tema la încărcarea componentei
   useEffect(() => {
-    // Verifică preferința salvată în localStorage
-    const savedTheme = localStorage.getItem('theme');
-
     // Verifică preferința sistemului
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    // Setează tema inițială
-    const initialDarkMode = savedTheme === 'dark' || (!savedTheme && prefersDark);
-    setIsDarkMode(initialDarkMode);
-
-    // Aplică tema inițială
-    if (initialDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, []);
-
-  // Comută tema
-  const toggleTheme = () => {
-    setIsDarkMode(prev => {
-      const newDarkMode = !prev;
-
-      // Salvează preferința în localStorage
-      localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');
-
-      // Aplică tema
-      if (newDarkMode) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-
-      return newDarkMode;
-    });
-  };
+    
+    // Setează tema inițială bazată pe preferința sistemului
+    setDarkMode(prefersDark);
+    
+    // Aplică tema inițială (acest lucru este gestionat acum în slice-ul de theme)
+  }, [setDarkMode]);
 
   return (
     <button
       type="button"
-      onClick={toggleTheme}
+      onClick={toggleDarkMode}
       className={`p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${
-        isDarkMode
+        darkMode
           ? 'bg-gray-800 text-accent-400 hover:bg-gray-700 focus:ring-accent-500'
           : 'bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-primary-500'
       } ${className}`}
-      aria-label={isDarkMode ? 'Comută la modul light' : 'Comută la modul dark'}
+      aria-label={darkMode ? 'Comută la modul light' : 'Comută la modul dark'}
     >
-      {isDarkMode ? (
+      {darkMode ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-5 w-5"
