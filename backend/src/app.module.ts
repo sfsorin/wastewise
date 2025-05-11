@@ -6,6 +6,11 @@ import { AppService } from './app.service';
 import configs from '@config/index';
 import { UsersModule } from '@modules/users/users.module';
 import { ProfilesModule } from '@modules/profiles/profiles.module';
+import { GeographicModule } from '@modules/geographic/geographic.module';
+import { ClientsModule } from '@modules/clients/clients.module';
+import { OperationalModule } from '@modules/operational/operational.module';
+import { ContractsModule } from '@modules/contracts/contracts.module';
+import { MLModule } from '@modules/ml/ml.module';
 
 @Module({
   imports: [
@@ -23,6 +28,11 @@ import { ProfilesModule } from '@modules/profiles/profiles.module';
     }),
     UsersModule,
     ProfilesModule,
+    GeographicModule,
+    ClientsModule,
+    OperationalModule,
+    ContractsModule,
+    MLModule,
   ],
   controllers: [AppController],
   providers: [AppService],
