@@ -192,12 +192,12 @@
 - [x] Configurare retenție backup-uri
 - [x] Testare proces de backup și restore
 
-### 1.4.4 Creare script-uri de migrare inițiale 🟡 (1 zi)
+### 1.4.4 Creare script-uri de migrare inițiale 🟡 (1 zi) ✅
 
-- [ ] Creare script pentru structura de bază
-- [ ] Creare script pentru date inițiale (seed)
-- [ ] Configurare versionare migrări
-- [ ] Testare migrări (up/down)
+- [x] Creare script pentru structura de bază
+- [x] Creare script pentru date inițiale (seed)
+- [x] Configurare versionare migrări
+- [x] Testare migrări (up/down)
 
 ## 1.5 Configurare Docker și Docker Compose (5.5 zile)
 
