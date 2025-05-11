@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useTheme } from '../../../store/hooks';
 
 interface ThemeToggleProps {
@@ -13,30 +13,11 @@ interface ThemeToggleProps {
  * Folosește Zustand pentru gestionarea stării
  */
 export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '' }) => {
-  const { darkMode, toggleDarkMode, setDarkMode } = useTheme();
+  const { darkMode, toggleDarkMode } = useTheme();
 
-  // Aplicăm tema la încărcarea componentei
-  useEffect(() => {
-    // Verificăm preferința sistemului
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    // Verificăm preferința salvată în localStorage
-    const savedTheme = localStorage.getItem('theme');
-
-    // Setăm tema în funcție de preferința salvată, starea din store sau preferința sistemului
-    if (savedTheme === 'dark' || (savedTheme === null && prefersDark)) {
-      document.documentElement.classList.add('dark');
-      setDarkMode(true);
-    } else if (savedTheme === 'light') {
-      document.documentElement.classList.remove('dark');
-      setDarkMode(false);
-    }
-  }, [setDarkMode]);
-
-  // Comută tema și salvează preferința
+  // Comută tema (gestionarea temei este acum în useThemeEffect)
   const handleToggleTheme = () => {
     toggleDarkMode();
-    localStorage.setItem('theme', !darkMode ? 'dark' : 'light');
   };
 
   return (

@@ -1,23 +1,17 @@
 import { useEffect } from 'react';
 import AppRouter from './routes';
-import { useTheme, useAuth } from './store/hooks';
+import { useAuth } from './store/hooks';
+import useThemeEffect from './hooks/useThemeEffect';
 
 /**
  * Componenta principală a aplicației
  * Folosește React Router pentru navigare și Zustand pentru state management
  */
 function App() {
-  const { darkMode } = useTheme();
   const { isAuthenticated } = useAuth();
 
-  // Aplicăm tema la încărcarea aplicației
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [darkMode]);
+  // Utilizăm hook-ul personalizat pentru gestionarea temei
+  useThemeEffect();
 
   // Logică pentru autentificare automată (dacă există un token valid)
   useEffect(() => {

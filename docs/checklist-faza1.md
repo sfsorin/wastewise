@@ -164,9 +164,10 @@
 
 - [x] Instalare Zustand
 - [x] Configurare store de bază
-- [x] Creare store-uri pentru funcționalități comune
-- [x] Configurare middleware (persist, devtools)
+- [x] Creare store-uri pentru funcționalități comune (auth, theme, user, waste, ui)
+- [x] Configurare middleware (persist, devtools, immer)
 - [x] Testare funcționalitate state management
+- [x] Implementare hook personalizat pentru gestionarea temei
 
 ## 1.4 Configurare Bază de Date (3 zile)
 
