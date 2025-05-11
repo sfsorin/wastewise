@@ -1,5 +1,5 @@
 import { type StateCreator } from 'zustand';
-import { StoreState } from '..';
+import { type StoreState } from '../types';
 
 // Define user profile type
 export interface UserProfile {
@@ -19,7 +19,7 @@ export interface UserSlice {
   profile: UserProfile | null;
   loading: boolean;
   error: string | null;
-  
+
   // Actions
   loadUserProfile: () => Promise<void>;
   setUserProfile: (profile: UserProfile) => void;
@@ -35,23 +35,23 @@ export const createUserSlice: StateCreator<
   [['zustand/immer', never]],
   [],
   UserSlice
-> = (set) => ({
+> = set => ({
   // Initial state
   profile: null,
   loading: false,
   error: null,
-  
+
   // Actions
   loadUserProfile: async () => {
     try {
-      set((state) => {
+      set(state => {
         state.loading = true;
         state.error = null;
       });
-      
+
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
       // Mock user data
       const userData: UserProfile = {
         id: '1',
@@ -63,36 +63,36 @@ export const createUserSlice: StateCreator<
         company: 'WasteWise SRL',
         address: 'Strada Exemplu 123, București',
       };
-      
-      set((state) => {
+
+      set(state => {
         state.profile = userData;
         state.loading = false;
       });
     } catch (error) {
-      set((state) => {
+      set(state => {
         state.error = 'Eroare la încărcarea profilului';
         state.loading = false;
       });
     }
   },
-  
+
   setUserProfile: (profile: UserProfile) => {
-    set((state) => {
+    set(state => {
       state.profile = profile;
     });
   },
-  
+
   updateUserProfile: async (updates: Partial<UserProfile>) => {
     try {
-      set((state) => {
+      set(state => {
         state.loading = true;
         state.error = null;
       });
-      
+
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
-      set((state) => {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      set(state => {
         if (state.profile) {
           state.profile = {
             ...state.profile,
@@ -101,19 +101,19 @@ export const createUserSlice: StateCreator<
         }
         state.loading = false;
       });
-      
+
       return true;
     } catch (error) {
-      set((state) => {
+      set(state => {
         state.error = 'Eroare la actualizarea profilului';
         state.loading = false;
       });
       return false;
     }
   },
-  
+
   clearUserProfile: () => {
-    set((state) => {
+    set(state => {
       state.profile = null;
     });
   },

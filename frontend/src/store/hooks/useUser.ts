@@ -1,17 +1,17 @@
-import { useStore } from '..';
+import { useStore } from '@store/index';
 
 /**
  * Hook for accessing user state and actions
  */
 export const useUser = () => {
   const store = useStore();
-  
+
   return {
     // State
     profile: store.profile,
     loading: store.loading,
     error: store.error,
-    
+
     // Actions
     loadUserProfile: store.loadUserProfile,
     setUserProfile: store.setUserProfile,

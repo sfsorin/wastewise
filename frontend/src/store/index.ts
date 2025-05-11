@@ -3,14 +3,17 @@ import { devtools, persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 
 // Import slices
-import { createAuthSlice, AuthSlice } from './slices/authSlice';
-import { createThemeSlice, ThemeSlice } from './slices/themeSlice';
-import { createUserSlice, UserSlice } from './slices/userSlice';
-import { createWasteSlice, WasteSlice } from './slices/wasteSlice';
-import { createUiSlice, UiSlice } from './slices/uiSlice';
+import { createAuthSlice } from './slices/authSlice';
+import { createThemeSlice } from './slices/themeSlice';
+import { createUserSlice } from './slices/userSlice';
+import { createWasteSlice } from './slices/wasteSlice';
+import { createUiSlice } from './slices/uiSlice';
 
-// Define the store type
-export type StoreState = AuthSlice & ThemeSlice & UserSlice & WasteSlice & UiSlice;
+// Import store type
+import type { StoreState } from './types';
+
+// Re-export StoreState type
+export type { StoreState };
 
 /**
  * Create the store with all slices
@@ -31,15 +34,17 @@ export const useStore = create<StoreState>()(
       {
         name: 'wastewise-storage',
         // Only persist specific parts of the state
-        partialize: (state) => ({
+        partialize: state => ({
           auth: { isAuthenticated: state.isAuthenticated, token: state.token },
           theme: { darkMode: state.darkMode },
           user: { profile: state.profile },
         }),
-      }
+        // Asigură-te că starea este disponibilă imediat
+        skipHydration: false,
+      },
     ),
-    { name: 'WasteWise Store' }
-  )
+    { name: 'WasteWise Store' },
+  ),
 );
 
 export default useStore;

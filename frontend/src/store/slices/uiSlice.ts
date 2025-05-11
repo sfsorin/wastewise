@@ -1,5 +1,5 @@
 import { type StateCreator } from 'zustand';
-import { StoreState } from '..';
+import { type StoreState } from '../types';
 
 // Define notification type
 export interface Notification {
@@ -16,7 +16,7 @@ export interface UiSlice {
   // State
   sidebarOpen: boolean;
   notifications: Notification[];
-  
+
   // Actions
   toggleSidebar: () => void;
   setSidebarOpen: (isOpen: boolean) => void;
@@ -33,28 +33,28 @@ export const createUiSlice: StateCreator<
   [['zustand/immer', never]],
   [],
   UiSlice
-> = (set) => ({
+> = set => ({
   // Initial state
   sidebarOpen: false,
   notifications: [],
-  
+
   // Actions
   toggleSidebar: () => {
-    set((state) => {
+    set(state => {
       state.sidebarOpen = !state.sidebarOpen;
     });
   },
-  
+
   setSidebarOpen: (isOpen: boolean) => {
-    set((state) => {
+    set(state => {
       state.sidebarOpen = isOpen;
     });
   },
-  
+
   addNotification: (notification: Omit<Notification, 'id'>) => {
     const id = Math.random().toString(36).substring(2, 9);
-    
-    set((state) => {
+
+    set(state => {
       state.notifications.push({
         ...notification,
         id,
@@ -62,26 +62,26 @@ export const createUiSlice: StateCreator<
         duration: notification.duration ?? 5000,
       });
     });
-    
+
     // Auto-close notification if enabled
     if (notification.autoClose !== false) {
       const duration = notification.duration ?? 5000;
       setTimeout(() => {
-        set((state) => {
-          state.notifications = state.notifications.filter((n) => n.id !== id);
+        set(state => {
+          state.notifications = state.notifications.filter(n => n.id !== id);
         });
       }, duration);
     }
   },
-  
+
   removeNotification: (id: string) => {
-    set((state) => {
-      state.notifications = state.notifications.filter((n) => n.id !== id);
+    set(state => {
+      state.notifications = state.notifications.filter(n => n.id !== id);
     });
   },
-  
+
   clearNotifications: () => {
-    set((state) => {
+    set(state => {
       state.notifications = [];
     });
   },

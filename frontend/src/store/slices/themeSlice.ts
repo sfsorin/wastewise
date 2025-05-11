@@ -1,11 +1,11 @@
 import { type StateCreator } from 'zustand';
-import { StoreState } from '..';
+import { type StoreState } from '../types';
 
 // Define the theme slice state and actions
 export interface ThemeSlice {
   // State
   darkMode: boolean;
-  
+
   // Actions
   toggleDarkMode: () => void;
   setDarkMode: (isDark: boolean) => void;
@@ -19,34 +19,22 @@ export const createThemeSlice: StateCreator<
   [['zustand/immer', never]],
   [],
   ThemeSlice
-> = (set) => ({
-  // Initial state - check system preference
-  darkMode: window.matchMedia('(prefers-color-scheme: dark)').matches,
-  
+> = set => ({
+  // Initial state - va fi suprascris de ThemeProvider
+  darkMode: false,
+
   // Actions
   toggleDarkMode: () => {
-    set((state) => {
+    set(state => {
       state.darkMode = !state.darkMode;
-      
-      // Update document class for Tailwind dark mode
-      if (state.darkMode) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
+      // Nu mai aplicăm tema aici, este gestionată de useThemeEffect
     });
   },
-  
+
   setDarkMode: (isDark: boolean) => {
-    set((state) => {
+    set(state => {
       state.darkMode = isDark;
-      
-      // Update document class for Tailwind dark mode
-      if (isDark) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
+      // Nu mai aplicăm tema aici, este gestionată de useThemeEffect
     });
   },
 });

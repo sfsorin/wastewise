@@ -1,5 +1,5 @@
 import { type StateCreator } from 'zustand';
-import { StoreState } from '..';
+import { type StoreState } from '../types';
 
 // Define waste collection type
 export interface WasteCollection {
@@ -19,7 +19,7 @@ export interface WasteSlice {
   collections: WasteCollection[];
   loading: boolean;
   error: string | null;
-  
+
   // Actions
   fetchCollections: () => Promise<void>;
   addCollection: (collection: Omit<WasteCollection, 'id'>) => Promise<string | null>;
@@ -41,18 +41,18 @@ export const createWasteSlice: StateCreator<
   collections: [],
   loading: false,
   error: null,
-  
+
   // Actions
   fetchCollections: async () => {
     try {
-      set((state) => {
+      set(state => {
         state.loading = true;
         state.error = null;
       });
-      
+
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
       // Mock collections data
       const mockCollections: WasteCollection[] = [
         {
@@ -95,62 +95,62 @@ export const createWasteSlice: StateCreator<
           userId: '1',
         },
       ];
-      
-      set((state) => {
+
+      set(state => {
         state.collections = mockCollections;
         state.loading = false;
       });
     } catch (error) {
-      set((state) => {
+      set(state => {
         state.error = 'Eroare la încărcarea colectărilor';
         state.loading = false;
       });
     }
   },
-  
+
   addCollection: async (collection: Omit<WasteCollection, 'id'>) => {
     try {
-      set((state) => {
+      set(state => {
         state.loading = true;
         state.error = null;
       });
-      
+
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
       // Generate a random ID
       const id = Math.random().toString(36).substring(2, 9);
-      
-      set((state) => {
+
+      set(state => {
         state.collections.push({
           ...collection,
           id,
         });
         state.loading = false;
       });
-      
+
       return id;
     } catch (error) {
-      set((state) => {
+      set(state => {
         state.error = 'Eroare la adăugarea colectării';
         state.loading = false;
       });
       return null;
     }
   },
-  
+
   updateCollection: async (id: string, updates: Partial<WasteCollection>) => {
     try {
-      set((state) => {
+      set(state => {
         state.loading = true;
         state.error = null;
       });
-      
+
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
-      set((state) => {
-        const index = state.collections.findIndex((c) => c.id === id);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      set(state => {
+        const index = state.collections.findIndex(c => c.id === id);
         if (index !== -1) {
           state.collections[index] = {
             ...state.collections[index],
@@ -159,43 +159,43 @@ export const createWasteSlice: StateCreator<
         }
         state.loading = false;
       });
-      
+
       return true;
     } catch (error) {
-      set((state) => {
+      set(state => {
         state.error = 'Eroare la actualizarea colectării';
         state.loading = false;
       });
       return false;
     }
   },
-  
+
   deleteCollection: async (id: string) => {
     try {
-      set((state) => {
+      set(state => {
         state.loading = true;
         state.error = null;
       });
-      
+
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
-      set((state) => {
-        state.collections = state.collections.filter((c) => c.id !== id);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      set(state => {
+        state.collections = state.collections.filter(c => c.id !== id);
         state.loading = false;
       });
-      
+
       return true;
     } catch (error) {
-      set((state) => {
+      set(state => {
         state.error = 'Eroare la ștergerea colectării';
         state.loading = false;
       });
       return false;
     }
   },
-  
+
   getCollectionById: (id: string) => {
-    return get().collections.find((c) => c.id === id);
+    return get().collections.find(c => c.id === id);
   },
 });

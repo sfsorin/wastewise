@@ -1,5 +1,5 @@
 import { type StateCreator } from 'zustand';
-import { StoreState } from '..';
+import { type StoreState } from '../types';
 
 // Define the auth slice state and actions
 export interface AuthSlice {
@@ -35,19 +35,19 @@ export const createAuthSlice: StateCreator<
   // Actions
   login: async (email: string, password: string) => {
     try {
-      set((state) => {
+      set(state => {
         state.loading = true;
         state.error = null;
       });
 
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       // In a real app, this would be an API call to authenticate
       if (email === 'demo@example.com' && password === 'password') {
         const token = 'fake-jwt-token';
 
-        set((state) => {
+        set(state => {
           state.isAuthenticated = true;
           state.token = token;
           state.loading = false;
@@ -58,14 +58,14 @@ export const createAuthSlice: StateCreator<
 
         return true;
       } else {
-        set((state) => {
+        set(state => {
           state.error = 'Credențiale invalide';
           state.loading = false;
         });
         return false;
       }
     } catch (error) {
-      set((state) => {
+      set(state => {
         state.error = 'Eroare la autentificare';
         state.loading = false;
       });
@@ -75,18 +75,18 @@ export const createAuthSlice: StateCreator<
 
   register: async (name: string, email: string, password: string) => {
     try {
-      set((state) => {
+      set(state => {
         state.loading = true;
         state.error = null;
       });
 
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       // In a real app, this would be an API call to register
       const token = 'fake-jwt-token';
 
-      set((state) => {
+      set(state => {
         state.isAuthenticated = true;
         state.token = token;
         state.loading = false;
@@ -102,7 +102,7 @@ export const createAuthSlice: StateCreator<
 
       return true;
     } catch (error) {
-      set((state) => {
+      set(state => {
         state.error = 'Eroare la înregistrare';
         state.loading = false;
       });
@@ -111,7 +111,7 @@ export const createAuthSlice: StateCreator<
   },
 
   logout: () => {
-    set((state) => {
+    set(state => {
       state.isAuthenticated = false;
       state.token = null;
       state.error = null;
@@ -123,21 +123,21 @@ export const createAuthSlice: StateCreator<
 
   resetPassword: async (email: string) => {
     try {
-      set((state) => {
+      set(state => {
         state.loading = true;
         state.error = null;
       });
 
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-      set((state) => {
+      set(state => {
         state.loading = false;
       });
 
       return true;
     } catch (error) {
-      set((state) => {
+      set(state => {
         state.error = 'Eroare la resetarea parolei';
         state.loading = false;
       });
@@ -146,7 +146,7 @@ export const createAuthSlice: StateCreator<
   },
 
   clearAuthError: () => {
-    set((state) => {
+    set(state => {
       state.error = null;
     });
   },
