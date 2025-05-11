@@ -1,7 +1,10 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# Adăugați aici comenzile de linting pentru backend și frontend
-# De exemplu:
-# cd backend && npm run lint
-# cd frontend && npm run lint
+# Executare linting pentru backend
+echo "🔍 Verificare linting pentru backend..."
+cd backend && npm run lint
+
+# Executare linting pentru frontend
+echo "🔍 Verificare linting pentru frontend..."
+cd ../frontend && npm run lint

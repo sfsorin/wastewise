@@ -48,11 +48,13 @@
 
 ### 1.1.5 Documentare workflow Git în README.md 🟢 (1 zi) ✅
 
-- [x] Documentare structură branch-uri (GitFlow)
+- [x] Documentare structură branch-uri (Strategie de branching pe faze)
 - [x] Documentare proces de creare branch-uri
 - [x] Documentare proces de creare pull requests
 - [x] Documentare convenții de commit
 - [x] Documentare proces de review și merge
+- [x] Creare document detaliat cu strategia de branching (BRANCHING-STRATEGY.md)
+- [x] Creare document cu instrucțiuni Git pentru echipă (GIT-INSTRUCTIONS.md)
 
 ## 1.2 Setup Proiect Backend (NestJS) (4.5 zile)
 
@@ -106,61 +108,66 @@
 
 ## 1.3 Setup Proiect Frontend (React + Vite) (4.5 zile)
 
-### 1.3.1 Inițializare proiect React cu Vite 🟢 (0.5 zile)
+### 1.3.1 Inițializare proiect React cu Vite 🟢 (0.5 zile) ✅
 
-- [ ] Instalare Vite
-- [ ] Creare proiect React + TypeScript
-- [ ] Configurare structură de directoare
-- [ ] Configurare package.json cu script-uri necesare
+- [x] Instalare Vite
+- [x] Creare proiect React + TypeScript
+- [x] Configurare structură de directoare
+- [x] Configurare package.json cu script-uri necesare
 
-### 1.3.2 Configurare TypeScript și tsconfig.json 🟢 (0.5 zile)
+### 1.3.2 Configurare TypeScript și tsconfig.json 🟢 (0.5 zile) ✅
 
-- [ ] Configurare tsconfig.json pentru:
-  - [ ] Target ES2020 sau mai recent
-  - [ ] Module ESNext
-  - [ ] Strict type checking
-  - [ ] Path aliases
-  - [ ] React JSX
+- [x] Configurare tsconfig.json pentru:
+  - [x] Target ES2020 sau mai recent
+  - [x] Module ESNext
+  - [x] Strict type checking
+  - [x] Path aliases
+  - [x] React JSX
 
-### 1.3.3 Configurare ESLint și Prettier 🟢 (0.5 zile)
+### 1.3.3 Configurare ESLint și Prettier 🟢 (0.5 zile) ✅
 
-- [ ] Instalare și configurare ESLint
-- [ ] Instalare și configurare Prettier
-- [ ] Configurare reguli ESLint specifice pentru React
-- [ ] Configurare integrare ESLint-Prettier
-- [ ] Adăugare script-uri pentru linting și formatare
+- [x] Instalare și configurare ESLint
+- [x] Instalare și configurare Prettier
+- [x] Configurare reguli ESLint specifice pentru React
+- [x] Configurare integrare ESLint-Prettier
+- [x] Adăugare script-uri pentru linting și formatare
 
-### 1.3.4 Configurare Jest și React Testing Library 🟡 (1 zi)
+### 1.3.4 Configurare Jest și React Testing Library 🟡 (1 zi) ✅
 
-- [ ] Configurare Jest pentru TypeScript
-- [ ] Configurare React Testing Library
-- [ ] Creare fișiere de test de exemplu
-- [ ] Configurare coverage reporting
-- [ ] Adăugare script-uri pentru rulare teste
+- [x] Configurare Vitest pentru TypeScript (alternativă modernă la Jest)
+- [x] Configurare React Testing Library
+- [x] Creare fișiere de test de exemplu
+  - [x] Test pentru componente (Button)
+  - [x] Test pentru hooks (useLocalStorage)
+  - [x] Test pentru utilitare (formatters)
+- [x] Configurare coverage reporting
+- [x] Adăugare script-uri pentru rulare teste
 
-### 1.3.5 Configurare Tailwind CSS 🟢 (0.5 zile)
+### 1.3.5 Configurare Tailwind CSS 🟢 (0.5 zile) ✅
 
-- [ ] Instalare Tailwind CSS
-- [ ] Configurare tailwind.config.js
-- [ ] Configurare PostCSS
-- [ ] Creare fișier CSS de bază
-- [ ] Testare funcționalitate Tailwind
+- [x] Instalare Tailwind CSS
+- [x] Configurare tailwind.config.js cu suport pentru dark mode și container queries
+- [x] Configurare PostCSS cu nesting și optimizări pentru producție
+- [x] Creare fișier CSS de bază cu variabile CSS și utilități personalizate
+- [x] Creare componente de bază cu Tailwind (Button, Card, ThemeToggle, ResponsiveContainer)
+- [x] Testare funcționalitate Tailwind
 
-### 1.3.6 Configurare React Router 🟢 (0.5 zile)
+### 1.3.6 Configurare React Router 🟢 (0.5 zile) ✅
 
-- [ ] Instalare React Router
-- [ ] Configurare router de bază
-- [ ] Creare componente pentru pagini de exemplu
-- [ ] Configurare rute protejate
-- [ ] Testare navigare
+- [x] Instalare React Router
+- [x] Configurare router de bază
+- [x] Creare componente pentru pagini de exemplu
+- [x] Configurare rute protejate
+- [x] Testare navigare
 
-### 1.3.7 Configurare Zustand pentru state management 🟡 (1 zi)
+### 1.3.7 Configurare Zustand pentru state management 🟡 (1 zi) ✅
 
-- [ ] Instalare Zustand
-- [ ] Configurare store de bază
-- [ ] Creare store-uri pentru funcționalități comune
-- [ ] Configurare middleware (persist, devtools)
-- [ ] Testare funcționalitate state management
+- [x] Instalare Zustand
+- [x] Configurare store de bază
+- [x] Creare store-uri pentru funcționalități comune (auth, theme, user, waste, ui)
+- [x] Configurare middleware (persist, devtools, immer)
+- [x] Testare funcționalitate state management
+- [x] Implementare hook personalizat pentru gestionarea temei
 
 ## 1.4 Configurare Bază de Date (3 zile)
 

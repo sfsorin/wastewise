@@ -55,13 +55,32 @@ npm run preview
 
 ## Teste
 
+Proiectul folosește Vitest și React Testing Library pentru testare.
+
 ```bash
-# Rulare teste
+# Rulare toate testele o singură dată
 npm run test
 
-# Rulare teste cu watch
+# Rulare teste în mod watch (pentru dezvoltare)
 npm run test:watch
 
-# Acoperire cod
+# Rulare teste cu interfață UI
+npm run test:ui
+
+# Generare raport de acoperire cod
 npm run test:coverage
 ```
+
+### Structura testelor
+
+- Testele sunt localizate lângă fișierele pe care le testează cu extensia `.test.tsx` sau `.test.ts`
+- Fișierele de configurare pentru teste:
+  - `vitest.config.ts` - Configurare Vitest
+  - `src/test/setup.ts` - Setup global pentru teste
+  - `src/__mocks__/` - Mock-uri pentru fișiere statice
+
+### Exemple de teste
+
+- Componente: `src/components/common/Button/Button.test.tsx`
+- Hooks: `src/hooks/useLocalStorage.test.ts`
+- Utilitare: `src/utils/formatters.test.ts`

@@ -125,14 +125,15 @@ wastewise/
 
 ## Workflow Git
 
-### Structură Branch-uri (GitFlow)
+### Structură Branch-uri
 
 - `main`: Branch-ul principal pentru versiuni stabile
 - `develop`: Branch-ul de dezvoltare
-- `feature/*`: Branch-uri pentru funcționalități noi
-- `bugfix/*`: Branch-uri pentru rezolvarea bug-urilor
-- `release/*`: Branch-uri pentru pregătirea versiunilor
-- `hotfix/*`: Branch-uri pentru rezolvarea urgentă a bug-urilor în producție
+- `faza/X.Y-nume-faza`: Branch-uri pentru faze majore (ex: `faza/1.3-setup-frontend`)
+- `faza/X.Y.Z-nume-subfaza`: Branch-uri pentru subfaze (ex: `faza/1.3.4-testing-config`)
+- `fix/*`: Branch-uri pentru rezolvarea bug-urilor
+
+Pentru detalii complete, consultați [Strategia de Branching](docs/BRANCHING-STRATEGY.md).
 
 ### Proces de Creare Branch-uri
 
@@ -143,13 +144,20 @@ wastewise/
    git pull origin develop
    ```
 
-2. Creează un branch nou:
+2. Creează un branch nou pentru o fază:
 
    ```
-   git checkout -b feature/nume-functionalitate
+   git checkout -b faza/1.5-autentificare
    ```
 
-3. Lucrează pe branch-ul tău și fă commit-uri regulate.
+3. Sau pentru o subfază:
+
+   ```
+   git checkout faza/1.5-autentificare
+   git checkout -b faza/1.5.1-login-form
+   ```
+
+4. Lucrează pe branch-ul tău și fă commit-uri regulate.
 
 ### Proces de Creare Pull Requests
 
