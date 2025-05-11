@@ -1,6 +1,6 @@
-# Scripturi SQL pentru Baza de Date WasteWise
+# Scripturi pentru Baza de Date WasteWise
 
-Acest director conține scripturi SQL utilizate pentru configurarea și gestionarea bazei de date PostgreSQL pentru aplicația WasteWise.
+Acest director conține scripturi utilizate pentru configurarea, gestionarea și backup-ul bazei de date PostgreSQL pentru aplicația WasteWise.
 
 ## Scripturi Disponibile
 
@@ -60,8 +60,52 @@ Pentru a reveni la starea anterioară:
 npm run migration:revert
 ```
 
+### `backup-database.sh`
+
+Acest script realizează backup-ul bazei de date `wastewise` și îl salvează într-un director configurat.
+
+**Utilizare:**
+
+```bash
+./backup-database.sh
+```
+
+**Notă:** Scriptul comprimă backup-ul și implementează o politică de retenție pentru a șterge backup-urile vechi.
+
+### `restore-database.sh`
+
+Acest script restaurează baza de date `wastewise` din cel mai recent backup sau dintr-un backup specificat.
+
+**Utilizare:**
+
+```bash
+# Restaurare din cel mai recent backup
+./restore-database.sh
+
+# Restaurare dintr-un backup specific
+./restore-database.sh wastewise_20230101_120000.dump.gz
+```
+
+### `setup-backup-cron.sh`
+
+Acest script configurează un cron job pentru backup automat al bazei de date.
+
+**Utilizare:**
+
+```bash
+./setup-backup-cron.sh
+```
+
+**Notă:** Implicit, backup-ul este programat să ruleze zilnic la ora 2:00 AM.
+
+## Backup și Restore
+
+Pentru informații detaliate despre procesul de backup și restore, consultați documentul [backup-restore-postgresql.md](../../../docs/backup-restore-postgresql.md) din directorul `docs`.
+
 ## Note Importante
 
 - Scripturile trebuie rulate ca utilizator `postgres` sau alt utilizator cu drepturi de superuser
 - Parola utilizatorului aplicației (`wastewise_app`) este setată la `app_password_secure` și ar trebui schimbată în mediul de producție
 - În mediul de producție, se recomandă utilizarea utilizatorului `wastewise_app` în loc de `postgres` pentru conexiunea aplicației la baza de date
+- Backup-urile ar trebui stocate pe un sistem de stocare separat sau în cloud în mediul de producție
+- Testați periodic procesul de restore pentru a vă asigura că backup-urile sunt funcționale

@@ -185,12 +185,12 @@
 - [x] Configurare permisiuni
 - [x] Creare scheme pentru diferite module
 
-### 1.4.3 Configurare backup automat 🟡 (1 zi)
+### 1.4.3 Configurare backup automat 🟡 (1 zi) ✅
 
-- [ ] Configurare script de backup
-- [ ] Configurare cron job pentru backup automat
-- [ ] Configurare retenție backup-uri
-- [ ] Testare proces de backup și restore
+- [x] Configurare script de backup
+- [x] Configurare cron job pentru backup automat
+- [x] Configurare retenție backup-uri
+- [x] Testare proces de backup și restore
 
 ### 1.4.4 Creare script-uri de migrare inițiale 🟡 (1 zi)
 
