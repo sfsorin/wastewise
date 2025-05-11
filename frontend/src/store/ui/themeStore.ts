@@ -15,37 +15,21 @@ interface ThemeState {
  */
 export const useThemeStore = create<ThemeState>()(
   persist(
-    (set) => ({
+    set => ({
       isDarkMode: false,
 
       toggleTheme: () => {
-        set((state) => {
-          const newDarkMode = !state.isDarkMode;
-          
-          // Aplicăm tema la nivel de document
-          if (newDarkMode) {
-            document.documentElement.classList.add('dark');
-          } else {
-            document.documentElement.classList.remove('dark');
-          }
-          
-          return { isDarkMode: newDarkMode };
-        });
+        set(state => ({
+          isDarkMode: !state.isDarkMode,
+        }));
       },
 
-      setDarkMode: (isDark) => {
+      setDarkMode: isDark => {
         set({ isDarkMode: isDark });
-        
-        // Aplicăm tema la nivel de document
-        if (isDark) {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-        }
       },
     }),
     {
       name: 'theme-storage', // Numele pentru localStorage
-    }
-  )
+    },
+  ),
 );

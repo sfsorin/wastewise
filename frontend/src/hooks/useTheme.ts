@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useThemeStore } from '../store';
 import { useUserStore } from '../store';
 
@@ -9,28 +9,44 @@ import { useUserStore } from '../store';
 export const useTheme = () => {
   const { isDarkMode, toggleTheme, setDarkMode } = useThemeStore();
   const { preferences, setTheme } = useUserStore();
+  const isInitialized = useRef(false);
 
-  // Efect pentru a sincroniza tema cu preferințele utilizatorului și tema sistemului
+  // Efect pentru inițializarea temei
   useEffect(() => {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    // Setăm tema în funcție de preferințele utilizatorului
-    if (preferences.theme === 'system') {
-      setDarkMode(prefersDark);
+    if (isInitialized.current) return;
+
+    // Verifică dacă există o temă salvată în localStorage
+    const savedTheme = localStorage.getItem('theme');
+
+    if (savedTheme) {
+      // Aplică tema salvată
+      if (savedTheme === 'dark' && !isDarkMode) {
+        setDarkMode(true);
+      } else if (savedTheme === 'light' && isDarkMode) {
+        setDarkMode(false);
+      }
     } else {
-      setDarkMode(preferences.theme === 'dark');
+      // Dacă nu există o temă salvată, folosește preferința sistemului
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (prefersDark !== isDarkMode) {
+        setDarkMode(prefersDark);
+      }
     }
-    
-    // Adăugăm un listener pentru schimbările de temă ale sistemului
+
+    isInitialized.current = true;
+  }, [isDarkMode, setDarkMode]);
+
+  // Adăugăm un listener pentru schimbările de temă ale sistemului
+  useEffect(() => {
+    if (preferences.theme !== 'system') return;
+
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = (e: MediaQueryListEvent) => {
-      if (preferences.theme === 'system') {
-        setDarkMode(e.matches);
-      }
+      setDarkMode(e.matches);
     };
-    
+
     mediaQuery.addEventListener('change', handleChange);
-    
+
     return () => {
       mediaQuery.removeEventListener('change', handleChange);
     };
@@ -38,8 +54,11 @@ export const useTheme = () => {
 
   // Funcție pentru a schimba tema
   const changeTheme = (theme: 'light' | 'dark' | 'system') => {
+    // Evităm actualizări inutile
+    if (theme === preferences.theme) return;
+
     setTheme(theme);
-    
+
     if (theme === 'system') {
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       setDarkMode(prefersDark);
