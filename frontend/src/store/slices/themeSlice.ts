@@ -1,5 +1,5 @@
 import { type StateCreator } from 'zustand';
-import { type StoreState } from '../types';
+import { type StoreState } from '..';
 
 // Define the theme slice state and actions
 export interface ThemeSlice {

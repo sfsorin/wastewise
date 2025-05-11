@@ -9,11 +9,15 @@ import { createUserSlice } from './slices/userSlice';
 import { createWasteSlice } from './slices/wasteSlice';
 import { createUiSlice } from './slices/uiSlice';
 
-// Import store type
-import type { StoreState } from './types';
+// Define the store type
+import type { AuthSlice } from './slices/authSlice';
+import type { ThemeSlice } from './slices/themeSlice';
+import type { UserSlice } from './slices/userSlice';
+import type { WasteSlice } from './slices/wasteSlice';
+import type { UiSlice } from './slices/uiSlice';
 
-// Re-export StoreState type
-export type { StoreState };
+// Define the store type
+export type StoreState = AuthSlice & ThemeSlice & UserSlice & WasteSlice & UiSlice;
 
 /**
  * Create the store with all slices
