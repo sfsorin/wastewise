@@ -178,12 +178,12 @@
 - [x] Configurare acces și securitate
 - [x] Testare conexiune
 
-### 1.4.2 Creare scheme și utilizatori 🟢 (0.5 zile)
+### 1.4.2 Creare scheme și utilizatori 🟢 (0.5 zile) ✅
 
-- [ ] Creare utilizator pentru aplicație
-- [ ] Creare bază de date pentru aplicație
-- [ ] Configurare permisiuni
-- [ ] Creare scheme pentru diferite module
+- [x] Creare utilizator pentru aplicație
+- [x] Creare bază de date pentru aplicație
+- [x] Configurare permisiuni
+- [x] Creare scheme pentru diferite module
 
 ### 1.4.3 Configurare backup automat 🟡 (1 zi)
 

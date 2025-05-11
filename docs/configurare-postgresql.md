@@ -20,7 +20,20 @@ Baza de date este gestionată prin pgAdmin cu următoarele credențiale:
 
 ## Creare Bază de Date
 
-Pentru a crea baza de date `wastewise`, urmați acești pași:
+Baza de date poate fi creată în mai multe moduri:
+
+### Utilizând scriptul SQL
+
+Cel mai simplu mod este să utilizați scriptul SQL furnizat:
+
+```bash
+cd backend
+psql -h 10.10.10.116 -U postgres -f src/database/scripts/create-database.sql
+```
+
+### Utilizând pgAdmin
+
+Pentru a crea baza de date `wastewise` prin pgAdmin, urmați acești pași:
 
 1. Conectați-vă la pgAdmin folosind credențialele de mai sus
 2. Faceți click dreapta pe "Servers" și selectați "Create" > "Server..."
@@ -35,6 +48,8 @@ Pentru a crea baza de date `wastewise`, urmați acești pași:
 6. Faceți click dreapta pe noul server > "Databases" și selectați "Create" > "Database..."
 7. Introduceți numele bazei de date: `wastewise`
 8. Faceți click pe "Save"
+
+### Utilizând linia de comandă
 
 Alternativ, puteți crea baza de date folosind linia de comandă (dacă aveți psql instalat):
 
@@ -61,8 +76,37 @@ DB_DATABASE=wastewise
 Baza de date `wastewise` conține următoarele scheme:
 
 - **public**: Schema principală pentru tabelele aplicației
-- **audit**: Schema pentru loguri de audit
-- **geo**: Schema pentru date geografice
+- **audit**: Schema pentru loguri de audit și istoricul modificărilor
+- **geo**: Schema pentru date geografice (județe, localități, UAT-uri)
+
+### Utilizatori și Permisiuni
+
+Aplicația folosește următorii utilizatori:
+
+- **postgres**: Utilizator administrator (superuser) pentru administrarea bazei de date
+- **wastewise_app**: Utilizator cu drepturi limitate pentru aplicație
+
+Utilizatorul `wastewise_app` are următoarele permisiuni:
+
+- **Schema public**: SELECT, INSERT, UPDATE, DELETE pe tabele
+- **Schema audit**: SELECT, INSERT pe tabele
+- **Schema geo**: SELECT pe tabele
+- Permisiuni USAGE și SELECT pe secvențe în toate schemele
+
+### Crearea Schemelor și Utilizatorilor
+
+Schemele și utilizatorii sunt create automat prin migrarea `CreateSchemasAndUsers`. Pentru a rula manual această migrare:
+
+```bash
+cd backend
+npm run migration:run
+```
+
+Alternativ, puteți executa direct scriptul SQL:
+
+```bash
+psql -h 10.10.10.116 -U postgres -d wastewise -f backend/src/database/scripts/create-schemas-users.sql
+```
 
 ## Backup și Restore
 
