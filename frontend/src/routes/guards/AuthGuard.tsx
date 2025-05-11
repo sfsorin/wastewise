@@ -1,25 +1,7 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-
-// Acest hook va fi înlocuit cu un hook real de autentificare
-const useAuth = () => {
-  // Simulăm verificarea autentificării
-  // În implementarea reală, acest hook ar verifica token-ul JWT sau sesiunea
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  
-  useEffect(() => {
-    // Simulăm un apel asincron pentru verificarea autentificării
-    const checkAuth = async () => {
-      // În implementarea reală, aici ar fi un apel către API sau verificarea token-ului
-      const token = localStorage.getItem('auth_token');
-      setIsAuthenticated(!!token);
-    };
-    
-    checkAuth();
-  }, []);
-  
-  return { isAuthenticated };
-};
+import { useAuthStore } from '../../store';
+import LoadingSpinner from '../../components/common/LoadingSpinner/LoadingSpinner';
 
 interface AuthGuardProps {
   children: ReactNode;
@@ -28,25 +10,31 @@ interface AuthGuardProps {
 /**
  * Componenta AuthGuard protejează rutele care necesită autentificare
  * Redirecționează utilizatorul către pagina de login dacă nu este autentificat
+ * Folosește Zustand pentru gestionarea stării de autentificare
  */
 const AuthGuard = ({ children }: AuthGuardProps) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading, checkAuth } = useAuthStore();
   const location = useLocation();
-  
+
+  // Verificăm autentificarea la încărcarea componentei
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
   // Afișăm un indicator de încărcare în timp ce verificăm autentificarea
-  if (isAuthenticated === null) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
+        <LoadingSpinner size="lg" />
       </div>
     );
   }
-  
+
   // Redirecționăm către pagina de login dacă utilizatorul nu este autentificat
   if (!isAuthenticated) {
     return <Navigate to="/auth/login" state={{ from: location }} replace />;
   }
-  
+
   // Afișăm conținutul protejat dacă utilizatorul este autentificat
   return <>{children}</>;
 };

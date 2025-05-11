@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useThemeStore } from '../../../store';
 
 interface ThemeToggleProps {
   /**
@@ -9,48 +10,28 @@ interface ThemeToggleProps {
 
 /**
  * Componenta ThemeToggle pentru comutarea între modurile light și dark
+ * Folosește Zustand pentru gestionarea stării temei
  */
 export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '' }) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { isDarkMode, toggleTheme, setDarkMode } = useThemeStore();
 
   // Verifică tema la încărcarea componentei
   useEffect(() => {
-    // Verifică preferința salvată în localStorage
-    const savedTheme = localStorage.getItem('theme');
-
     // Verifică preferința sistemului
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-    // Setează tema inițială
-    const initialDarkMode = savedTheme === 'dark' || (!savedTheme && prefersDark);
-    setIsDarkMode(initialDarkMode);
+    // Setează tema inițială dacă nu există deja în store
+    if (isDarkMode === undefined) {
+      setDarkMode(prefersDark);
+    }
 
     // Aplică tema inițială
-    if (initialDarkMode) {
+    if (isDarkMode) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
-  }, []);
-
-  // Comută tema
-  const toggleTheme = () => {
-    setIsDarkMode(prev => {
-      const newDarkMode = !prev;
-
-      // Salvează preferința în localStorage
-      localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');
-
-      // Aplică tema
-      if (newDarkMode) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-
-      return newDarkMode;
-    });
-  };
+  }, [isDarkMode, setDarkMode]);
 
   return (
     <button
