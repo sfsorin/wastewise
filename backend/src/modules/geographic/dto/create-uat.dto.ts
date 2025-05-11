@@ -1,0 +1,54 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsString, IsOptional, Length, IsUUID, IsNumber, Min } from 'class-validator';
+import { Type } from 'class-transformer';
+
+export class CreateUATDto {
+  @ApiProperty({
+    description: 'Numele UAT-ului',
+    example: 'Alba Iulia',
+  })
+  @IsNotEmpty({ message: 'Numele UAT-ului este obligatoriu' })
+  @IsString({ message: 'Numele UAT-ului trebuie să fie un șir de caractere' })
+  @Length(2, 100, { message: 'Numele UAT-ului trebuie să aibă între 2 și 100 de caractere' })
+  nume: string;
+
+  @ApiProperty({
+    description: 'ID-ul județului',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @IsNotEmpty({ message: 'ID-ul județului este obligatoriu' })
+  @IsUUID('4', { message: 'ID-ul județului trebuie să fie un UUID valid' })
+  judetId: string;
+
+  @ApiProperty({
+    description: 'Codul SIRUTA al UAT-ului',
+    example: '1001',
+    required: false,
+  })
+  @IsOptional()
+  @IsString({ message: 'Codul SIRUTA trebuie să fie un șir de caractere' })
+  @Length(1, 10, { message: 'Codul SIRUTA trebuie să aibă între 1 și 10 caractere' })
+  codSiruta?: string;
+
+  @ApiProperty({
+    description: 'Populația UAT-ului',
+    example: 74000,
+    required: false,
+  })
+  @IsOptional()
+  @IsNumber({}, { message: 'Populația trebuie să fie un număr' })
+  @Min(0, { message: 'Populația trebuie să fie un număr pozitiv' })
+  @Type(() => Number)
+  populatie?: number;
+
+  @ApiProperty({
+    description: 'Suprafața UAT-ului (km²)',
+    example: 103.65,
+    required: false,
+  })
+  @IsOptional()
+  @IsNumber({}, { message: 'Suprafața trebuie să fie un număr' })
+  @Min(0, { message: 'Suprafața trebuie să fie un număr pozitiv' })
+  @Type(() => Number)
+  suprafata?: number;
+}
