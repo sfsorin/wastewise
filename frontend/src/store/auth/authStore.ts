@@ -1,47 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
-// Definim tipurile direct în fișier pentru a evita probleme de import
-/**
- * Tipul pentru utilizator
- */
-export interface User {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  role: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-/**
- * Tipul pentru datele de înregistrare
- */
-export interface RegisterData {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-}
-
-/**
- * Tipul pentru starea de autentificare
- */
-export interface AuthState {
-  user: User | null;
-  token: string | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  error: string | null;
-
-  // Acțiuni
-  login: (email: string, password: string) => Promise<void>;
-  register: (userData: RegisterData) => Promise<void>;
-  logout: () => void;
-  checkAuth: () => Promise<void>;
-  clearError: () => void;
-}
+import type { User, RegisterData, AuthState } from '../../types/auth.types';
 
 /**
  * Serviciu pentru autentificare (simulat)

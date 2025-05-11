@@ -3,8 +3,11 @@
  */
 
 // Store-uri principale
-export { useAuthStore, User, AuthState, RegisterData } from './auth/authStore';
+export { useAuthStore } from './auth/authStore';
 export { useThemeStore } from './ui/themeStore';
 
 // Slice-uri
 export { useUserStore } from './slices/userSlice';
+
+// Export tipuri
+export type { User, RegisterData, AuthState } from '../types/auth.types';
