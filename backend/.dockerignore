@@ -1,0 +1,33 @@
+# Fișiere și directoare care nu trebuie incluse în container
+
+# Dependențe
+node_modules
+npm-debug.log
+
+# Fișiere de build
+dist
+build
+coverage
+
+# Fișiere de dezvoltare
+.git
+.github
+.vscode
+.idea
+*.md
+!README.md
+
+# Fișiere de configurare locale
+.env
+.env.*
+!.env.example
+
+# Alte fișiere
+.DS_Store
+Dockerfile*
+docker-compose*
+.dockerignore
+.gitignore
+.eslintrc
+.prettierrc
+jest.config.js

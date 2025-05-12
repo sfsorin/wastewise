@@ -1,0 +1,23 @@
+# Dockerfile pentru mediul de dezvoltare
+FROM node:22-alpine
+
+# Setăm directorul de lucru
+WORKDIR /app
+
+# Instalăm dependențele globale necesare
+RUN npm install -g @nestjs/cli
+
+# Copiem package.json și package-lock.json
+COPY package*.json ./
+
+# Instalăm dependențele
+RUN npm ci
+
+# Copiem restul codului sursă
+COPY . .
+
+# Expunem portul pe care rulează aplicația
+EXPOSE 3000
+
+# Comanda pentru rularea aplicației în modul de dezvoltare
+CMD ["npm", "run", "start:dev"]

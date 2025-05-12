@@ -202,13 +202,13 @@
 
 ## 1.5 Configurare Docker și Docker Compose (5.5 zile)
 
-### 1.5.1 Creare Dockerfile pentru backend 🟡 (1 zi)
+### 1.5.1 Creare Dockerfile pentru backend 🟡 (1 zi) ✅
 
-- [ ] Creare Dockerfile.dev pentru dezvoltare
-- [ ] Creare Dockerfile.prod pentru producție
-- [ ] Configurare multi-stage build
-- [ ] Optimizare imagine (dimensiune, securitate)
-- [ ] Testare build și rulare container
+- [x] Creare Dockerfile.dev pentru dezvoltare
+- [x] Creare Dockerfile.prod pentru producție
+- [x] Configurare multi-stage build
+- [x] Optimizare imagine (dimensiune, securitate)
+- [x] Testare build și rulare container
 
 ### 1.5.2 Creare Dockerfile pentru frontend 🟡 (1 zi)
 
