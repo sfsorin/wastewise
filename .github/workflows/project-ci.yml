@@ -1,0 +1,46 @@
+name: Project CI
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths-ignore:
+      - 'backend/**'
+      - 'frontend/**'
+      - 'docs/**'
+      - '**.md'
+  pull_request:
+    branches: [ main, develop ]
+    paths-ignore:
+      - 'backend/**'
+      - 'frontend/**'
+      - 'docs/**'
+      - '**.md'
+
+jobs:
+  validate:
+    name: Validate Project
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate docker-compose files
+        run: |
+          docker-compose -f docker-compose.yml config
+          docker-compose -f docker-compose.dev.yml config
+          docker-compose -f docker-compose.prod.yml config
+
+      - name: Validate project structure
+        run: |
+          # Verifică existența directoarelor principale
+          [ -d "backend" ] || exit 1
+          [ -d "frontend" ] || exit 1
+          [ -d "docs" ] || exit 1
+          
+          # Verifică existența fișierelor de configurare principale
+          [ -f "docker-compose.yml" ] || exit 1
+          [ -f ".gitignore" ] || exit 1
+          [ -f "README.md" ] || exit 1
+          
+          echo "Project structure validation passed"

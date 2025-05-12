@@ -260,13 +260,13 @@
 
 ## 1.6 Configurare CI/CD (GitHub Actions) (6 zile)
 
-### 1.6.1 Configurare workflow pentru linting și teste 🟡 (1 zi)
+### 1.6.1 Configurare workflow pentru linting și teste 🟡 (1 zi) ✅
 
-- [ ] Configurare workflow pentru backend
-- [ ] Configurare workflow pentru frontend
-- [ ] Configurare cache pentru dependențe
-- [ ] Configurare matrix pentru teste pe diferite versiuni
-- [ ] Testare workflow
+- [x] Configurare workflow pentru backend
+- [x] Configurare workflow pentru frontend
+- [x] Configurare cache pentru dependențe
+- [x] Configurare matrix pentru teste pe diferite versiuni
+- [x] Testare workflow
 
 ### 1.6.2 Configurare workflow pentru build 🟡 (1 zi)
 
