@@ -1,0 +1,162 @@
+name: Frontend Build
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend-build.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend-build.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: './frontend/package-lock.json'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create .env file
+        run: |
+          cp .env.example .env
+          echo "VITE_API_BASE_URL=http://localhost:3000/api/v1" >> .env
+          echo "VITE_NODE_ENV=production" >> .env
+
+      - name: Build application
+        run: npm run build:check
+
+      - name: Archive build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: |
+            frontend/dist
+            frontend/package.json
+            frontend/package-lock.json
+          retention-days: 7
+
+  docker:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name != 'pull_request'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-frontend-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-frontend-
+
+      - name: Extract metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: wastewise-frontend
+          tags: |
+            type=ref,event=branch
+            type=sha,format=short
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile.prod
+          push: false
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+          outputs: type=docker,dest=/tmp/frontend-image.tar
+
+      - name: Upload Docker image as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-docker-image
+          path: /tmp/frontend-image.tar
+          retention-days: 1
+
+      # Workaround pentru cache Docker
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+  validate:
+    name: Validate Build
+    runs-on: ubuntu-latest
+    needs: build
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-dist
+          path: ./frontend
+
+      - name: Validate build
+        run: |
+          if [ ! -d "dist" ]; then
+            echo "Build directory does not exist"
+            exit 1
+          fi
+          
+          if [ ! -f "dist/index.html" ]; then
+            echo "Index file does not exist"
+            exit 1
+          fi
+          
+          echo "Build validation successful"
+
+      - name: Setup Node.js for serving
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install serve
+        run: npm install -g serve
+
+      - name: Serve build
+        run: |
+          serve -s dist -l 8080 &
+          sleep 5
+          curl -s http://localhost:8080 > /dev/null
+          if [ $? -ne 0 ]; then
+            echo "Failed to serve build"
+            exit 1
+          fi
+          echo "Build served successfully"
+          pkill -f "serve -s dist"

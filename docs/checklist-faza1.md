@@ -260,34 +260,34 @@
 
 ## 1.6 Configurare CI/CD (GitHub Actions) (6 zile)
 
-### 1.6.1 Configurare workflow pentru linting și teste 🟡 (1 zi)
+### 1.6.1 Configurare workflow pentru linting și teste 🟡 (1 zi) ✅
 
-- [ ] Configurare workflow pentru backend
-- [ ] Configurare workflow pentru frontend
-- [ ] Configurare cache pentru dependențe
-- [ ] Configurare matrix pentru teste pe diferite versiuni
-- [ ] Testare workflow
+- [x] Configurare workflow pentru backend
+- [x] Configurare workflow pentru frontend
+- [x] Configurare cache pentru dependențe
+- [x] Configurare matrix pentru teste pe diferite versiuni
+- [x] Testare workflow
 
-### 1.6.2 Configurare workflow pentru build 🟡 (1 zi)
+### 1.6.2 Configurare workflow pentru build 🟡 (1 zi) ✅
 
-- [ ] Configurare workflow pentru build backend
-- [ ] Configurare workflow pentru build frontend
-- [ ] Configurare cache pentru build
-- [ ] Configurare artifact storage
-- [ ] Testare workflow
+- [x] Configurare workflow pentru build backend
+- [x] Configurare workflow pentru build frontend
+- [x] Configurare cache pentru build
+- [x] Configurare artifact storage
+- [x] Testare workflow
 
-### 1.6.3 Configurare workflow pentru deployment în staging 🔴 (2 zile)
+### 1.6.3 Configurare workflow pentru deployment în staging 🔴 (2 zile) ✅
 
-- [ ] Configurare secrets pentru staging
-- [ ] Configurare workflow pentru build și push imagini Docker
-- [ ] Configurare deployment în Kubernetes/server staging
-- [ ] Configurare verificări post-deployment
-- [ ] Testare workflow complet
+- [x] Configurare secrets pentru staging
+- [x] Configurare workflow pentru build și push imagini Docker
+- [x] Configurare deployment în Kubernetes/server staging
+- [x] Configurare verificări post-deployment
+- [x] Testare workflow complet
 
-### 1.6.4 Configurare workflow pentru deployment în producție 🔴 (2 zile)
+### 1.6.4 Configurare workflow pentru deployment în producție 🔴 (2 zile) ✅
 
-- [ ] Configurare secrets pentru producție
-- [ ] Configurare workflow cu aprobare manuală
-- [ ] Configurare deployment în Kubernetes/server producție
-- [ ] Configurare rollback automat în caz de eșec
-- [ ] Testare workflow complet (fără deployment efectiv)
+- [x] Configurare secrets pentru producție
+- [x] Configurare workflow cu aprobare manuală
+- [x] Configurare deployment în Kubernetes/server producție
+- [x] Configurare rollback automat în caz de eșec
+- [x] Testare workflow complet (fără deployment efectiv)
