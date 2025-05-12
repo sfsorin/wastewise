@@ -226,13 +226,13 @@
 - [x] Configurare networking
 - [x] Testare docker-compose up
 
-### 1.5.4 Configurare docker-compose.prod.yml 🟡 (1 zi)
+### 1.5.4 Configurare docker-compose.prod.yml 🟡 (1 zi) ✅
 
-- [ ] Configurare servicii optimizate pentru producție
-- [ ] Configurare volume-uri pentru persistență
-- [ ] Configurare variabile de mediu
-- [ ] Configurare networking și securitate
-- [ ] Testare docker-compose up în mod producție
+- [x] Configurare servicii optimizate pentru producție
+- [x] Configurare volume-uri pentru persistență
+- [x] Configurare variabile de mediu
+- [x] Configurare networking și securitate
+- [x] Testare docker-compose up în mod producție
 
 ### 1.5.5 Configurare volume pentru persistența datelor 🟢 (0.5 zile)
 
