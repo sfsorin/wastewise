@@ -7,6 +7,7 @@ import { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from '../dto/register.dto';
 import { ForgotPasswordDto } from '../dto/forgot-password.dto';
 import { ResetPasswordDto } from '../dto/reset-password.dto';
+import { UserStatus } from '../../users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -39,7 +40,7 @@ export class AuthService {
       throw new UnauthorizedException('Credențiale invalide');
     }
 
-    if (user.status !== 'active') {
+    if (user.status !== UserStatus.ACTIVE) {
       throw new UnauthorizedException('Contul este inactiv');
     }
 

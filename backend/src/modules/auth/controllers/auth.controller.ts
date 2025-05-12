@@ -24,7 +24,7 @@ import { RegisterDto } from '../dto/register.dto';
 import { ForgotPasswordDto } from '../dto/forgot-password.dto';
 import { ResetPasswordDto } from '../dto/reset-password.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { User } from '../entities/user.entity';
+import { User } from '../../users/entities/user.entity';
 
 @ApiTags('auth')
 @ApiExtraModels(User)

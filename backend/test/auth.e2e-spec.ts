@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { User } from '../src/modules/auth/entities/user.entity';
+import { User } from '../src/modules/users/entities/user.entity';
 import { PasswordResetToken } from '../src/modules/auth/entities/password-reset-token.entity';
 import { Repository } from 'typeorm';
 import { TestAppModule } from './test-app.module';

@@ -17,6 +17,13 @@ export enum UserRole {
   OPERATOR = 'operator',
 }
 
+export enum UserStatus {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+  SUSPENDED = 'suspended',
+  PENDING = 'pending',
+}
+
 @Entity('users')
 export class User {
   @ApiProperty({
@@ -27,28 +34,42 @@ export class User {
   id: string;
 
   @ApiProperty({
+    description: 'Numele de utilizator',
+    example: 'john.doe',
+  })
+  @Column({ length: 50, unique: true })
+  username: string;
+
+  @ApiProperty({
     description: 'Prenumele utilizatorului',
     example: 'John',
   })
-  @Column({ length: 100 })
+  @Column({ length: 100, nullable: true })
   firstName: string;
 
   @ApiProperty({
     description: 'Numele de familie al utilizatorului',
     example: 'Doe',
   })
-  @Column({ length: 100 })
+  @Column({ length: 100, nullable: true })
   lastName: string;
+
+  @ApiProperty({
+    description: 'Numele complet al utilizatorului',
+    example: 'John Doe',
+  })
+  @Column({ length: 100, nullable: true })
+  fullName: string;
 
   @ApiProperty({
     description: 'Adresa de email a utilizatorului',
     example: 'john.doe@example.com',
   })
-  @Column({ unique: true })
+  @Column({ length: 255, unique: true })
   email: string;
 
   @ApiHideProperty()
-  @Column()
+  @Column({ length: 255 })
   @Exclude({ toPlainOnly: true })
   password: string;
 
@@ -65,11 +86,30 @@ export class User {
   role: UserRole;
 
   @ApiProperty({
+    description: 'Statusul utilizatorului',
+    enum: UserStatus,
+    example: UserStatus.ACTIVE,
+  })
+  @Column({
+    type: 'enum',
+    enum: UserStatus,
+    default: UserStatus.ACTIVE,
+  })
+  status: UserStatus;
+
+  @ApiProperty({
     description: 'Indică dacă utilizatorul este activ',
     example: true,
   })
   @Column({ default: true })
   isActive: boolean;
+
+  @ApiProperty({
+    description: 'Data ultimei autentificări',
+    example: '2023-01-01T00:00:00Z',
+  })
+  @Column({ nullable: true })
+  lastLogin: Date;
 
   @ApiProperty({
     description: 'Data creării utilizatorului',
@@ -96,5 +136,12 @@ export class User {
 
   async validatePassword(password: string): Promise<boolean> {
     return bcrypt.compare(password, this.password);
+  }
+
+  // Metodă utilă pentru a genera numele complet din prenume și nume
+  generateFullName() {
+    if (this.firstName && this.lastName) {
+      this.fullName = `${this.firstName} ${this.lastName}`;
+    }
   }
 }

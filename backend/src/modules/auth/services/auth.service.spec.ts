@@ -5,7 +5,7 @@ import { UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UsersService } from './users.service';
 import { MailService } from './mail.service';
-import { User } from '../entities/user.entity';
+import { User } from '../../users/entities/user.entity';
 
 describe('AuthService', () => {
   let service: AuthService;

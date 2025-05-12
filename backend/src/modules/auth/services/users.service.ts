@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from '../entities/user.entity';
+import { User, UserStatus } from '../../users/entities/user.entity';
 import { RegisterDto } from '../dto/register.dto';
 import { PasswordResetToken } from '../entities/password-reset-token.entity';
 import * as crypto from 'crypto';
@@ -40,6 +40,15 @@ export class UsersService {
     }
 
     const user = this.usersRepository.create(registerDto);
+
+    // Generare nume complet dacă nu este furnizat dar avem prenume și nume
+    if (!user.fullName && user.firstName && user.lastName) {
+      user.fullName = `${user.firstName} ${user.lastName}`;
+    }
+
+    // Setare status implicit
+    user.status = UserStatus.ACTIVE;
+
     return this.usersRepository.save(user);
   }
 
@@ -128,7 +137,7 @@ export class UsersService {
 
   async createPasswordResetToken(email: string): Promise<{ token: string; user: User }> {
     const user = await this.usersRepository.findOne({
-      where: { email, status: 'active' },
+      where: { email, status: UserStatus.ACTIVE },
     });
 
     if (!user) {

@@ -5,7 +5,7 @@ import { AppController } from '../src/app.controller';
 import { AppService } from '../src/app.service';
 import configs from '../src/config/index';
 import { AuthModule } from '../src/modules/auth/auth.module';
-import { User } from '../src/modules/auth/entities/user.entity';
+import { User } from '../src/modules/users/entities/user.entity';
 import { PasswordResetToken } from '../src/modules/auth/entities/password-reset-token.entity';
 
 @Module({

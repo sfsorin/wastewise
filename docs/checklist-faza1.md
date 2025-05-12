@@ -97,6 +97,7 @@
 - [x] Configurare entități de bază
 - [x] Configurare migrări
 - [x] Testare conexiune și operațiuni CRUD de bază
+- [x] Rezolvare problemă duplicate DTO pentru entitatea User
 
 ### 1.2.6 Configurare Swagger pentru documentație API 🟡 (1 zi) ✅
 

@@ -47,6 +47,26 @@ export class RegisterDto {
   password: string;
 
   @ApiProperty({
+    description: 'Prenumele utilizatorului',
+    example: 'John',
+    required: false,
+  })
+  @IsOptional()
+  @IsString({ message: 'Prenumele trebuie să fie un șir de caractere' })
+  @MaxLength(100, { message: 'Prenumele trebuie să aibă cel mult 100 de caractere' })
+  firstName?: string;
+
+  @ApiProperty({
+    description: 'Numele de familie al utilizatorului',
+    example: 'Doe',
+    required: false,
+  })
+  @IsOptional()
+  @IsString({ message: 'Numele de familie trebuie să fie un șir de caractere' })
+  @MaxLength(100, { message: 'Numele de familie trebuie să aibă cel mult 100 de caractere' })
+  lastName?: string;
+
+  @ApiProperty({
     description: 'Numele complet al utilizatorului',
     example: 'John Doe',
     required: false,
