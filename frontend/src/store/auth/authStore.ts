@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { User, RegisterData, AuthState } from '../../types/auth.types';
+import type { RegisterData, AuthState } from '../../types/auth.types';
 
 /**
  * Serviciu pentru autentificare (simulat)
@@ -83,7 +83,7 @@ const AuthService = {
  */
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set, get) => ({
+    set => ({
       user: null,
       token: null,
       isAuthenticated: false,

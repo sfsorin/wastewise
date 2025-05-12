@@ -1,4 +1,5 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
+import type { ReactNode } from 'react';
 
 interface CardProps {
   /**
@@ -40,10 +41,10 @@ export const Card: React.FC<CardProps> = ({
 }) => {
   // Clase pentru umbră
   const shadowClasses = withShadow ? 'shadow-md' : '';
-  
+
   // Clase pentru border
   const borderClasses = withBorder ? 'border border-gray-200' : '';
-  
+
   // Clase pentru padding
   const paddingClasses = {
     none: '',
@@ -51,7 +52,7 @@ export const Card: React.FC<CardProps> = ({
     medium: 'p-4',
     large: 'p-6',
   };
-  
+
   // Combinarea tuturor claselor
   const cardClasses = `bg-white rounded-lg ${shadowClasses} ${borderClasses} ${paddingClasses[padding]} ${className}`;
 

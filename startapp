@@ -1,0 +1,468 @@
+#!/bin/bash
+# Script unificat pentru aplicația WasteWise
+# Acest script permite instalarea dependențelor, rularea testelor și pornirea serviciilor
+
+# Culori pentru output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Configurare
+# Obținem calea absolută a directorului curent
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+BACKEND_DIR="$SCRIPT_DIR/backend"
+FRONTEND_DIR="$SCRIPT_DIR/frontend"
+DB_HOST=${DB_HOST:-"10.10.10.116"}
+DB_PORT=${DB_PORT:-"5432"}
+DB_USER=${DB_USER:-"postgres"}
+DB_PASSWORD=${DB_PASSWORD:-"postgres"}
+DB_NAME=${DB_NAME:-"wastewise"}
+BACKEND_PORT=${BACKEND_PORT:-"3000"}
+FRONTEND_PORT=${FRONTEND_PORT:-"5173"}
+MAX_RETRIES=15
+RETRY_INTERVAL=3
+
+# Variabile globale
+BACKEND_PID=""
+FRONTEND_PID=""
+
+# Funcție pentru afișarea mesajelor
+log_message() {
+    local level=$1
+    local message=$2
+    local color=$NC
+
+    case $level in
+        "INFO") color=$BLUE ;;
+        "SUCCESS") color=$GREEN ;;
+        "WARNING") color=$YELLOW ;;
+        "ERROR") color=$RED ;;
+    esac
+
+    echo -e "${color}[$(date +"%Y-%m-%d %H:%M:%S")] [$level] $message${NC}"
+}
+
+# Funcție pentru afișarea meniului principal
+show_main_menu() {
+    clear
+    echo "========================================"
+    echo "      WasteWise - Meniu Principal      "
+    echo "========================================"
+    echo "1. Instalare dependențe"
+    echo "2. Rulare teste"
+    echo "3. Pornire servicii"
+    echo "4. Verificare bază de date"
+    echo "5. Rulare migrări"
+    echo "0. Ieșire"
+    echo "========================================"
+    read -p "Alegeți o opțiune: " main_option
+
+    case $main_option in
+        1) show_install_menu ;;
+        2) show_test_menu ;;
+        3) start_services ;;
+        4) check_database ;;
+        5) run_migrations "true" ;;
+        0) exit 0 ;;
+        *)
+            log_message "ERROR" "Opțiune invalidă."
+            read -p "Apăsați Enter pentru a continua..."
+            show_main_menu
+            ;;
+    esac
+}
+
+# Funcție pentru afișarea meniului de instalare
+show_install_menu() {
+    clear
+    echo "========================================"
+    echo "    WasteWise - Instalare Dependențe   "
+    echo "========================================"
+    echo "1. Instalare dependențe backend"
+    echo "2. Instalare dependențe frontend"
+    echo "3. Instalare toate dependențele"
+    echo "0. Înapoi la meniul principal"
+    echo "========================================"
+    read -p "Alegeți o opțiune: " install_option
+
+    case $install_option in
+        1) install_dependencies "backend" "$BACKEND_DIR" ;;
+        2) install_dependencies "frontend" "$FRONTEND_DIR" ;;
+        3)
+            install_dependencies "backend" "$BACKEND_DIR"
+            install_dependencies "frontend" "$FRONTEND_DIR"
+            ;;
+        0) show_main_menu ;;
+        *)
+            log_message "ERROR" "Opțiune invalidă."
+            read -p "Apăsați Enter pentru a continua..."
+            show_install_menu
+            ;;
+    esac
+}
+
+# Funcție pentru afișarea meniului de teste
+show_test_menu() {
+    clear
+    echo "========================================"
+    echo "      WasteWise - Rulare Teste         "
+    echo "========================================"
+    echo "1. Rulare teste backend"
+    echo "2. Rulare teste frontend"
+    echo "3. Rulare toate testele"
+    echo "4. Rulare teste backend cu coverage"
+    echo "5. Rulare teste frontend cu coverage"
+    echo "6. Rulare toate testele cu coverage"
+    echo "0. Înapoi la meniul principal"
+    echo "========================================"
+    read -p "Alegeți o opțiune: " test_option
+
+    case $test_option in
+        1) run_tests "backend" "$BACKEND_DIR" "test" ;;
+        2) run_tests "frontend" "$FRONTEND_DIR" "test" ;;
+        3)
+            run_tests "backend" "$BACKEND_DIR" "test"
+            run_tests "frontend" "$FRONTEND_DIR" "test"
+            ;;
+        4) run_tests "backend" "$BACKEND_DIR" "test:cov" ;;
+        5) run_tests "frontend" "$FRONTEND_DIR" "test:coverage" ;;
+        6)
+            run_tests "backend" "$BACKEND_DIR" "test:cov"
+            run_tests "frontend" "$FRONTEND_DIR" "test:coverage"
+            ;;
+        0) show_main_menu ;;
+        *)
+            log_message "ERROR" "Opțiune invalidă."
+            read -p "Apăsați Enter pentru a continua..."
+            show_test_menu
+            ;;
+    esac
+}
+
+# Funcție pentru instalarea dependențelor
+install_dependencies() {
+    local project=$1
+    local directory=$2
+
+    log_message "INFO" "Instalare dependențe pentru $project..."
+
+    # Verificăm dacă directorul există
+    if [ ! -d "$directory" ]; then
+        log_message "ERROR" "Directorul $directory nu există."
+        read -p "Apăsați Enter pentru a continua..."
+        show_install_menu
+        return
+    fi
+
+    # Verificăm dacă package.json există
+    if [ ! -f "$directory/package.json" ]; then
+        log_message "ERROR" "Fișierul package.json nu există în directorul $directory."
+        read -p "Apăsați Enter pentru a continua..."
+        show_install_menu
+        return
+    fi
+
+    # Instalăm dependențele
+    (cd "$directory" && npm install)
+
+    if [ $? -eq 0 ]; then
+        log_message "SUCCESS" "Dependențele pentru $project au fost instalate cu succes."
+    else
+        log_message "ERROR" "A apărut o eroare la instalarea dependențelor pentru $project."
+
+        # Întrebăm utilizatorul dacă dorește să încerce cu --legacy-peer-deps
+        read -p "Doriți să încercați instalarea cu --legacy-peer-deps? (y/n): " use_legacy
+        if [[ $use_legacy == "y" || $use_legacy == "Y" ]]; then
+            log_message "INFO" "Instalare dependențe pentru $project cu --legacy-peer-deps..."
+            (cd "$directory" && npm install --legacy-peer-deps)
+
+            if [ $? -eq 0 ]; then
+                log_message "SUCCESS" "Dependențele pentru $project au fost instalate cu succes (cu --legacy-peer-deps)."
+            else
+                log_message "ERROR" "A apărut o eroare la instalarea dependențelor pentru $project (cu --legacy-peer-deps)."
+            fi
+        fi
+    fi
+
+    read -p "Apăsați Enter pentru a continua..."
+    show_install_menu
+}
+
+# Funcție pentru rularea testelor
+run_tests() {
+    local project=$1
+    local directory=$2
+    local command=$3
+
+    log_message "INFO" "Rulare teste pentru $project..."
+
+    # Verificăm dacă directorul există
+    if [ ! -d "$directory" ]; then
+        log_message "ERROR" "Directorul $directory nu există."
+        read -p "Apăsați Enter pentru a continua..."
+        show_test_menu
+        return
+    fi
+
+    # Verificăm dacă package.json există
+    if [ ! -f "$directory/package.json" ]; then
+        log_message "ERROR" "Fișierul package.json nu există în directorul $directory."
+        read -p "Apăsați Enter pentru a continua..."
+        show_test_menu
+        return
+    fi
+
+    # Rulăm testele
+    (cd "$directory" && npm run $command)
+
+    if [ $? -eq 0 ]; then
+        log_message "SUCCESS" "Testele pentru $project au fost rulate cu succes."
+    else
+        log_message "ERROR" "A apărut o eroare la rularea testelor pentru $project."
+    fi
+
+    read -p "Apăsați Enter pentru a continua..."
+    show_test_menu
+}
+
+# Funcție pentru verificarea disponibilității bazei de date
+check_database() {
+    log_message "INFO" "Verificare conexiune la baza de date PostgreSQL ($DB_HOST:$DB_PORT/$DB_NAME)..."
+
+    # Setăm variabila de mediu pentru parola PostgreSQL
+    export PGPASSWORD="$DB_PASSWORD"
+
+    # Încercăm să ne conectăm la baza de date
+    if psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" -c "SELECT 1" >/dev/null 2>&1; then
+        log_message "SUCCESS" "Conexiune reușită la baza de date."
+    else
+        log_message "ERROR" "Nu s-a putut conecta la baza de date."
+
+        # Verificăm dacă serverul PostgreSQL este disponibil
+        if psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -c "SELECT 1" >/dev/null 2>&1; then
+            log_message "INFO" "Serverul PostgreSQL este disponibil, dar baza de date '$DB_NAME' nu există."
+
+            # Întrebăm utilizatorul dacă dorește să creăm baza de date
+            read -p "Doriți să creați baza de date '$DB_NAME'? (y/n): " create_db
+            if [[ $create_db == "y" || $create_db == "Y" ]]; then
+                log_message "INFO" "Se creează baza de date '$DB_NAME'..."
+                if psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -c "CREATE DATABASE $DB_NAME" >/dev/null 2>&1; then
+                    log_message "SUCCESS" "Baza de date '$DB_NAME' a fost creată cu succes."
+                else
+                    log_message "ERROR" "Nu s-a putut crea baza de date '$DB_NAME'."
+                fi
+            fi
+        else
+            log_message "ERROR" "Serverul PostgreSQL nu este disponibil."
+        fi
+    fi
+
+    read -p "Apăsați Enter pentru a continua..."
+    show_main_menu
+}
+
+# Funcție pentru rularea migrărilor
+run_migrations() {
+    local return_to_menu=$1
+    log_message "INFO" "Rulare migrări pentru baza de date..."
+
+    # Verificăm dacă directorul backend există
+    if [ ! -d "$BACKEND_DIR" ]; then
+        log_message "ERROR" "Directorul $BACKEND_DIR nu există."
+        if [ "$return_to_menu" = "true" ]; then
+            read -p "Apăsați Enter pentru a continua..."
+            show_main_menu
+        fi
+        return 1
+    fi
+
+    # Rulăm migrările
+    (cd "$BACKEND_DIR" && npm run migration:run || true)
+
+    if [ $? -eq 0 ]; then
+        log_message "SUCCESS" "Migrările au fost rulate cu succes."
+        if [ "$return_to_menu" = "true" ]; then
+            read -p "Apăsați Enter pentru a continua..."
+            show_main_menu
+        fi
+        return 0
+    else
+        log_message "ERROR" "A apărut o eroare la rularea migrărilor."
+        if [ "$return_to_menu" = "true" ]; then
+            read -p "Apăsați Enter pentru a continua..."
+            show_main_menu
+        fi
+        return 1
+    fi
+}
+
+# Funcție pentru verificarea disponibilității unui port
+check_port_available() {
+    local port=$1
+    if lsof -i:$port >/dev/null 2>&1; then
+        return 1
+    else
+        return 0
+    fi
+}
+
+# Funcție pentru verificarea disponibilității unui serviciu
+check_service_available() {
+    local host=$1
+    local port=$2
+    local retries=$3
+    local interval=$4
+    local count=0
+
+    while [ $count -lt $retries ]; do
+        if curl -s "http://$host:$port" >/dev/null 2>&1; then
+            return 0
+        fi
+
+        count=$((count + 1))
+        log_message "INFO" "Așteptare serviciu la $host:$port... ($count/$retries)"
+        sleep $interval
+    done
+
+    return 1
+}
+
+# Funcție pentru pornirea backend-ului
+start_backend() {
+    log_message "INFO" "Pornire server backend..."
+
+    # Verificăm dacă portul backend-ului este disponibil
+    if ! check_port_available $BACKEND_PORT; then
+        log_message "WARNING" "Portul $BACKEND_PORT este deja în uz. Backend-ul ar putea fi deja pornit."
+        log_message "INFO" "Continuare automată..."
+    fi
+
+    # Pornim backend-ul în fundal
+    (cd "$BACKEND_DIR" && npm run start:dev) &
+    BACKEND_PID=$!
+
+    # Verificăm dacă backend-ul a pornit cu succes
+    log_message "INFO" "Așteptare pornire backend (max ${MAX_RETRIES}x${RETRY_INTERVAL}s)..."
+    if check_service_available "localhost" $BACKEND_PORT $MAX_RETRIES $RETRY_INTERVAL; then
+        log_message "SUCCESS" "Backend-ul a pornit cu succes (PID: $BACKEND_PID)."
+        return 0
+    else
+        log_message "ERROR" "Backend-ul nu a pornit în timpul alocat."
+        return 1
+    fi
+}
+
+# Funcție pentru pornirea frontend-ului
+start_frontend() {
+    log_message "INFO" "Pornire server frontend..."
+
+    # Verificăm dacă directorul frontend există
+    if [ ! -d "$FRONTEND_DIR" ]; then
+        log_message "ERROR" "Directorul $FRONTEND_DIR nu există."
+        return 1
+    fi
+
+    # Verificăm dacă portul frontend-ului este disponibil
+    if ! check_port_available $FRONTEND_PORT; then
+        log_message "WARNING" "Portul $FRONTEND_PORT este deja în uz. Frontend-ul ar putea fi deja pornit."
+        log_message "INFO" "Continuare automată..."
+    fi
+
+    # Pornim frontend-ul în fundal
+    (cd "$FRONTEND_DIR" && npm run dev) &
+    FRONTEND_PID=$!
+
+    # Verificăm dacă frontend-ul a pornit cu succes
+    log_message "INFO" "Așteptare pornire frontend (max ${MAX_RETRIES}x${RETRY_INTERVAL}s)..."
+    if check_service_available "localhost" $FRONTEND_PORT $MAX_RETRIES $RETRY_INTERVAL; then
+        log_message "SUCCESS" "Frontend-ul a pornit cu succes (PID: $FRONTEND_PID)."
+        return 0
+    else
+        log_message "ERROR" "Frontend-ul nu a pornit în timpul alocat."
+        return 1
+    fi
+}
+
+# Funcție pentru pornirea serviciilor
+start_services() {
+    log_message "INFO" "Pornire servicii WasteWise..."
+
+    # Verificăm baza de date
+    export PGPASSWORD="$DB_PASSWORD"
+    if ! psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" -c "SELECT 1" >/dev/null 2>&1; then
+        log_message "ERROR" "Nu se pot porni serviciile fără o bază de date funcțională."
+        read -p "Doriți să verificați baza de date? (y/n): " check_db
+        if [[ $check_db == "y" || $check_db == "Y" ]]; then
+            check_database
+        fi
+        read -p "Apăsați Enter pentru a continua..."
+        show_main_menu
+        return
+    fi
+
+    # Rulăm migrările automat
+    log_message "INFO" "Rulare automată a migrărilor pentru baza de date..."
+    run_migrations "false"
+
+    # Pornim backend-ul
+    if ! start_backend; then
+        log_message "ERROR" "Nu s-a putut porni backend-ul."
+        read -p "Apăsați Enter pentru a continua..."
+        show_main_menu
+        return
+    fi
+
+    # Pornim frontend-ul
+    if ! start_frontend; then
+        log_message "ERROR" "Nu s-a putut porni frontend-ul."
+        # Oprim backend-ul dacă frontend-ul nu a pornit
+        if [ ! -z "$BACKEND_PID" ]; then
+            kill $BACKEND_PID 2>/dev/null
+            log_message "INFO" "Backend oprit (PID: $BACKEND_PID)."
+        fi
+        read -p "Apăsați Enter pentru a continua..."
+        show_main_menu
+        return
+    fi
+
+    log_message "SUCCESS" "Toate serviciile au pornit cu succes!"
+    log_message "INFO" "Backend: http://localhost:$BACKEND_PORT"
+    log_message "INFO" "Frontend: http://localhost:$FRONTEND_PORT"
+
+    # Afișăm informații despre cum să acceseze aplicația
+    log_message "INFO" "Pentru a accesa aplicația, deschideți browser-ul la adresa http://localhost:$FRONTEND_PORT"
+
+    log_message "INFO" "Apăsați Ctrl+C pentru a opri toate serviciile."
+
+    # Înregistrăm handler pentru semnale de oprire
+    trap cleanup SIGINT SIGTERM
+
+    # Așteptăm să fie întrerupt de utilizator
+    wait
+}
+
+# Funcție pentru oprirea serviciilor
+cleanup() {
+    log_message "INFO" "Oprire servicii..."
+
+    if [ ! -z "$BACKEND_PID" ]; then
+        kill $BACKEND_PID 2>/dev/null
+        log_message "INFO" "Backend oprit (PID: $BACKEND_PID)."
+    fi
+
+    if [ ! -z "$FRONTEND_PID" ]; then
+        kill $FRONTEND_PID 2>/dev/null
+        log_message "INFO" "Frontend oprit (PID: $FRONTEND_PID)."
+    fi
+
+    log_message "SUCCESS" "Toate serviciile au fost oprite."
+    exit 0
+}
+
+# Verificăm dacă scriptul este rulat direct sau inclus în alt script
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    # Afișăm meniul principal
+    show_main_menu
+fi

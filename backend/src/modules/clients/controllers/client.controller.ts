@@ -8,16 +8,8 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  Query,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiParam,
-  ApiBody,
-  ApiQuery,
-} from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
 import { ClientService } from '../services/client.service';
 import { CreateClientDto } from '../dto/create-client.dto';
 import { UpdateClientDto } from '../dto/update-client.dto';
@@ -164,10 +156,7 @@ export class ClientController {
     status: HttpStatus.CONFLICT,
     description: 'Există deja un client cu același CUI, CNP sau cod client.',
   })
-  update(
-    @Param('id') id: string,
-    @Body() updateClientDto: UpdateClientDto,
-  ): Promise<Client> {
+  update(@Param('id') id: string, @Body() updateClientDto: UpdateClientDto): Promise<Client> {
     return this.clientService.update(id, updateClientDto);
   }
 

@@ -1,4 +1,5 @@
-import { useState, FormEvent } from 'react';
+import { useState } from 'react';
+import type { FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../components/common/Button/Button';
 
@@ -14,9 +15,9 @@ const RegisterPage = () => {
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const navigate = useNavigate();
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -24,37 +25,37 @@ const RegisterPage = () => {
       [name]: value,
     }));
   };
-  
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
+
     // Validare simplă
     if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
       setError('Toate câmpurile sunt obligatorii');
       return;
     }
-    
+
     if (formData.password !== formData.confirmPassword) {
       setError('Parolele nu coincid');
       return;
     }
-    
+
     if (formData.password.length < 8) {
       setError('Parola trebuie să aibă cel puțin 8 caractere');
       return;
     }
-    
+
     try {
       setIsLoading(true);
       setError('');
-      
+
       // Simulăm un apel către API
       // În implementarea reală, aici ar fi un apel către backend
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       // Simulăm înregistrarea reușită
       localStorage.setItem('auth_token', 'dummy_token');
-      
+
       // Redirecționăm utilizatorul către dashboard
       navigate('/dashboard');
     } catch (err) {
@@ -63,20 +64,19 @@ const RegisterPage = () => {
       setIsLoading(false);
     }
   };
-  
+
   return (
     <div>
       <h1 className="text-2xl font-bold text-center mb-6">Înregistrare</h1>
-      
-      {error && (
-        <div className="bg-danger-50 text-danger-700 p-3 rounded-md mb-4">
-          {error}
-        </div>
-      )}
-      
+
+      {error && <div className="bg-danger-50 text-danger-700 p-3 rounded-md mb-4">{error}</div>}
+
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          >
             Nume complet
           </label>
           <input
@@ -90,9 +90,12 @@ const RegisterPage = () => {
             required
           />
         </div>
-        
+
         <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          >
             Email
           </label>
           <input
@@ -106,9 +109,12 @@ const RegisterPage = () => {
             required
           />
         </div>
-        
+
         <div className="mb-4">
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          >
             Parolă
           </label>
           <input
@@ -122,9 +128,12 @@ const RegisterPage = () => {
             required
           />
         </div>
-        
+
         <div className="mb-6">
-          <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label
+            htmlFor="confirmPassword"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          >
             Confirmare parolă
           </label>
           <input
@@ -138,7 +147,7 @@ const RegisterPage = () => {
             required
           />
         </div>
-        
+
         <Button
           type="submit"
           label={isLoading ? 'Se procesează...' : 'Înregistrare'}
@@ -147,7 +156,7 @@ const RegisterPage = () => {
           disabled={isLoading}
         />
       </form>
-      
+
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600 dark:text-gray-400">
           Ai deja cont?{' '}
