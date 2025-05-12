@@ -1,7 +1,7 @@
 import { expect, afterEach, afterAll, beforeAll, vi } from 'vitest';
 import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
-import matchers from '@testing-library/jest-dom/matchers';
+import * as matchers from '@testing-library/jest-dom/matchers';
 
 // Extinde expect cu matchers de la @testing-library/jest-dom
 expect.extend(matchers);
@@ -58,7 +58,7 @@ beforeAll(() => {
 afterEach(() => {
   // Curăță DOM-ul după fiecare test
   cleanup();
-  
+
   // Resetează toate mockurile
   vi.clearAllMocks();
 });

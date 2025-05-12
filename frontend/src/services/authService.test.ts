@@ -1,15 +1,26 @@
 import axios from 'axios';
 import authService from './authService';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 // Mock axios
-jest.mock('axios');
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+vi.mock('axios', () => {
+  return {
+    default: {
+      post: vi.fn(),
+      get: vi.fn(),
+    },
+  };
+});
+const mockedAxios = axios as unknown as {
+  post: vi.Mock;
+  get: vi.Mock;
+};
 
 describe('authService', () => {
   beforeEach(() => {
     // Clear all mocks before each test
-    jest.clearAllMocks();
-    
+    vi.clearAllMocks();
+
     // Clear localStorage before each test
     localStorage.clear();
   });
@@ -36,7 +47,7 @@ describe('authService', () => {
 
       expect(mockedAxios.post).toHaveBeenCalledWith(
         expect.stringContaining('/auth/login'),
-        credentials
+        credentials,
       );
       expect(localStorage.getItem('token')).toBe('jwt-token');
       expect(localStorage.getItem('user')).toBe(JSON.stringify(mockResponse.data.user));
@@ -89,7 +100,7 @@ describe('authService', () => {
 
       expect(mockedAxios.post).toHaveBeenCalledWith(
         expect.stringContaining('/auth/register'),
-        registerData
+        registerData,
       );
       expect(localStorage.getItem('token')).toBe('jwt-token');
       expect(localStorage.getItem('user')).toBe(JSON.stringify(mockResponse.data.user));
@@ -174,7 +185,7 @@ describe('authService', () => {
 
       expect(mockedAxios.post).toHaveBeenCalledWith(
         expect.stringContaining('/auth/forgot-password'),
-        data
+        data,
       );
       expect(result).toEqual(mockResponse.data);
     });
@@ -194,7 +205,7 @@ describe('authService', () => {
       const result = await authService.validateResetToken(token);
 
       expect(mockedAxios.get).toHaveBeenCalledWith(
-        expect.stringContaining(`/auth/validate-reset-token?token=${token}`)
+        expect.stringContaining(`/auth/validate-reset-token?token=${token}`),
       );
       expect(result).toBe(true);
     });
@@ -219,7 +230,7 @@ describe('authService', () => {
 
       expect(mockedAxios.post).toHaveBeenCalledWith(
         expect.stringContaining('/auth/reset-password'),
-        data
+        data,
       );
       expect(result).toEqual(mockResponse.data);
     });
@@ -228,7 +239,7 @@ describe('authService', () => {
   describe('getProfile', () => {
     it('should make a GET request to profile endpoint with authorization header', async () => {
       localStorage.setItem('token', 'jwt-token');
-      
+
       const mockUser = {
         id: '123',
         username: 'testuser',
@@ -236,7 +247,7 @@ describe('authService', () => {
         fullName: 'Test User',
         role: 'user',
       };
-      
+
       const mockResponse = {
         data: mockUser,
       };
@@ -245,14 +256,11 @@ describe('authService', () => {
 
       const result = await authService.getProfile();
 
-      expect(mockedAxios.get).toHaveBeenCalledWith(
-        expect.stringContaining('/auth/profile'),
-        {
-          headers: {
-            Authorization: 'Bearer jwt-token',
-          },
-        }
-      );
+      expect(mockedAxios.get).toHaveBeenCalledWith(expect.stringContaining('/auth/profile'), {
+        headers: {
+          Authorization: 'Bearer jwt-token',
+        },
+      });
       expect(result).toEqual(mockUser);
     });
   });

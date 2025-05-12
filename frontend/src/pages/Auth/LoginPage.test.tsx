@@ -2,28 +2,29 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import LoginPage from './LoginPage';
 import useAuthStore from '../../stores/authStore';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 // Mock useAuthStore
-jest.mock('../../stores/authStore');
+vi.mock('../../stores/authStore');
 
 // Mock useNavigate
-const mockNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+const mockNavigate = vi.fn();
+vi.mock('react-router-dom', () => ({
+  ...vi.importActual('react-router-dom'),
   useNavigate: () => mockNavigate,
   useLocation: () => ({ state: { from: { pathname: '/dashboard' } } }),
 }));
 
 describe('LoginPage', () => {
-  const mockLogin = jest.fn();
-  const mockClearError = jest.fn();
+  const mockLogin = vi.fn();
+  const mockClearError = vi.fn();
 
   beforeEach(() => {
     // Reset mocks
-    jest.clearAllMocks();
-    
+    vi.clearAllMocks();
+
     // Mock the store
-    (useAuthStore as jest.Mock).mockReturnValue({
+    (useAuthStore as unknown as vi.Mock).mockReturnValue({
       login: mockLogin,
       isLoading: false,
       error: null,
@@ -36,7 +37,7 @@ describe('LoginPage', () => {
     render(
       <BrowserRouter>
         <LoginPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
 
     // Check if the form elements are rendered
@@ -51,7 +52,7 @@ describe('LoginPage', () => {
 
   it('shows error message when login fails', () => {
     // Mock the store with an error
-    (useAuthStore as jest.Mock).mockReturnValue({
+    (useAuthStore as unknown as vi.Mock).mockReturnValue({
       login: mockLogin,
       isLoading: false,
       error: 'Credențiale invalide',
@@ -62,7 +63,7 @@ describe('LoginPage', () => {
     render(
       <BrowserRouter>
         <LoginPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
 
     // Check if the error message is displayed
@@ -71,7 +72,7 @@ describe('LoginPage', () => {
 
   it('shows loading state when submitting the form', () => {
     // Mock the store with loading state
-    (useAuthStore as jest.Mock).mockReturnValue({
+    (useAuthStore as unknown as vi.Mock).mockReturnValue({
       login: mockLogin,
       isLoading: true,
       error: null,
@@ -82,7 +83,7 @@ describe('LoginPage', () => {
     render(
       <BrowserRouter>
         <LoginPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
 
     // Check if the button shows loading state
@@ -94,7 +95,7 @@ describe('LoginPage', () => {
     render(
       <BrowserRouter>
         <LoginPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
 
     // Fill in the form
@@ -116,7 +117,7 @@ describe('LoginPage', () => {
 
   it('redirects to dashboard when already authenticated', () => {
     // Mock the store with authenticated state
-    (useAuthStore as jest.Mock).mockReturnValue({
+    (useAuthStore as unknown as vi.Mock).mockReturnValue({
       login: mockLogin,
       isLoading: false,
       error: null,
@@ -127,7 +128,7 @@ describe('LoginPage', () => {
     render(
       <BrowserRouter>
         <LoginPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
 
     // Check if navigate was called with correct path
@@ -136,7 +137,7 @@ describe('LoginPage', () => {
 
   it('clears error when email or password changes', () => {
     // Mock the store with an error
-    (useAuthStore as jest.Mock).mockReturnValue({
+    (useAuthStore as unknown as vi.Mock).mockReturnValue({
       login: mockLogin,
       isLoading: false,
       error: 'Credențiale invalide',
@@ -147,7 +148,7 @@ describe('LoginPage', () => {
     render(
       <BrowserRouter>
         <LoginPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
 
     // Change email input
@@ -163,7 +164,7 @@ describe('LoginPage', () => {
     render(
       <BrowserRouter>
         <LoginPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
 
     // Click on the register link
@@ -177,7 +178,7 @@ describe('LoginPage', () => {
     render(
       <BrowserRouter>
         <LoginPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
 
     // Click on the forgot password link

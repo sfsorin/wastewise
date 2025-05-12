@@ -2,37 +2,38 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import ResetPasswordPage from './ResetPasswordPage';
 import authService from '../../services/authService';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 // Mock authService
-jest.mock('../../services/authService');
+vi.mock('../../services/authService');
 
 // Mock useSearchParams
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+vi.mock('react-router-dom', () => ({
+  ...vi.importActual('react-router-dom'),
   useSearchParams: () => [
     {
       get: (param: string) => (param === 'token' ? 'valid-token' : null),
     },
   ],
-  useNavigate: () => jest.fn(),
+  useNavigate: () => vi.fn(),
 }));
 
 describe('ResetPasswordPage', () => {
   beforeEach(() => {
     // Reset mocks
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('shows loading state while checking token', async () => {
     // Mock validateResetToken to delay response
-    (authService.validateResetToken as jest.Mock).mockImplementation(
-      () => new Promise((resolve) => setTimeout(() => resolve(true), 100))
+    vi.mocked(authService.validateResetToken).mockImplementation(
+      () => new Promise(resolve => setTimeout(() => resolve(true), 100)),
     );
 
     render(
       <BrowserRouter>
         <ResetPasswordPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
 
     // Check if loading state is displayed
@@ -41,12 +42,12 @@ describe('ResetPasswordPage', () => {
 
   it('shows error message for invalid token', async () => {
     // Mock validateResetToken to return false
-    (authService.validateResetToken as jest.Mock).mockResolvedValue(false);
+    vi.mocked(authService.validateResetToken).mockResolvedValue(false);
 
     render(
       <BrowserRouter>
         <ResetPasswordPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
 
     // Wait for token validation to complete
@@ -55,18 +56,20 @@ describe('ResetPasswordPage', () => {
     });
 
     // Check if error message and button are displayed
-    expect(screen.getByText(/Link-ul de resetare a parolei este invalid sau a expirat/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Link-ul de resetare a parolei este invalid sau a expirat/i),
+    ).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Solicită un nou link/i })).toBeInTheDocument();
   });
 
   it('shows reset password form for valid token', async () => {
     // Mock validateResetToken to return true
-    (authService.validateResetToken as jest.Mock).mockResolvedValue(true);
+    vi.mocked(authService.validateResetToken).mockResolvedValue(true);
 
     render(
       <BrowserRouter>
         <ResetPasswordPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
 
     // Wait for token validation to complete
@@ -82,12 +85,12 @@ describe('ResetPasswordPage', () => {
 
   it('shows validation errors when submitting invalid data', async () => {
     // Mock validateResetToken to return true
-    (authService.validateResetToken as jest.Mock).mockResolvedValue(true);
+    vi.mocked(authService.validateResetToken).mockResolvedValue(true);
 
     render(
       <BrowserRouter>
         <ResetPasswordPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
 
     // Wait for token validation to complete
@@ -132,16 +135,16 @@ describe('ResetPasswordPage', () => {
 
   it('resets password successfully', async () => {
     // Mock validateResetToken to return true
-    (authService.validateResetToken as jest.Mock).mockResolvedValue(true);
+    vi.mocked(authService.validateResetToken).mockResolvedValue(true);
     // Mock resetPassword to resolve successfully
-    (authService.resetPassword as jest.Mock).mockResolvedValue({
+    vi.mocked(authService.resetPassword).mockResolvedValue({
       message: 'Parola a fost resetată cu succes.',
     });
 
     render(
       <BrowserRouter>
         <ResetPasswordPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
 
     // Wait for token validation to complete
@@ -176,9 +179,9 @@ describe('ResetPasswordPage', () => {
 
   it('shows error message when reset password fails', async () => {
     // Mock validateResetToken to return true
-    (authService.validateResetToken as jest.Mock).mockResolvedValue(true);
+    vi.mocked(authService.validateResetToken).mockResolvedValue(true);
     // Mock resetPassword to reject with error
-    (authService.resetPassword as jest.Mock).mockRejectedValue({
+    vi.mocked(authService.resetPassword).mockRejectedValue({
       response: {
         data: {
           message: 'Token-ul de resetare a parolei a expirat',
@@ -189,7 +192,7 @@ describe('ResetPasswordPage', () => {
     render(
       <BrowserRouter>
         <ResetPasswordPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
 
     // Wait for token validation to complete

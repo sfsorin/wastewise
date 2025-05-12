@@ -1,22 +1,28 @@
 import { act, renderHook } from '@testing-library/react';
 import useAuthStore from './authStore';
 import authService from '../services/authService';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 // Mock authService
-jest.mock('../services/authService', () => ({
-  login: jest.fn(),
-  register: jest.fn(),
-  logout: jest.fn(),
-  getCurrentUser: jest.fn(),
-  getToken: jest.fn(),
-  getProfile: jest.fn(),
-}));
+vi.mock('../services/authService', async () => {
+  return {
+    default: {
+      login: vi.fn(),
+      register: vi.fn(),
+      logout: vi.fn(),
+      getCurrentUser: vi.fn(),
+      getToken: vi.fn(),
+      getProfile: vi.fn(),
+      isAuthenticated: vi.fn(),
+    },
+  };
+});
 
 describe('authStore', () => {
   beforeEach(() => {
     // Clear all mocks before each test
-    jest.clearAllMocks();
-    
+    vi.clearAllMocks();
+
     // Reset the store state before each test
     act(() => {
       useAuthStore.setState({
@@ -43,7 +49,7 @@ describe('authStore', () => {
         },
       };
 
-      (authService.login as jest.Mock).mockResolvedValueOnce(mockResponse);
+      vi.mocked(authService.login).mockResolvedValueOnce(mockResponse);
 
       const { result } = renderHook(() => useAuthStore());
 
@@ -69,7 +75,7 @@ describe('authStore', () => {
         },
       };
 
-      (authService.login as jest.Mock).mockRejectedValueOnce(errorResponse);
+      vi.mocked(authService.login).mockRejectedValueOnce(errorResponse);
 
       const { result } = renderHook(() => useAuthStore());
 
@@ -105,7 +111,7 @@ describe('authStore', () => {
         },
       };
 
-      (authService.register as jest.Mock).mockResolvedValueOnce(mockResponse);
+      vi.mocked(authService.register).mockResolvedValueOnce(mockResponse);
 
       const { result } = renderHook(() => useAuthStore());
 
@@ -136,7 +142,7 @@ describe('authStore', () => {
         },
       };
 
-      (authService.register as jest.Mock).mockRejectedValueOnce(errorResponse);
+      vi.mocked(authService.register).mockRejectedValueOnce(errorResponse);
 
       const { result } = renderHook(() => useAuthStore());
 
@@ -149,7 +155,9 @@ describe('authStore', () => {
       expect(result.current.token).toBeNull();
       expect(result.current.isAuthenticated).toBe(false);
       expect(result.current.isLoading).toBe(false);
-      expect(result.current.error).toBe('Există deja un utilizator cu același nume sau adresă de email');
+      expect(result.current.error).toBe(
+        'Există deja un utilizator cu același nume sau adresă de email',
+      );
     });
   });
 
@@ -216,7 +224,7 @@ describe('authStore', () => {
         });
       });
 
-      (authService.getProfile as jest.Mock).mockResolvedValueOnce(mockUser);
+      vi.mocked(authService.getProfile).mockResolvedValueOnce(mockUser);
 
       const { result } = renderHook(() => useAuthStore());
 
@@ -239,7 +247,7 @@ describe('authStore', () => {
         });
       });
 
-      (authService.getProfile as jest.Mock).mockRejectedValueOnce(new Error('Invalid token'));
+      vi.mocked(authService.getProfile).mockRejectedValueOnce(new Error('Invalid token'));
 
       const { result } = renderHook(() => useAuthStore());
 
