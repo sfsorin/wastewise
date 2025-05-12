@@ -268,13 +268,13 @@
 - [x] Configurare matrix pentru teste pe diferite versiuni
 - [x] Testare workflow
 
-### 1.6.2 Configurare workflow pentru build 🟡 (1 zi)
+### 1.6.2 Configurare workflow pentru build 🟡 (1 zi) ✅
 
-- [ ] Configurare workflow pentru build backend
-- [ ] Configurare workflow pentru build frontend
-- [ ] Configurare cache pentru build
-- [ ] Configurare artifact storage
-- [ ] Testare workflow
+- [x] Configurare workflow pentru build backend
+- [x] Configurare workflow pentru build frontend
+- [x] Configurare cache pentru build
+- [x] Configurare artifact storage
+- [x] Testare workflow
 
 ### 1.6.3 Configurare workflow pentru deployment în staging 🔴 (2 zile)
 
