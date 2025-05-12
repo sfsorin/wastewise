@@ -276,13 +276,13 @@
 - [x] Configurare artifact storage
 - [x] Testare workflow
 
-### 1.6.3 Configurare workflow pentru deployment în staging 🔴 (2 zile)
+### 1.6.3 Configurare workflow pentru deployment în staging 🔴 (2 zile) ✅
 
-- [ ] Configurare secrets pentru staging
-- [ ] Configurare workflow pentru build și push imagini Docker
-- [ ] Configurare deployment în Kubernetes/server staging
-- [ ] Configurare verificări post-deployment
-- [ ] Testare workflow complet
+- [x] Configurare secrets pentru staging
+- [x] Configurare workflow pentru build și push imagini Docker
+- [x] Configurare deployment în Kubernetes/server staging
+- [x] Configurare verificări post-deployment
+- [x] Testare workflow complet
 
 ### 1.6.4 Configurare workflow pentru deployment în producție 🔴 (2 zile)
 
