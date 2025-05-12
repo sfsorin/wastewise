@@ -1,5 +1,5 @@
-wastewise-frontend        latest    b5916985cdf2   11 minutes ago   650MB
-wastewise-backend         latest    5a141c0e0a32   12 minutes ago   1.17GB
-wastewise-frontend-prod   latest    59d4b074f76e   40 minutes ago   76.4MB
-wastewise-frontend-dev    latest    a61ac315d0a9   42 minutes ago   650MB
-wastewise-backend-test    latest    6cd2f688e969   49 minutes ago   538MB
+wastewise-frontend         latest    2fd3384cb711   2 minutes ago   549MB
+wastewise-backend          latest    b04ada1a6dc5   3 hours ago     902MB
+wastewise-frontend-prod    latest    59d4b074f76e   4 hours ago     76.4MB
+wastewise-frontend-dev     latest    a61ac315d0a9   4 hours ago     650MB
+wastewise-backend-test     latest    6cd2f688e969   4 hours ago     538MB
