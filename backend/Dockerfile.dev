@@ -4,20 +4,31 @@ FROM node:22-alpine
 # Setăm directorul de lucru
 WORKDIR /app
 
-# Instalăm dependențele globale necesare
-RUN npm install -g @nestjs/cli
+# Instalăm dependențele globale necesare și curățăm cache-ul
+RUN npm install -g @nestjs/cli && \
+    npm cache clean --force && \
+    rm -rf /tmp/* /var/cache/apk/*
 
 # Copiem package.json și package-lock.json
 COPY package*.json ./
 
 # Instalăm dependențele
-RUN npm ci
+RUN npm ci && \
+    npm cache clean --force
 
 # Copiem restul codului sursă
 COPY . .
 
-# Expunem portul pe care rulează aplicația
-EXPOSE 3000
+# Crearea unui utilizator non-root
+RUN addgroup -g 1001 -S appuser && \
+    adduser -u 1001 -S appuser -G appuser && \
+    chown -R appuser:appuser /app
+
+# Expunem porturile pentru aplicație și debugging
+EXPOSE 3000 9229
+
+# Schimbarea utilizatorului
+USER appuser
 
 # Comanda pentru rularea aplicației în modul de dezvoltare
 CMD ["npm", "run", "start:dev"]

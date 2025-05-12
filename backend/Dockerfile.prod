@@ -8,8 +8,9 @@ WORKDIR /app
 # Copiem package.json și package-lock.json
 COPY package*.json ./
 
-# Instalăm dependențele
-RUN npm ci
+# Instalăm dependențele și curățăm cache-ul
+RUN npm ci && \
+    npm cache clean --force
 
 # Copiem restul codului sursă
 COPY . .
@@ -29,8 +30,10 @@ WORKDIR /app
 # Copiem package.json și package-lock.json
 COPY package*.json ./
 
-# Instalăm doar dependențele de producție
-RUN npm ci --only=production
+# Instalăm doar dependențele de producție și curățăm cache-ul
+RUN npm ci --only=production && \
+    npm cache clean --force && \
+    rm -rf /tmp/* /var/cache/apk/*
 
 # Copiem codul compilat din etapa de build
 COPY --from=builder /app/dist ./dist
@@ -39,8 +42,16 @@ COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 # Copiem fișierele necesare pentru configurare
 COPY --from=builder /app/.env.example ./.env.example
 
+# Crearea unui utilizator non-root
+RUN addgroup -g 1001 -S appuser && \
+    adduser -u 1001 -S appuser -G appuser && \
+    chown -R appuser:appuser /app
+
 # Expunem portul pe care rulează aplicația
 EXPOSE 3000
+
+# Schimbarea utilizatorului
+USER appuser
 
 # Comanda pentru rularea aplicației în modul de producție
 CMD ["node", "dist/main"]

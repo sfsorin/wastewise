@@ -1,0 +1,5 @@
+local     wastewise_backend-node-modules
+local     wastewise_frontend-node-modules
+local     wastewise_minio-data-dev
+local     wastewise_pgdata-dev
+local     wastewise_redis-data-dev

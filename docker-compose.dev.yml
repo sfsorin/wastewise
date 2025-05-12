@@ -60,7 +60,7 @@ services:
     env_file:
       - ./frontend/.env
     environment:
-      - VITE_API_BASE_URL=http://localhost:3000/api/v1
+      - VITE_API_BASE_URL=http://localhost:3030/api/v1
       - VITE_NODE_ENV=development
     networks:
       - wastewise-network-dev
@@ -112,6 +112,86 @@ services:
     restart: unless-stopped
     command: server /data --console-address ":9001"
 
+  # Prometheus pentru monitorizare
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data-dev:/prometheus
+    ports:
+      - "9092:9090"
+    networks:
+      - wastewise-network-dev
+    restart: unless-stopped
+
+  # Grafana pentru vizualizare
+  grafana:
+    image: grafana/grafana:latest
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - grafana-data-dev:/var/lib/grafana
+    ports:
+      - "3001:3000"
+    networks:
+      - wastewise-network-dev
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+
+  # Node Exporter pentru metrici sistem
+  node-exporter:
+    image: prom/node-exporter:latest
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - "--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)"
+    networks:
+      - wastewise-network-dev
+    restart: unless-stopped
+
+  # cAdvisor pentru metrici containere
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    networks:
+      - wastewise-network-dev
+    restart: unless-stopped
+
+  # Loki pentru logging
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - "3100:3100"
+    volumes:
+      - loki-data-dev:/loki
+    networks:
+      - wastewise-network-dev
+    restart: unless-stopped
+
+  # Promtail pentru colectare log-uri
+  promtail:
+    image: grafana/promtail:latest
+    volumes:
+      - /var/log:/var/log
+      - ./promtail/promtail-config.yml:/etc/promtail/config.yml
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    networks:
+      - wastewise-network-dev
+    restart: unless-stopped
+    depends_on:
+      - loki
+
 networks:
   wastewise-network-dev:
     driver: bridge
@@ -122,3 +202,6 @@ volumes:
   frontend-node-modules:
   redis-data-dev:
   minio-data-dev:
+  prometheus-data-dev:
+  grafana-data-dev:
+  loki-data-dev:

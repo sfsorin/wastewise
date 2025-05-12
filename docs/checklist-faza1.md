@@ -200,7 +200,7 @@
 - [x] Configurare versionare migrări
 - [x] Testare migrări (up/down)
 
-## 1.5 Configurare Docker și Docker Compose (5.5 zile)
+## 1.5 Configurare Docker și Docker Compose (6 zile)
 
 ### 1.5.1 Creare Dockerfile pentru backend 🟡 (1 zi) ✅
 
@@ -249,6 +249,14 @@
 - [x] Testare persistență date
 - [x] Testare performanță
 - [x] Documentare proces de containerizare
+
+### 1.5.7 Îmbunătățiri containerizare 🟢 (0.5 zile) ✅
+
+- [x] Optimizare imagini Docker (utilizatori non-root, curățare cache)
+- [x] Configurare monitorizare cu Prometheus și Grafana
+- [x] Configurare logging centralizat cu Loki și Promtail
+- [x] Implementare script pentru backup automat
+- [x] Creare ghid Docker pentru proiect
 
 ## 1.6 Configurare CI/CD (GitHub Actions) (6 zile)
 

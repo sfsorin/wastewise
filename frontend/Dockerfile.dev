@@ -4,20 +4,30 @@ FROM node:20-alpine
 # Setăm directorul de lucru
 WORKDIR /app
 
-# Instalăm dependențele necesare pentru dezvoltare
-RUN apk add --no-cache git
+# Instalăm dependențele necesare pentru dezvoltare și curățăm cache-ul
+RUN apk add --no-cache git && \
+    rm -rf /var/cache/apk/*
 
 # Copiem package.json și package-lock.json pentru a instala dependențele
 COPY package*.json ./
 
 # Instalăm dependențele cu flag-ul legacy-peer-deps pentru a rezolva conflictele
-RUN npm install --legacy-peer-deps
+RUN npm install --legacy-peer-deps && \
+    npm cache clean --force
 
 # Copiem restul codului sursă
 COPY . .
 
+# Crearea unui utilizator non-root
+RUN addgroup -g 1001 -S appuser && \
+    adduser -u 1001 -S appuser -G appuser && \
+    chown -R appuser:appuser /app
+
 # Expunem portul pe care rulează aplicația
 EXPOSE 5173
+
+# Schimbarea utilizatorului
+USER appuser
 
 # Comanda pentru pornirea aplicației în modul de dezvoltare
 CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
