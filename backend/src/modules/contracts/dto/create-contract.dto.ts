@@ -7,7 +7,6 @@ import {
   IsUUID,
   IsNumber,
   Min,
-  IsDate,
   IsISO8601,
 } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -49,7 +48,7 @@ export class CreateContractDto {
 
   @ApiProperty({
     description: 'Valoarea contractului',
-    example: 10000.00,
+    example: 10000.0,
     required: false,
   })
   @IsOptional()

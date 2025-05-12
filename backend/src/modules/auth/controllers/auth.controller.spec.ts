@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from '../services/auth.service';
 import { User } from '../entities/user.entity';
-import { HttpStatus } from '@nestjs/common';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -90,7 +89,7 @@ describe('AuthController', () => {
   describe('getProfile', () => {
     it('should return the result of authService.getProfile', async () => {
       const req = { user: { id: '123' } };
-      
+
       mockAuthService.getProfile.mockResolvedValue(mockUser);
 
       const result = await controller.getProfile(req);
@@ -103,13 +102,15 @@ describe('AuthController', () => {
   describe('forgotPassword', () => {
     it('should call authService.forgotPassword and return success message', async () => {
       const forgotPasswordDto = { email: 'test@example.com' };
-      
+
       mockAuthService.forgotPassword.mockResolvedValue(undefined);
 
       const result = await controller.forgotPassword(forgotPasswordDto);
 
       expect(authService.forgotPassword).toHaveBeenCalledWith(forgotPasswordDto);
-      expect(result).toEqual({ message: 'Email-ul de resetare a parolei a fost trimis cu succes.' });
+      expect(result).toEqual({
+        message: 'Email-ul de resetare a parolei a fost trimis cu succes.',
+      });
     });
   });
 
@@ -120,7 +121,7 @@ describe('AuthController', () => {
         password: 'NewPassword123!',
         passwordConfirmation: 'NewPassword123!',
       };
-      
+
       mockAuthService.resetPassword.mockResolvedValue(undefined);
 
       const result = await controller.resetPassword(resetPasswordDto);

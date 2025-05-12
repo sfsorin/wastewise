@@ -1,13 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsNotEmpty,
-  IsString,
-  IsOptional,
-  IsUUID,
-  IsNumber,
-  Min,
-  Max,
-} from 'class-validator';
+import { IsNotEmpty, IsOptional, IsUUID, IsNumber, Min, Max } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateServiciuContractatDto {
@@ -29,7 +21,7 @@ export class CreateServiciuContractatDto {
 
   @ApiProperty({
     description: 'Cantitatea contractată',
-    example: 10.00,
+    example: 10.0,
     required: false,
   })
   @IsOptional()
@@ -40,7 +32,7 @@ export class CreateServiciuContractatDto {
 
   @ApiProperty({
     description: 'Prețul unitar negociat',
-    example: 100.00,
+    example: 100.0,
   })
   @IsNotEmpty({ message: 'Prețul unitar este obligatoriu' })
   @IsNumber({}, { message: 'Prețul unitar trebuie să fie un număr' })
@@ -50,7 +42,7 @@ export class CreateServiciuContractatDto {
 
   @ApiProperty({
     description: 'Discount-ul aplicat',
-    example: 10.00,
+    example: 10.0,
     default: 0,
     required: false,
   })

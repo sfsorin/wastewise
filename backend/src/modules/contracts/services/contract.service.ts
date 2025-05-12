@@ -23,7 +23,9 @@ export class ContractService {
       where: { numarContract: createContractDto.numarContract },
     });
     if (existingByNumber) {
-      throw new ConflictException(`Există deja un contract cu numărul ${createContractDto.numarContract}`);
+      throw new ConflictException(
+        `Există deja un contract cu numărul ${createContractDto.numarContract}`,
+      );
     }
 
     // Setare valori implicite
@@ -35,13 +37,22 @@ export class ContractService {
       createContractDto.status = 'active';
     }
 
-    // Conversie date din string în Date
-    const contract = this.contractRepository.create({
-      ...createContractDto,
-      dataInceput: new Date(createContractDto.dataInceput),
-      dataSfarsit: createContractDto.dataSfarsit ? new Date(createContractDto.dataSfarsit) : null,
-    });
+    // Creăm un obiect nou pentru contract
+    const contract = new Contract();
 
+    // Copiem proprietățile din DTO
+    contract.clientId = createContractDto.clientId;
+    contract.numarContract = createContractDto.numarContract;
+    contract.dataInceput = new Date(createContractDto.dataInceput);
+    contract.dataSfarsit = createContractDto.dataSfarsit
+      ? new Date(createContractDto.dataSfarsit)
+      : null;
+    contract.valoare = createContractDto.valoare || null;
+    contract.moneda = createContractDto.moneda || 'RON';
+    contract.status = createContractDto.status || 'active';
+    contract.detalii = createContractDto.detalii || null;
+
+    // Salvăm contractul
     return this.contractRepository.save(contract);
   }
 
@@ -109,12 +120,17 @@ export class ContractService {
     }
 
     // Verificare dacă există deja un contract cu același număr
-    if (updateContractDto.numarContract && updateContractDto.numarContract !== contract.numarContract) {
+    if (
+      updateContractDto.numarContract &&
+      updateContractDto.numarContract !== contract.numarContract
+    ) {
       const existingByNumber = await this.contractRepository.findOne({
         where: { numarContract: updateContractDto.numarContract },
       });
       if (existingByNumber && existingByNumber.id !== id) {
-        throw new ConflictException(`Există deja un contract cu numărul ${updateContractDto.numarContract}`);
+        throw new ConflictException(
+          `Există deja un contract cu numărul ${updateContractDto.numarContract}`,
+        );
       }
     }
 

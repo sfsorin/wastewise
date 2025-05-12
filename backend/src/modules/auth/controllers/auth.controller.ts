@@ -16,6 +16,7 @@ import {
   ApiBody,
   ApiBearerAuth,
   ApiQuery,
+  ApiExtraModels,
 } from '@nestjs/swagger';
 import { AuthService } from '../services/auth.service';
 import { LoginDto } from '../dto/login.dto';
@@ -26,6 +27,7 @@ import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { User } from '../entities/user.entity';
 
 @ApiTags('auth')
+@ApiExtraModels(User)
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -37,6 +39,21 @@ export class AuthController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Utilizatorul a fost autentificat cu succes.',
+    schema: {
+      properties: {
+        access_token: { type: 'string' },
+        user: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            username: { type: 'string' },
+            email: { type: 'string' },
+            fullName: { type: 'string' },
+            role: { type: 'string' },
+          },
+        },
+      },
+    },
   })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
@@ -52,6 +69,21 @@ export class AuthController {
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'Utilizatorul a fost înregistrat cu succes.',
+    schema: {
+      properties: {
+        access_token: { type: 'string' },
+        user: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            username: { type: 'string' },
+            email: { type: 'string' },
+            fullName: { type: 'string' },
+            role: { type: 'string' },
+          },
+        },
+      },
+    },
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
@@ -72,13 +104,21 @@ export class AuthController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Profilul utilizatorului a fost obținut cu succes.',
-    type: User,
+    schema: {
+      properties: {
+        id: { type: 'string' },
+        username: { type: 'string' },
+        email: { type: 'string' },
+        fullName: { type: 'string' },
+        role: { type: 'string' },
+      },
+    },
   })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
     description: 'Utilizatorul nu este autentificat.',
   })
-  getProfile(@Request() req) {
+  getProfile(@Request() req: any) {
     return this.authService.getProfile(req.user.id);
   }
 

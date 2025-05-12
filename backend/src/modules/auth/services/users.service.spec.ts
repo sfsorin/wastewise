@@ -1,18 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from '../entities/user.entity';
 import { PasswordResetToken } from '../entities/password-reset-token.entity';
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
 
 jest.mock('bcrypt');
 
 describe('UsersService', () => {
   let service: UsersService;
-  let userRepository: Repository<User>;
-  let passwordResetTokenRepository: Repository<PasswordResetToken>;
 
   const mockUserRepository = {
     create: jest.fn(),
@@ -45,10 +43,6 @@ describe('UsersService', () => {
     }).compile();
 
     service = module.get<UsersService>(UsersService);
-    userRepository = module.get<Repository<User>>(getRepositoryToken(User));
-    passwordResetTokenRepository = module.get<Repository<PasswordResetToken>>(
-      getRepositoryToken(PasswordResetToken),
-    );
   });
 
   afterEach(() => {
@@ -187,9 +181,12 @@ describe('UsersService', () => {
       mockPasswordResetTokenRepository.save.mockResolvedValue(passwordResetToken);
 
       // Mock crypto.randomBytes
-      jest.spyOn(global.crypto, 'randomBytes').mockReturnValue({
-        toString: jest.fn().mockReturnValue(token),
-      } as any);
+      jest.spyOn(crypto, 'randomBytes').mockImplementation(
+        () =>
+          ({
+            toString: () => token,
+          }) as any,
+      );
 
       const result = await service.createPasswordResetToken('test@example.com');
 

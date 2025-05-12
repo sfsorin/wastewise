@@ -9,9 +9,7 @@ import { User } from '../entities/user.entity';
 
 describe('AuthService', () => {
   let service: AuthService;
-  let usersService: UsersService;
   let jwtService: JwtService;
-  let mailService: MailService;
 
   const mockUser = {
     id: '123',
@@ -70,9 +68,7 @@ describe('AuthService', () => {
     }).compile();
 
     service = module.get<AuthService>(AuthService);
-    usersService = module.get<UsersService>(UsersService);
     jwtService = module.get<JwtService>(JwtService);
-    mailService = module.get<MailService>(MailService);
   });
 
   afterEach(() => {
@@ -88,7 +84,7 @@ describe('AuthService', () => {
       mockUsersService.findByUsernameOrEmail.mockResolvedValue(mockUser);
 
       const result = await service.validateUser('testuser', 'password');
-      
+
       expect(result).toBeDefined();
       expect(result.password).toBeUndefined();
       expect(result.id).toBe(mockUser.id);
@@ -99,7 +95,7 @@ describe('AuthService', () => {
       mockUsersService.findByUsernameOrEmail.mockRejectedValue(new Error('User not found'));
 
       const result = await service.validateUser('nonexistent', 'password');
-      
+
       expect(result).toBeNull();
     });
 
@@ -110,7 +106,7 @@ describe('AuthService', () => {
       });
 
       const result = await service.validateUser('testuser', 'wrongpassword');
-      
+
       expect(result).toBeNull();
     });
   });
@@ -127,7 +123,7 @@ describe('AuthService', () => {
       });
 
       const result = await service.login({ username: 'testuser', password: 'password' });
-      
+
       expect(validateUserSpy).toHaveBeenCalledWith('testuser', 'password');
       expect(mockUsersService.updateLastLogin).toHaveBeenCalledWith(mockUser.id);
       expect(jwtService.sign).toHaveBeenCalled();
@@ -140,7 +136,7 @@ describe('AuthService', () => {
       jest.spyOn(service, 'validateUser').mockResolvedValue(null);
 
       await expect(
-        service.login({ username: 'testuser', password: 'wrongpassword' })
+        service.login({ username: 'testuser', password: 'wrongpassword' }),
       ).rejects.toThrow(UnauthorizedException);
     });
 
@@ -150,9 +146,9 @@ describe('AuthService', () => {
         status: 'inactive',
       });
 
-      await expect(
-        service.login({ username: 'testuser', password: 'password' })
-      ).rejects.toThrow(UnauthorizedException);
+      await expect(service.login({ username: 'testuser', password: 'password' })).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
   });
 
@@ -168,7 +164,7 @@ describe('AuthService', () => {
       };
 
       const result = await service.register(registerDto);
-      
+
       expect(mockUsersService.create).toHaveBeenCalledWith(registerDto);
       expect(jwtService.sign).toHaveBeenCalled();
       expect(result.access_token).toBe('jwt-token');
@@ -185,13 +181,13 @@ describe('AuthService', () => {
       });
 
       await service.forgotPassword({ email: 'test@example.com' });
-      
+
       expect(mockUsersService.createPasswordResetToken).toHaveBeenCalledWith('test@example.com');
       expect(mockConfigService.get).toHaveBeenCalledWith('FRONTEND_URL');
       expect(mockMailService.sendPasswordResetEmail).toHaveBeenCalledWith(
         mockUser.email,
         'http://localhost:5173/reset-password?token=reset-token',
-        mockUser.username
+        mockUser.username,
       );
     });
   });
@@ -207,7 +203,7 @@ describe('AuthService', () => {
       };
 
       await service.resetPassword(resetPasswordDto);
-      
+
       expect(mockUsersService.validatePasswordResetToken).toHaveBeenCalledWith('valid-token');
       expect(mockUsersService.resetPassword).toHaveBeenCalledWith('valid-token', 'NewPassword123!');
     });
@@ -219,10 +215,8 @@ describe('AuthService', () => {
         passwordConfirmation: 'DifferentPassword123!',
       };
 
-      await expect(
-        service.resetPassword(resetPasswordDto)
-      ).rejects.toThrow(BadRequestException);
-      
+      await expect(service.resetPassword(resetPasswordDto)).rejects.toThrow(BadRequestException);
+
       expect(mockUsersService.validatePasswordResetToken).not.toHaveBeenCalled();
       expect(mockUsersService.resetPassword).not.toHaveBeenCalled();
     });
@@ -236,10 +230,8 @@ describe('AuthService', () => {
         passwordConfirmation: 'NewPassword123!',
       };
 
-      await expect(
-        service.resetPassword(resetPasswordDto)
-      ).rejects.toThrow(BadRequestException);
-      
+      await expect(service.resetPassword(resetPasswordDto)).rejects.toThrow(BadRequestException);
+
       expect(mockUsersService.validatePasswordResetToken).toHaveBeenCalledWith('invalid-token');
       expect(mockUsersService.resetPassword).not.toHaveBeenCalled();
     });
@@ -250,7 +242,7 @@ describe('AuthService', () => {
       mockUsersService.validatePasswordResetToken.mockResolvedValue(true);
 
       const result = await service.validateResetToken('valid-token');
-      
+
       expect(result).toBe(true);
       expect(mockUsersService.validatePasswordResetToken).toHaveBeenCalledWith('valid-token');
     });
@@ -259,7 +251,7 @@ describe('AuthService', () => {
       mockUsersService.validatePasswordResetToken.mockResolvedValue(false);
 
       const result = await service.validateResetToken('invalid-token');
-      
+
       expect(result).toBe(false);
       expect(mockUsersService.validatePasswordResetToken).toHaveBeenCalledWith('invalid-token');
     });

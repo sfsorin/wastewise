@@ -16,6 +16,7 @@ import {
   ApiParam,
   ApiBody,
   ApiBearerAuth,
+  ApiExtraModels,
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -23,6 +24,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 
 @ApiTags('users')
+@ApiExtraModels(User)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -34,7 +36,18 @@ export class UsersController {
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'Utilizatorul a fost creat cu succes.',
-    type: User,
+    schema: {
+      properties: {
+        id: { type: 'string' },
+        firstName: { type: 'string' },
+        lastName: { type: 'string' },
+        email: { type: 'string' },
+        role: { type: 'string' },
+        isActive: { type: 'boolean' },
+        createdAt: { type: 'string', format: 'date-time' },
+        updatedAt: { type: 'string', format: 'date-time' },
+      },
+    },
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
@@ -53,7 +66,22 @@ export class UsersController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Lista de utilizatori a fost obținută cu succes.',
-    type: [User],
+    schema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'string' },
+          firstName: { type: 'string' },
+          lastName: { type: 'string' },
+          email: { type: 'string' },
+          role: { type: 'string' },
+          isActive: { type: 'boolean' },
+          createdAt: { type: 'string', format: 'date-time' },
+          updatedAt: { type: 'string', format: 'date-time' },
+        },
+      },
+    },
   })
   @ApiBearerAuth('JWT-auth')
   findAll(): Promise<User[]> {
@@ -71,7 +99,18 @@ export class UsersController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Utilizatorul a fost găsit.',
-    type: User,
+    schema: {
+      properties: {
+        id: { type: 'string' },
+        firstName: { type: 'string' },
+        lastName: { type: 'string' },
+        email: { type: 'string' },
+        role: { type: 'string' },
+        isActive: { type: 'boolean' },
+        createdAt: { type: 'string', format: 'date-time' },
+        updatedAt: { type: 'string', format: 'date-time' },
+      },
+    },
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
@@ -94,7 +133,18 @@ export class UsersController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Utilizatorul a fost actualizat cu succes.',
-    type: User,
+    schema: {
+      properties: {
+        id: { type: 'string' },
+        firstName: { type: 'string' },
+        lastName: { type: 'string' },
+        email: { type: 'string' },
+        role: { type: 'string' },
+        isActive: { type: 'boolean' },
+        createdAt: { type: 'string', format: 'date-time' },
+        updatedAt: { type: 'string', format: 'date-time' },
+      },
+    },
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,

@@ -1,12 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from '../src/app.module';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from '../src/modules/auth/entities/user.entity';
 import { PasswordResetToken } from '../src/modules/auth/entities/password-reset-token.entity';
 import { Repository } from 'typeorm';
-import * as bcrypt from 'bcrypt';
+import { TestAppModule } from './test-app.module';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
@@ -18,25 +17,33 @@ describe('AuthController (e2e)', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [TestAppModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());
     await app.init();
 
-    userRepository = moduleFixture.get(getRepositoryToken(User));
-    passwordResetTokenRepository = moduleFixture.get(getRepositoryToken(PasswordResetToken));
+    userRepository = app.get(getRepositoryToken(User));
+    passwordResetTokenRepository = app.get(getRepositoryToken(PasswordResetToken));
 
     // Clean up database before tests
-    await passwordResetTokenRepository.delete({});
-    await userRepository.delete({});
+    try {
+      await passwordResetTokenRepository.delete({});
+      await userRepository.delete({});
+    } catch (error) {
+      console.error('Error cleaning up database:', error);
+    }
   });
 
   afterAll(async () => {
     // Clean up database after tests
-    await passwordResetTokenRepository.delete({});
-    await userRepository.delete({});
+    try {
+      await passwordResetTokenRepository.delete({});
+      await userRepository.delete({});
+    } catch (error) {
+      console.error('Error cleaning up database:', error);
+    }
     await app.close();
   });
 
@@ -98,7 +105,9 @@ describe('AuthController (e2e)', () => {
         .expect(409);
 
       expect(response.body).toHaveProperty('message');
-      expect(response.body.message).toContain('Există deja un utilizator cu adresa de email test@example.com');
+      expect(response.body.message).toContain(
+        'Există deja un utilizator cu adresa de email test@example.com',
+      );
     });
 
     it('/auth/login (POST) - should login with valid credentials', async () => {
@@ -146,9 +155,7 @@ describe('AuthController (e2e)', () => {
     });
 
     it('/auth/profile (GET) - should return 401 without token', async () => {
-      await request(app.getHttpServer())
-        .get('/auth/profile')
-        .expect(401);
+      await request(app.getHttpServer()).get('/auth/profile').expect(401);
     });
   });
 
@@ -219,12 +226,7 @@ describe('AuthController (e2e)', () => {
         where: { token: resetToken },
       });
 
-      expect(token.used).toBe(true);
-
-      // Check if password was updated
-      const user = await userRepository.findOne({
-        where: { id: userId },
-      });
+      expect(token?.used).toBe(true);
 
       // Verify new password works
       const loginDto = {
@@ -232,17 +234,11 @@ describe('AuthController (e2e)', () => {
         password: 'NewPassword123!',
       };
 
-      await request(app.getHttpServer())
-        .post('/auth/login')
-        .send(loginDto)
-        .expect(200);
+      await request(app.getHttpServer()).post('/auth/login').send(loginDto).expect(200);
     });
 
     it('/auth/reset-password (POST) - should return 400 if passwords do not match', async () => {
       // Create a new token
-      const user = await userRepository.findOne({
-        where: { id: userId },
-      });
 
       const expiresAt = new Date();
       expiresAt.setHours(expiresAt.getHours() + 1);
@@ -282,7 +278,9 @@ describe('AuthController (e2e)', () => {
         .expect(400);
 
       expect(response.body).toHaveProperty('message');
-      expect(response.body.message).toBe('Token-ul de resetare a parolei este invalid sau a expirat');
+      expect(response.body.message).toBe(
+        'Token-ul de resetare a parolei este invalid sau a expirat',
+      );
     });
   });
 });

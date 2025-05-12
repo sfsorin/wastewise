@@ -47,14 +47,14 @@ export class Contract {
     example: '2024-01-01',
   })
   @Column({ type: 'date', nullable: true })
-  dataSfarsit: Date;
+  dataSfarsit: Date | null;
 
   @ApiProperty({
     description: 'Valoarea contractului',
-    example: 10000.00,
+    example: 10000.0,
   })
   @Column({ type: 'decimal', precision: 12, scale: 2, nullable: true })
-  valoare: number;
+  valoare: number | null;
 
   @ApiProperty({
     description: 'Moneda',
@@ -75,7 +75,7 @@ export class Contract {
     example: 'Contract pentru servicii de colectare deșeuri menajere',
   })
   @Column({ type: 'text', nullable: true })
-  detalii: string;
+  detalii: string | null;
 
   @ApiProperty({
     description: 'Data creării înregistrării',
@@ -92,10 +92,10 @@ export class Contract {
   updatedAt: Date;
 
   // Relații
-  @ManyToOne(() => Client, (client) => client.contracte)
+  @ManyToOne(() => Client, client => client.contracte)
   @JoinColumn({ name: 'client_id' })
   client: Client;
 
-  @OneToMany(() => ServiciuContractat, (serviciuContractat) => serviciuContractat.contract)
+  @OneToMany(() => ServiciuContractat, serviciuContractat => serviciuContractat.contract)
   serviciiContractate: ServiciuContractat[];
 }
