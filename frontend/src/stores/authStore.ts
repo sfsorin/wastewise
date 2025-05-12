@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
-import authService, { User, LoginCredentials, RegisterData } from '../services/authService';
+import authService from '../services/authService';
+import type { User, LoginCredentials, RegisterData } from '../services/authService';
 
 /**
  * Interfață pentru starea de autentificare
@@ -105,7 +106,7 @@ const useAuthStore = create<AuthState>()(
          */
         loadUser: async () => {
           if (!get().token) return;
-          
+
           set({ isLoading: true });
           try {
             const user = await authService.getProfile();
@@ -127,14 +128,14 @@ const useAuthStore = create<AuthState>()(
       }),
       {
         name: 'auth-storage',
-        partialize: (state) => ({
+        partialize: state => ({
           user: state.user,
           token: state.token,
           isAuthenticated: state.isAuthenticated,
         }),
-      }
-    )
-  )
+      },
+    ),
+  ),
 );
 
 export default useAuthStore;
