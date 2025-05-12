@@ -24,9 +24,10 @@ import { HealthModule } from './health/health.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        ...configService.get('database'),
-      }),
+      useFactory: (configService: ConfigService) => {
+        const dbConfig = configService.get('database');
+        return dbConfig ? { ...dbConfig } : {};
+      },
     }),
     UsersModule,
     ProfilesModule,

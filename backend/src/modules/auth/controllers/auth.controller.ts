@@ -118,7 +118,7 @@ export class AuthController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Utilizatorul nu este autentificat.',
   })
-  getProfile(@Request() req: any) {
+  getProfile(@Request() req: any): Promise<any> {
     return this.authService.getProfile(req.user.id);
   }
 

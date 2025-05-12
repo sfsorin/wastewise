@@ -5,7 +5,7 @@ export class CreateBaseTables1746975670121 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     // Activare extensie uuid-ossp pentru generarea UUID-urilor
-    await queryRunner.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
+    await queryRunner.query(`CREATE EXTENSION IF NOT EXISTS 'uuid-ossp'`);
 
     // Tabela pentru tipuri de clienți
     await queryRunner.query(`

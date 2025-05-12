@@ -11,7 +11,11 @@ async function bootstrap() {
 
   // Obține configurația
   const configService = app.get(ConfigService);
-  const appConfig = configService.get('app');
+  const appConfig = configService.get('app') as {
+    apiPrefix: string;
+    apiVersion: string;
+    port: number;
+  };
 
   // Configurare prefix API
   const globalPrefix = `${appConfig.apiPrefix}/${appConfig.apiVersion}`;
