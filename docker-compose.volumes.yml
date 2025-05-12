@@ -1,0 +1,53 @@
+version: "3.8"
+
+# Acest fișier definește volumele pentru persistența datelor
+# Poate fi utilizat împreună cu docker-compose.dev.yml sau docker-compose.prod.yml
+
+volumes:
+  # Volume pentru baza de date PostgreSQL
+  pgdata:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH:-./data}/postgres
+
+  # Volume pentru Redis
+  redis-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH:-./data}/redis
+
+  # Volume pentru RabbitMQ
+  rabbitmq-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH:-./data}/rabbitmq
+
+  # Volume pentru MinIO/S3
+  minio-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH:-./data}/minio
+
+  # Volume pentru log-uri
+  log-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH:-./data}/logs
+
+  # Volume pentru backup-uri
+  backup-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH:-./data}/backups

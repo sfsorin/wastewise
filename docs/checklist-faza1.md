@@ -234,13 +234,13 @@
 - [x] Configurare networking și securitate
 - [x] Testare docker-compose up în mod producție
 
-### 1.5.5 Configurare volume pentru persistența datelor 🟢 (0.5 zile)
+### 1.5.5 Configurare volume pentru persistența datelor 🟢 (0.5 zile) ✅
 
-- [ ] Configurare volume pentru baza de date
-- [ ] Configurare volume pentru Redis
-- [ ] Configurare volume pentru RabbitMQ
-- [ ] Configurare volume pentru MinIO/S3
-- [ ] Testare persistență după restart
+- [x] Configurare volume pentru baza de date
+- [x] Configurare volume pentru Redis
+- [x] Configurare volume pentru RabbitMQ
+- [x] Configurare volume pentru MinIO/S3
+- [x] Testare persistență după restart
 
 ### 1.5.6 Testare containerizare completă 🟡 (1 zi)
 
