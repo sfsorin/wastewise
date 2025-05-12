@@ -9,6 +9,7 @@ import {
   HttpCode,
   HttpStatus,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -17,7 +18,11 @@ import {
   ApiParam,
   ApiBody,
   ApiQuery,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
+import { RolesGuard } from '@modules/auth/guards/roles.guard';
+import { Roles } from '@modules/auth/decorators/roles.decorator';
 import { PredictiiCantitatiService } from '../services/predictii-cantitati.service';
 import { CreatePredictiiCantitatiDto } from '../dto/create-predictii-cantitati.dto';
 import { UpdatePredictiiCantitatiDto } from '../dto/update-predictii-cantitati.dto';
@@ -25,10 +30,13 @@ import { PredictiiCantitati } from '../entities/predictii-cantitati.entity';
 
 @ApiTags('predictii-cantitati')
 @Controller('predictii-cantitati')
+@ApiBearerAuth()
 export class PredictiiCantitatiController {
   constructor(private readonly predictiiCantitatiService: PredictiiCantitatiService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Creare predicție cantități nouă' })
   @ApiBody({ type: CreatePredictiiCantitatiDto })
   @ApiResponse({
@@ -42,13 +50,17 @@ export class PredictiiCantitatiController {
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: 'UAT-ul, clientul, punctul de colectare sau categoria de deșeuri nu a fost găsită.',
+    description:
+      'UAT-ul, clientul, punctul de colectare sau categoria de deșeuri nu a fost găsită.',
   })
-  create(@Body() createPredictiiCantitatiDto: CreatePredictiiCantitatiDto): Promise<PredictiiCantitati> {
+  create(
+    @Body() createPredictiiCantitatiDto: CreatePredictiiCantitatiDto,
+  ): Promise<PredictiiCantitati> {
     return this.predictiiCantitatiService.create(createPredictiiCantitatiDto);
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere listă predicții cantități' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -60,6 +72,7 @@ export class PredictiiCantitatiController {
   }
 
   @Get('uat/:uatId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere predicții cantități după UAT-ul de care aparțin' })
   @ApiParam({ name: 'uatId', description: 'ID-ul UAT-ului' })
   @ApiResponse({
@@ -76,6 +89,7 @@ export class PredictiiCantitatiController {
   }
 
   @Get('client/:clientId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere predicții cantități după clientul de care aparțin' })
   @ApiParam({ name: 'clientId', description: 'ID-ul clientului' })
   @ApiResponse({
@@ -92,7 +106,10 @@ export class PredictiiCantitatiController {
   }
 
   @Get('punct-colectare/:punctColectareId')
-  @ApiOperation({ summary: 'Obținere predicții cantități după punctul de colectare de care aparțin' })
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({
+    summary: 'Obținere predicții cantități după punctul de colectare de care aparțin',
+  })
   @ApiParam({ name: 'punctColectareId', description: 'ID-ul punctului de colectare' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -103,11 +120,14 @@ export class PredictiiCantitatiController {
     status: HttpStatus.NOT_FOUND,
     description: 'Punctul de colectare nu a fost găsit.',
   })
-  findByPunctColectare(@Param('punctColectareId') punctColectareId: string): Promise<PredictiiCantitati[]> {
+  findByPunctColectare(
+    @Param('punctColectareId') punctColectareId: string,
+  ): Promise<PredictiiCantitati[]> {
     return this.predictiiCantitatiService.findByPunctColectare(punctColectareId);
   }
 
   @Get('categorie/:categorieId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere predicții cantități după categoria de deșeuri' })
   @ApiParam({ name: 'categorieId', description: 'ID-ul categoriei de deșeuri' })
   @ApiResponse({
@@ -124,6 +144,7 @@ export class PredictiiCantitatiController {
   }
 
   @Get('perioada')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere predicții cantități după perioadă' })
   @ApiQuery({ name: 'startDate', description: 'Data de început a perioadei (YYYY-MM-DD)' })
   @ApiQuery({ name: 'endDate', description: 'Data de sfârșit a perioadei (YYYY-MM-DD)' })
@@ -144,6 +165,7 @@ export class PredictiiCantitatiController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere predicție cantități după ID' })
   @ApiParam({ name: 'id', description: 'ID-ul predicției de cantități' })
   @ApiResponse({
@@ -160,6 +182,8 @@ export class PredictiiCantitatiController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Actualizare predicție cantități' })
   @ApiParam({ name: 'id', description: 'ID-ul predicției de cantități' })
   @ApiBody({ type: UpdatePredictiiCantitatiDto })
@@ -170,7 +194,8 @@ export class PredictiiCantitatiController {
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: 'Predicția de cantități, UAT-ul, clientul, punctul de colectare sau categoria de deșeuri nu a fost găsită.',
+    description:
+      'Predicția de cantități, UAT-ul, clientul, punctul de colectare sau categoria de deșeuri nu a fost găsită.',
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
@@ -185,6 +210,8 @@ export class PredictiiCantitatiController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Ștergere predicție cantități' })
   @ApiParam({ name: 'id', description: 'ID-ul predicției de cantități' })
   @ApiResponse({

@@ -8,8 +8,19 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBody,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
+import { RolesGuard } from '@modules/auth/guards/roles.guard';
+import { Roles } from '@modules/auth/decorators/roles.decorator';
 import { LocalitatiService } from '../services/localitati.service';
 import { CreateLocalitateDto } from '../dto/create-localitate.dto';
 import { UpdateLocalitateDto } from '../dto/update-localitate.dto';
@@ -17,10 +28,13 @@ import { Localitate } from '../entities/localitate.entity';
 
 @ApiTags('localitati')
 @Controller('localitati')
+@ApiBearerAuth()
 export class LocalitatiController {
   constructor(private readonly localitatiService: LocalitatiService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Creare localitate nouă' })
   @ApiBody({ type: CreateLocalitateDto })
   @ApiResponse({
@@ -45,6 +59,7 @@ export class LocalitatiController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere listă localități' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -56,6 +71,7 @@ export class LocalitatiController {
   }
 
   @Get('judet/:judetId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere localități după județul de care aparțin' })
   @ApiParam({ name: 'judetId', description: 'ID-ul județului' })
   @ApiResponse({
@@ -72,6 +88,7 @@ export class LocalitatiController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere localitate după ID' })
   @ApiParam({ name: 'id', description: 'ID-ul localității' })
   @ApiResponse({
@@ -88,6 +105,8 @@ export class LocalitatiController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Actualizare localitate' })
   @ApiParam({ name: 'id', description: 'ID-ul localității' })
   @ApiBody({ type: UpdateLocalitateDto })
@@ -117,6 +136,8 @@ export class LocalitatiController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Ștergere localitate' })
   @ApiParam({ name: 'id', description: 'ID-ul localității' })
   @ApiResponse({

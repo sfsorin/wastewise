@@ -8,6 +8,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -15,7 +16,11 @@ import {
   ApiResponse,
   ApiParam,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
+import { RolesGuard } from '@modules/auth/guards/roles.guard';
+import { Roles } from '@modules/auth/decorators/roles.decorator';
 import { ServiciuService } from '../services/serviciu.service';
 import { CreateServiciuDto } from '../dto/create-serviciu.dto';
 import { UpdateServiciuDto } from '../dto/update-serviciu.dto';
@@ -23,10 +28,13 @@ import { Serviciu } from '../entities/serviciu.entity';
 
 @ApiTags('servicii')
 @Controller('servicii')
+@ApiBearerAuth()
 export class ServiciuController {
   constructor(private readonly serviciuService: ServiciuService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Creare serviciu nou' })
   @ApiBody({ type: CreateServiciuDto })
   @ApiResponse({
@@ -47,6 +55,7 @@ export class ServiciuController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere listă servicii' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -58,6 +67,7 @@ export class ServiciuController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere serviciu după ID' })
   @ApiParam({ name: 'id', description: 'ID-ul serviciului' })
   @ApiResponse({
@@ -74,6 +84,8 @@ export class ServiciuController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Actualizare serviciu' })
   @ApiParam({ name: 'id', description: 'ID-ul serviciului' })
   @ApiBody({ type: UpdateServiciuDto })
@@ -94,15 +106,14 @@ export class ServiciuController {
     status: HttpStatus.CONFLICT,
     description: 'Există deja un serviciu cu același nume.',
   })
-  update(
-    @Param('id') id: string,
-    @Body() updateServiciuDto: UpdateServiciuDto,
-  ): Promise<Serviciu> {
+  update(@Param('id') id: string, @Body() updateServiciuDto: UpdateServiciuDto): Promise<Serviciu> {
     return this.serviciuService.update(id, updateServiciuDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Ștergere serviciu' })
   @ApiParam({ name: 'id', description: 'ID-ul serviciului' })
   @ApiResponse({

@@ -8,6 +8,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -15,7 +16,11 @@ import {
   ApiResponse,
   ApiParam,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
+import { RolesGuard } from '@modules/auth/guards/roles.guard';
+import { Roles } from '@modules/auth/decorators/roles.decorator';
 import { PunctColectareService } from '../services/punct-colectare.service';
 import { CreatePunctColectareDto } from '../dto/create-punct-colectare.dto';
 import { UpdatePunctColectareDto } from '../dto/update-punct-colectare.dto';
@@ -23,10 +28,13 @@ import { PunctColectare } from '../entities/punct-colectare.entity';
 
 @ApiTags('puncte-colectare')
 @Controller('puncte-colectare')
+@ApiBearerAuth()
 export class PunctColectareController {
   constructor(private readonly punctColectareService: PunctColectareService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Creare punct de colectare nou' })
   @ApiBody({ type: CreatePunctColectareDto })
   @ApiResponse({
@@ -47,6 +55,7 @@ export class PunctColectareController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere listă puncte de colectare' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -58,6 +67,7 @@ export class PunctColectareController {
   }
 
   @Get('client/:clientId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere puncte de colectare după clientul de care aparțin' })
   @ApiParam({ name: 'clientId', description: 'ID-ul clientului' })
   @ApiResponse({
@@ -74,6 +84,7 @@ export class PunctColectareController {
   }
 
   @Get('localitate/:localitateId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere puncte de colectare după localitatea de care aparțin' })
   @ApiParam({ name: 'localitateId', description: 'ID-ul localității' })
   @ApiResponse({
@@ -90,6 +101,7 @@ export class PunctColectareController {
   }
 
   @Get('judet/:judetId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere puncte de colectare după județul de care aparțin' })
   @ApiParam({ name: 'judetId', description: 'ID-ul județului' })
   @ApiResponse({
@@ -106,6 +118,7 @@ export class PunctColectareController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere punct de colectare după ID' })
   @ApiParam({ name: 'id', description: 'ID-ul punctului de colectare' })
   @ApiResponse({
@@ -122,6 +135,8 @@ export class PunctColectareController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Actualizare punct de colectare' })
   @ApiParam({ name: 'id', description: 'ID-ul punctului de colectare' })
   @ApiBody({ type: UpdatePunctColectareDto })
@@ -147,6 +162,8 @@ export class PunctColectareController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Ștergere punct de colectare' })
   @ApiParam({ name: 'id', description: 'ID-ul punctului de colectare' })
   @ApiResponse({

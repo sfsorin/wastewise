@@ -12,6 +12,7 @@ const AboutPage = lazy(() => import('../pages/About/AboutPage'));
 const LoginPage = lazy(() => import('../pages/Auth/LoginPage'));
 const RegisterPage = lazy(() => import('../pages/Auth/RegisterPage'));
 const ForgotPasswordPage = lazy(() => import('../pages/Auth/ForgotPasswordPage'));
+const ResetPasswordPage = lazy(() => import('../pages/Auth/ResetPasswordPage'));
 const DashboardPage = lazy(() => import('../pages/Dashboard/DashboardPage'));
 const ProfilePage = lazy(() => import('../pages/Dashboard/ProfilePage'));
 const SettingsPage = lazy(() => import('../pages/Dashboard/SettingsPage'));
@@ -75,6 +76,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingSpinner />}>
             <ForgotPasswordPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'reset-password',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <ResetPasswordPage />
           </Suspense>
         ),
       },

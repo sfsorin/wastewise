@@ -8,6 +8,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -15,7 +16,11 @@ import {
   ApiResponse,
   ApiParam,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
+import { RolesGuard } from '@modules/auth/guards/roles.guard';
+import { Roles } from '@modules/auth/decorators/roles.decorator';
 import { ServiciuContractatService } from '../services/serviciu-contractat.service';
 import { CreateServiciuContractatDto } from '../dto/create-serviciu-contractat.dto';
 import { UpdateServiciuContractatDto } from '../dto/update-serviciu-contractat.dto';
@@ -23,10 +28,13 @@ import { ServiciuContractat } from '../entities/serviciu-contractat.entity';
 
 @ApiTags('servicii-contractate')
 @Controller('servicii-contractate')
+@ApiBearerAuth()
 export class ServiciuContractatController {
   constructor(private readonly serviciuContractatService: ServiciuContractatService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Creare serviciu contractat nou' })
   @ApiBody({ type: CreateServiciuContractatDto })
   @ApiResponse({
@@ -42,11 +50,14 @@ export class ServiciuContractatController {
     status: HttpStatus.NOT_FOUND,
     description: 'Contractul sau serviciul nu a fost găsit.',
   })
-  create(@Body() createServiciuContractatDto: CreateServiciuContractatDto): Promise<ServiciuContractat> {
+  create(
+    @Body() createServiciuContractatDto: CreateServiciuContractatDto,
+  ): Promise<ServiciuContractat> {
     return this.serviciuContractatService.create(createServiciuContractatDto);
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere listă servicii contractate' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -58,6 +69,7 @@ export class ServiciuContractatController {
   }
 
   @Get('contract/:contractId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere servicii contractate după contractul de care aparțin' })
   @ApiParam({ name: 'contractId', description: 'ID-ul contractului' })
   @ApiResponse({
@@ -74,6 +86,7 @@ export class ServiciuContractatController {
   }
 
   @Get('serviciu/:serviciuId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere servicii contractate după serviciul de care aparțin' })
   @ApiParam({ name: 'serviciuId', description: 'ID-ul serviciului' })
   @ApiResponse({
@@ -90,6 +103,7 @@ export class ServiciuContractatController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere serviciu contractat după ID' })
   @ApiParam({ name: 'id', description: 'ID-ul serviciului contractat' })
   @ApiResponse({
@@ -106,6 +120,8 @@ export class ServiciuContractatController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Actualizare serviciu contractat' })
   @ApiParam({ name: 'id', description: 'ID-ul serviciului contractat' })
   @ApiBody({ type: UpdateServiciuContractatDto })
@@ -131,6 +147,8 @@ export class ServiciuContractatController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Ștergere serviciu contractat' })
   @ApiParam({ name: 'id', description: 'ID-ul serviciului contractat' })
   @ApiResponse({

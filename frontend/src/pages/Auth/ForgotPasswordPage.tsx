@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../../components/common/Button/Button';
+import authService from '../../services/authService';
 
 /**
  * Pagina pentru recuperarea parolei
@@ -25,14 +26,16 @@ const ForgotPasswordPage = () => {
       setIsLoading(true);
       setError('');
 
-      // Simulăm un apel către API
-      // În implementarea reală, aici ar fi un apel către backend
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Apel către API pentru a solicita resetarea parolei
+      await authService.forgotPassword({ email });
 
-      // Simulăm trimiterea reușită
+      // Marcăm solicitarea ca fiind trimisă
       setIsSubmitted(true);
-    } catch (err) {
-      setError('Cererea nu a putut fi procesată. Încercați din nou mai târziu.');
+    } catch (err: any) {
+      setError(
+        err.response?.data?.message ||
+          'Cererea nu a putut fi procesată. Încercați din nou mai târziu.',
+      );
     } finally {
       setIsLoading(false);
     }

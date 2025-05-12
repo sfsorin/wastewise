@@ -8,8 +8,19 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBody,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
+import { RolesGuard } from '@modules/auth/guards/roles.guard';
+import { Roles } from '@modules/auth/decorators/roles.decorator';
 import { ClientService } from '../services/client.service';
 import { CreateClientDto } from '../dto/create-client.dto';
 import { UpdateClientDto } from '../dto/update-client.dto';
@@ -17,10 +28,13 @@ import { Client } from '../entities/client.entity';
 
 @ApiTags('clienti')
 @Controller('clienti')
+@ApiBearerAuth()
 export class ClientController {
   constructor(private readonly clientService: ClientService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Creare client nou' })
   @ApiBody({ type: CreateClientDto })
   @ApiResponse({
@@ -45,6 +59,7 @@ export class ClientController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere listă clienți' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -56,6 +71,7 @@ export class ClientController {
   }
 
   @Get('tip-client/:tipClientId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere clienți după tipul de client' })
   @ApiParam({ name: 'tipClientId', description: 'ID-ul tipului de client' })
   @ApiResponse({
@@ -72,6 +88,7 @@ export class ClientController {
   }
 
   @Get('cui/:cui')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere client după CUI' })
   @ApiParam({ name: 'cui', description: 'CUI-ul clientului' })
   @ApiResponse({
@@ -88,6 +105,7 @@ export class ClientController {
   }
 
   @Get('cnp/:cnp')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere client după CNP' })
   @ApiParam({ name: 'cnp', description: 'CNP-ul clientului' })
   @ApiResponse({
@@ -104,6 +122,7 @@ export class ClientController {
   }
 
   @Get('cod/:codClient')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere client după codul clientului' })
   @ApiParam({ name: 'codClient', description: 'Codul clientului' })
   @ApiResponse({
@@ -120,6 +139,7 @@ export class ClientController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere client după ID' })
   @ApiParam({ name: 'id', description: 'ID-ul clientului' })
   @ApiResponse({
@@ -136,6 +156,8 @@ export class ClientController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Actualizare client' })
   @ApiParam({ name: 'id', description: 'ID-ul clientului' })
   @ApiBody({ type: UpdateClientDto })
@@ -162,6 +184,8 @@ export class ClientController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Ștergere client' })
   @ApiParam({ name: 'id', description: 'ID-ul clientului' })
   @ApiResponse({

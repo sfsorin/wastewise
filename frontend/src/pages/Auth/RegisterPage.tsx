@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Button from '../../components/common/Button/Button';
+import useAuthStore from '../../stores/authStore';
 
 /**
  * Pagina de înregistrare
@@ -13,10 +14,19 @@ const RegisterPage = () => {
     password: '',
     confirmPassword: '',
   });
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-
+  const { register, isLoading, error, clearError, isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Obținem URL-ul de redirecționare după înregistrare
+  const from = location.state?.from?.pathname || '/dashboard';
+
+  // Redirecționăm utilizatorul dacă este deja autentificat
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, navigate, from]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -28,40 +38,36 @@ const RegisterPage = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    clearError();
 
     // Validare simplă
     if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
-      setError('Toate câmpurile sunt obligatorii');
+      useAuthStore.setState({ error: 'Toate câmpurile sunt obligatorii' });
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Parolele nu coincid');
+      useAuthStore.setState({ error: 'Parolele nu coincid' });
       return;
     }
 
     if (formData.password.length < 8) {
-      setError('Parola trebuie să aibă cel puțin 8 caractere');
+      useAuthStore.setState({ error: 'Parola trebuie să aibă cel puțin 8 caractere' });
       return;
     }
 
     try {
-      setIsLoading(true);
-      setError('');
+      await register({
+        username: formData.name,
+        email: formData.email,
+        password: formData.password,
+        fullName: formData.fullName,
+      });
 
-      // Simulăm un apel către API
-      // În implementarea reală, aici ar fi un apel către backend
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Simulăm înregistrarea reușită
-      localStorage.setItem('auth_token', 'dummy_token');
-
-      // Redirecționăm utilizatorul către dashboard
-      navigate('/dashboard');
-    } catch (err) {
-      setError('Înregistrare eșuată. Încercați din nou mai târziu.');
-    } finally {
-      setIsLoading(false);
+      // Dacă înregistrarea a reușit, utilizatorul va fi redirecționat automat
+      // datorită efectului care verifică isAuthenticated
+    } catch (error) {
+      // Eroarea este gestionată în store
     }
   };
 

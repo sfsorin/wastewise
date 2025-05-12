@@ -8,6 +8,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -15,7 +16,11 @@ import {
   ApiResponse,
   ApiParam,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
+import { RolesGuard } from '@modules/auth/guards/roles.guard';
+import { Roles } from '@modules/auth/decorators/roles.decorator';
 import { TipClientService } from '../services/tip-client.service';
 import { CreateTipClientDto } from '../dto/create-tip-client.dto';
 import { UpdateTipClientDto } from '../dto/update-tip-client.dto';
@@ -23,10 +28,13 @@ import { TipClient } from '../entities/tip-client.entity';
 
 @ApiTags('tipuri-client')
 @Controller('tipuri-client')
+@ApiBearerAuth()
 export class TipClientController {
   constructor(private readonly tipClientService: TipClientService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Creare tip de client nou' })
   @ApiBody({ type: CreateTipClientDto })
   @ApiResponse({
@@ -47,6 +55,7 @@ export class TipClientController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere listă tipuri de client' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -58,6 +67,7 @@ export class TipClientController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere tip de client după ID' })
   @ApiParam({ name: 'id', description: 'ID-ul tipului de client' })
   @ApiResponse({
@@ -74,6 +84,8 @@ export class TipClientController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Actualizare tip de client' })
   @ApiParam({ name: 'id', description: 'ID-ul tipului de client' })
   @ApiBody({ type: UpdateTipClientDto })
@@ -103,6 +115,8 @@ export class TipClientController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Ștergere tip de client' })
   @ApiParam({ name: 'id', description: 'ID-ul tipului de client' })
   @ApiResponse({

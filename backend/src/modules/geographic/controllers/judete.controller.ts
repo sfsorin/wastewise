@@ -8,8 +8,19 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBody,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
+import { RolesGuard } from '@modules/auth/guards/roles.guard';
+import { Roles } from '@modules/auth/decorators/roles.decorator';
 import { JudeteService } from '../services/judete.service';
 import { CreateJudetDto } from '../dto/create-judet.dto';
 import { UpdateJudetDto } from '../dto/update-judet.dto';
@@ -17,10 +28,13 @@ import { Judet } from '../entities/judet.entity';
 
 @ApiTags('judete')
 @Controller('judete')
+@ApiBearerAuth()
 export class JudeteController {
   constructor(private readonly judeteService: JudeteService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Creare județ nou' })
   @ApiBody({ type: CreateJudetDto })
   @ApiResponse({
@@ -41,6 +55,7 @@ export class JudeteController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere listă județe' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -52,6 +67,7 @@ export class JudeteController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere județ după ID' })
   @ApiParam({ name: 'id', description: 'ID-ul județului' })
   @ApiResponse({
@@ -68,6 +84,7 @@ export class JudeteController {
   }
 
   @Get('cod-auto/:codAuto')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere județ după codul auto' })
   @ApiParam({ name: 'codAuto', description: 'Codul auto al județului' })
   @ApiResponse({
@@ -84,6 +101,8 @@ export class JudeteController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Actualizare județ' })
   @ApiParam({ name: 'id', description: 'ID-ul județului' })
   @ApiBody({ type: UpdateJudetDto })
@@ -110,6 +129,8 @@ export class JudeteController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Ștergere județ' })
   @ApiParam({ name: 'id', description: 'ID-ul județului' })
   @ApiResponse({

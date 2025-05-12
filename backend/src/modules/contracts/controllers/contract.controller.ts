@@ -8,6 +8,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -15,7 +16,11 @@ import {
   ApiResponse,
   ApiParam,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
+import { RolesGuard } from '@modules/auth/guards/roles.guard';
+import { Roles } from '@modules/auth/decorators/roles.decorator';
 import { ContractService } from '../services/contract.service';
 import { CreateContractDto } from '../dto/create-contract.dto';
 import { UpdateContractDto } from '../dto/update-contract.dto';
@@ -23,10 +28,13 @@ import { Contract } from '../entities/contract.entity';
 
 @ApiTags('contracte')
 @Controller('contracte')
+@ApiBearerAuth()
 export class ContractController {
   constructor(private readonly contractService: ContractService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Creare contract nou' })
   @ApiBody({ type: CreateContractDto })
   @ApiResponse({
@@ -51,6 +59,7 @@ export class ContractController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere listă contracte' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -62,6 +71,7 @@ export class ContractController {
   }
 
   @Get('active')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere contracte active' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -73,6 +83,7 @@ export class ContractController {
   }
 
   @Get('client/:clientId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere contracte după clientul de care aparțin' })
   @ApiParam({ name: 'clientId', description: 'ID-ul clientului' })
   @ApiResponse({
@@ -89,6 +100,7 @@ export class ContractController {
   }
 
   @Get('numar/:numarContract')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere contract după număr' })
   @ApiParam({ name: 'numarContract', description: 'Numărul contractului' })
   @ApiResponse({
@@ -105,6 +117,7 @@ export class ContractController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere contract după ID' })
   @ApiParam({ name: 'id', description: 'ID-ul contractului' })
   @ApiResponse({
@@ -121,6 +134,8 @@ export class ContractController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Actualizare contract' })
   @ApiParam({ name: 'id', description: 'ID-ul contractului' })
   @ApiBody({ type: UpdateContractDto })
@@ -141,15 +156,14 @@ export class ContractController {
     status: HttpStatus.CONFLICT,
     description: 'Există deja un contract cu același număr.',
   })
-  update(
-    @Param('id') id: string,
-    @Body() updateContractDto: UpdateContractDto,
-  ): Promise<Contract> {
+  update(@Param('id') id: string, @Body() updateContractDto: UpdateContractDto): Promise<Contract> {
     return this.contractService.update(id, updateContractDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Ștergere contract' })
   @ApiParam({ name: 'id', description: 'ID-ul contractului' })
   @ApiResponse({

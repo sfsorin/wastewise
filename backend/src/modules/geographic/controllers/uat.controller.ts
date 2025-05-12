@@ -8,8 +8,19 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBody,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
+import { RolesGuard } from '@modules/auth/guards/roles.guard';
+import { Roles } from '@modules/auth/decorators/roles.decorator';
 import { UATService } from '../services/uat.service';
 import { CreateUATDto } from '../dto/create-uat.dto';
 import { UpdateUATDto } from '../dto/update-uat.dto';
@@ -17,10 +28,13 @@ import { UAT } from '../entities/uat.entity';
 
 @ApiTags('uat')
 @Controller('uat')
+@ApiBearerAuth()
 export class UATController {
   constructor(private readonly uatService: UATService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Creare UAT nou' })
   @ApiBody({ type: CreateUATDto })
   @ApiResponse({
@@ -45,6 +59,7 @@ export class UATController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere listă UAT-uri' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -56,6 +71,7 @@ export class UATController {
   }
 
   @Get('judet/:judetId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere UAT-uri după județul de care aparțin' })
   @ApiParam({ name: 'judetId', description: 'ID-ul județului' })
   @ApiResponse({
@@ -72,6 +88,7 @@ export class UATController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere UAT după ID' })
   @ApiParam({ name: 'id', description: 'ID-ul UAT-ului' })
   @ApiResponse({
@@ -88,6 +105,8 @@ export class UATController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Actualizare UAT' })
   @ApiParam({ name: 'id', description: 'ID-ul UAT-ului' })
   @ApiBody({ type: UpdateUATDto })
@@ -114,6 +133,8 @@ export class UATController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Ștergere UAT' })
   @ApiParam({ name: 'id', description: 'ID-ul UAT-ului' })
   @ApiResponse({

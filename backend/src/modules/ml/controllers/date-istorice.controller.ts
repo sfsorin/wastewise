@@ -9,6 +9,7 @@ import {
   HttpCode,
   HttpStatus,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -17,7 +18,11 @@ import {
   ApiParam,
   ApiBody,
   ApiQuery,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
+import { RolesGuard } from '@modules/auth/guards/roles.guard';
+import { Roles } from '@modules/auth/decorators/roles.decorator';
 import { DateIstoriceService } from '../services/date-istorice.service';
 import { CreateDateIstoriceDto } from '../dto/create-date-istorice.dto';
 import { UpdateDateIstoriceDto } from '../dto/update-date-istorice.dto';
@@ -25,10 +30,13 @@ import { DateIstorice } from '../entities/date-istorice.entity';
 
 @ApiTags('date-istorice')
 @Controller('date-istorice')
+@ApiBearerAuth()
 export class DateIstoriceController {
   constructor(private readonly dateIstoriceService: DateIstoriceService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Creare înregistrare date istorice nouă' })
   @ApiBody({ type: CreateDateIstoriceDto })
   @ApiResponse({
@@ -49,6 +57,7 @@ export class DateIstoriceController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere listă date istorice' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -60,6 +69,7 @@ export class DateIstoriceController {
   }
 
   @Get('uat/:uatId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere date istorice după UAT-ul de care aparțin' })
   @ApiParam({ name: 'uatId', description: 'ID-ul UAT-ului' })
   @ApiResponse({
@@ -76,6 +86,7 @@ export class DateIstoriceController {
   }
 
   @Get('categorie/:categorieId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere date istorice după categoria de deșeuri' })
   @ApiParam({ name: 'categorieId', description: 'ID-ul categoriei de deșeuri' })
   @ApiResponse({
@@ -92,6 +103,7 @@ export class DateIstoriceController {
   }
 
   @Get('perioada')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere date istorice după perioadă' })
   @ApiQuery({ name: 'startDate', description: 'Data de început a perioadei (YYYY-MM-DD)' })
   @ApiQuery({ name: 'endDate', description: 'Data de sfârșit a perioadei (YYYY-MM-DD)' })
@@ -112,6 +124,7 @@ export class DateIstoriceController {
   }
 
   @Get('uat/:uatId/categorie/:categorieId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere date istorice după UAT și categorie de deșeuri' })
   @ApiParam({ name: 'uatId', description: 'ID-ul UAT-ului' })
   @ApiParam({ name: 'categorieId', description: 'ID-ul categoriei de deșeuri' })
@@ -132,6 +145,7 @@ export class DateIstoriceController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere înregistrare date istorice după ID' })
   @ApiParam({ name: 'id', description: 'ID-ul înregistrării de date istorice' })
   @ApiResponse({
@@ -148,6 +162,8 @@ export class DateIstoriceController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Actualizare înregistrare date istorice' })
   @ApiParam({ name: 'id', description: 'ID-ul înregistrării de date istorice' })
   @ApiBody({ type: UpdateDateIstoriceDto })
@@ -158,7 +174,8 @@ export class DateIstoriceController {
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: 'Înregistrarea de date istorice, UAT-ul sau categoria de deșeuri nu a fost găsită.',
+    description:
+      'Înregistrarea de date istorice, UAT-ul sau categoria de deșeuri nu a fost găsită.',
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
@@ -173,6 +190,8 @@ export class DateIstoriceController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Ștergere înregistrare date istorice' })
   @ApiParam({ name: 'id', description: 'ID-ul înregistrării de date istorice' })
   @ApiResponse({

@@ -8,6 +8,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -15,7 +16,11 @@ import {
   ApiResponse,
   ApiParam,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
+import { RolesGuard } from '@modules/auth/guards/roles.guard';
+import { Roles } from '@modules/auth/decorators/roles.decorator';
 import { CategorieDeseuriService } from '../services/categorie-deseuri.service';
 import { CreateCategorieDeseuriDto } from '../dto/create-categorie-deseuri.dto';
 import { UpdateCategorieDeseuriDto } from '../dto/update-categorie-deseuri.dto';
@@ -23,10 +28,13 @@ import { CategorieDeseuri } from '../entities/categorie-deseuri.entity';
 
 @ApiTags('categorii-deseuri')
 @Controller('categorii-deseuri')
+@ApiBearerAuth()
 export class CategorieDeseuriController {
   constructor(private readonly categorieDeseuriService: CategorieDeseuriService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Creare categorie de deșeuri nouă' })
   @ApiBody({ type: CreateCategorieDeseuriDto })
   @ApiResponse({
@@ -47,6 +55,7 @@ export class CategorieDeseuriController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere listă categorii de deșeuri' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -58,6 +67,7 @@ export class CategorieDeseuriController {
   }
 
   @Get('cod/:cod')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere categorie de deșeuri după cod' })
   @ApiParam({ name: 'cod', description: 'Codul categoriei de deșeuri' })
   @ApiResponse({
@@ -74,6 +84,7 @@ export class CategorieDeseuriController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere categorie de deșeuri după ID' })
   @ApiParam({ name: 'id', description: 'ID-ul categoriei de deșeuri' })
   @ApiResponse({
@@ -90,6 +101,8 @@ export class CategorieDeseuriController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Actualizare categorie de deșeuri' })
   @ApiParam({ name: 'id', description: 'ID-ul categoriei de deșeuri' })
   @ApiBody({ type: UpdateCategorieDeseuriDto })
@@ -119,6 +132,8 @@ export class CategorieDeseuriController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @ApiOperation({ summary: 'Ștergere categorie de deșeuri' })
   @ApiParam({ name: 'id', description: 'ID-ul categoriei de deșeuri' })
   @ApiResponse({
