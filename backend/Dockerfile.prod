@@ -47,7 +47,8 @@ RUN addgroup -g 1001 -S appuser && \
 
 # Copiem codul compilat din etapa de build
 COPY --from=builder --chown=appuser:appuser /app/dist ./dist
-COPY --from=builder --chown=appuser:appuser /app/node_modules/.prisma ./node_modules/.prisma
+# Eliminăm copierea directorului .prisma care cauzează erori
+# Vom instala dependențele direct în etapa de producție
 
 # Copiem fișierele necesare pentru configurare
 COPY --from=builder --chown=appuser:appuser /app/.env.example ./.env.example
