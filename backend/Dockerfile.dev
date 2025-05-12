@@ -9,20 +9,20 @@ RUN npm install -g @nestjs/cli && \
     npm cache clean --force && \
     rm -rf /tmp/* /var/cache/apk/*
 
+# Crearea unui utilizator non-root
+RUN addgroup -g 1001 -S appuser && \
+    adduser -u 1001 -S appuser -G appuser && \
+    chown -R appuser /app
+
 # Copiem package.json și package-lock.json
-COPY package*.json ./
+COPY --chown=appuser:appuser package*.json ./
 
 # Instalăm dependențele
 RUN npm ci && \
     npm cache clean --force
 
 # Copiem restul codului sursă
-COPY . .
-
-# Crearea unui utilizator non-root
-RUN addgroup -g 1001 -S appuser && \
-    adduser -u 1001 -S appuser -G appuser && \
-    chown -R appuser:appuser /app
+COPY --chown=appuser:appuser . .
 
 # Expunem porturile pentru aplicație și debugging
 EXPOSE 3000 9229

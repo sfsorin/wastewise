@@ -9,15 +9,20 @@ WORKDIR /app
 RUN apk add --no-cache git && \
     rm -rf /var/cache/apk/*
 
+# Crearea unui utilizator non-root
+RUN addgroup -g 1001 -S appuser && \
+    adduser -u 1001 -S appuser -G appuser && \
+    chown -R appuser /app
+
 # Copiem package.json și package-lock.json pentru a instala dependențele
-COPY package*.json ./
+COPY --chown=appuser:appuser package*.json ./
 
 # Instalăm dependențele cu flag-ul legacy-peer-deps pentru a rezolva conflictele
 RUN npm ci --legacy-peer-deps && \
     npm cache clean --force
 
 # Copiem restul codului sursă
-COPY . .
+COPY --chown=appuser:appuser . .
 
 # Construim aplicația pentru producție
 RUN npm run build
