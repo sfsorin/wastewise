@@ -34,6 +34,7 @@ services:
     volumes:
       - ./backend:/app
       - backend-node-modules:/app/node_modules
+      - /app/dist
     env_file:
       - ./backend/.env
     environment:
@@ -42,6 +43,7 @@ services:
     networks:
       - wastewise-network-dev
     restart: unless-stopped
+    user: "node"
     command: npm run start:dev
 
   # Frontend (React)
