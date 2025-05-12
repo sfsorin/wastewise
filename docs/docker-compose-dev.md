@@ -67,9 +67,10 @@ După pornirea containerelor, puteți accesa serviciile la următoarele adrese:
   - Utilizator: postgres
   - Parolă: postgres
   - Bază de date: wastewise
-- **MinIO Console**: http://localhost:9001
+- **MinIO Console**: http://localhost:9091
   - Utilizator: minioadmin
   - Parolă: minioadmin
+- **MinIO API**: http://localhost:9090
 
 ## Volume
 

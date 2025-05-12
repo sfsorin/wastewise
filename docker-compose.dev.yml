@@ -100,8 +100,8 @@ services:
     image: minio/minio:latest
     container_name: wastewise-minio-dev
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - "9090:9000"
+      - "9091:9001"
     volumes:
       - minio-data-dev:/data
     environment:
