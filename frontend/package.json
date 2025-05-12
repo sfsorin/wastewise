@@ -19,7 +19,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "test:auth": "vitest run src/services/authService.test.ts src/stores/authStore.test.ts src/pages/Auth/**/*.test.tsx",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "dependencies": {
     "@types/react-router-dom": "^5.3.3",
