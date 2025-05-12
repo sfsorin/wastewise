@@ -210,13 +210,13 @@
 - [x] Optimizare imagine (dimensiune, securitate)
 - [x] Testare build și rulare container
 
-### 1.5.2 Creare Dockerfile pentru frontend 🟡 (1 zi)
+### 1.5.2 Creare Dockerfile pentru frontend 🟡 (1 zi) ✅
 
-- [ ] Creare Dockerfile.dev pentru dezvoltare
-- [ ] Creare Dockerfile.prod pentru producție
-- [ ] Configurare multi-stage build
-- [ ] Configurare Nginx pentru servire fișiere statice
-- [ ] Testare build și rulare container
+- [x] Creare Dockerfile.dev pentru dezvoltare
+- [x] Creare Dockerfile.prod pentru producție
+- [x] Configurare multi-stage build
+- [x] Configurare Nginx pentru servire fișiere statice
+- [x] Testare build și rulare container
 
 ### 1.5.3 Configurare docker-compose.dev.yml 🟡 (1 zi)
 

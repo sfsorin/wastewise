@@ -1,0 +1,23 @@
+# Dockerfile pentru mediul de dezvoltare
+FROM node:20-alpine
+
+# Setăm directorul de lucru
+WORKDIR /app
+
+# Instalăm dependențele necesare pentru dezvoltare
+RUN apk add --no-cache git
+
+# Copiem package.json și package-lock.json pentru a instala dependențele
+COPY package*.json ./
+
+# Instalăm dependențele cu flag-ul legacy-peer-deps pentru a rezolva conflictele
+RUN npm install --legacy-peer-deps
+
+# Copiem restul codului sursă
+COPY . .
+
+# Expunem portul pe care rulează aplicația
+EXPOSE 5173
+
+# Comanda pentru pornirea aplicației în modul de dezvoltare
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
