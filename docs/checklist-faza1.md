@@ -218,13 +218,13 @@
 - [x] Configurare Nginx pentru servire fișiere statice
 - [x] Testare build și rulare container
 
-### 1.5.3 Configurare docker-compose.dev.yml 🟡 (1 zi)
+### 1.5.3 Configurare docker-compose.dev.yml 🟡 (1 zi) ✅
 
-- [ ] Configurare servicii (backend, frontend, db, etc.)
-- [ ] Configurare volume-uri pentru dezvoltare
-- [ ] Configurare variabile de mediu
-- [ ] Configurare networking
-- [ ] Testare docker-compose up
+- [x] Configurare servicii (backend, frontend, db, etc.)
+- [x] Configurare volume-uri pentru dezvoltare
+- [x] Configurare variabile de mediu
+- [x] Configurare networking
+- [x] Testare docker-compose up
 
 ### 1.5.4 Configurare docker-compose.prod.yml 🟡 (1 zi)
 
