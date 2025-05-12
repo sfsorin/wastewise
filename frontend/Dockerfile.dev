@@ -8,26 +8,18 @@ WORKDIR /app
 RUN apk add --no-cache git && \
     rm -rf /var/cache/apk/*
 
-# Crearea unui utilizator non-root
-RUN addgroup -g 1001 -S appuser && \
-    adduser -u 1001 -S appuser -G appuser && \
-    chown -R appuser /app
-
 # Copiem package.json și package-lock.json pentru a instala dependențele
-COPY --chown=appuser:appuser package*.json ./
+COPY package*.json ./
 
 # Instalăm dependențele cu flag-ul legacy-peer-deps pentru a rezolva conflictele
 RUN npm install --legacy-peer-deps && \
     npm cache clean --force
 
 # Copiem restul codului sursă
-COPY --chown=appuser:appuser . .
+COPY . .
 
 # Expunem portul pe care rulează aplicația
 EXPOSE 5173
-
-# Schimbarea utilizatorului
-USER appuser
 
 # Comanda pentru pornirea aplicației în modul de dezvoltare
 CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
