@@ -284,10 +284,10 @@
 - [x] Configurare verificări post-deployment
 - [x] Testare workflow complet
 
-### 1.6.4 Configurare workflow pentru deployment în producție 🔴 (2 zile)
+### 1.6.4 Configurare workflow pentru deployment în producție 🔴 (2 zile) ✅
 
-- [ ] Configurare secrets pentru producție
-- [ ] Configurare workflow cu aprobare manuală
-- [ ] Configurare deployment în Kubernetes/server producție
-- [ ] Configurare rollback automat în caz de eșec
-- [ ] Testare workflow complet (fără deployment efectiv)
+- [x] Configurare secrets pentru producție
+- [x] Configurare workflow cu aprobare manuală
+- [x] Configurare deployment în Kubernetes/server producție
+- [x] Configurare rollback automat în caz de eșec
+- [x] Testare workflow complet (fără deployment efectiv)
