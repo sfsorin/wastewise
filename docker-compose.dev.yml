@@ -113,6 +113,7 @@ services:
   # Prometheus pentru monitorizare
   prometheus:
     image: prom/prometheus:latest
+    container_name: wastewise-prometheus-dev
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus-data-dev:/prometheus
@@ -125,6 +126,7 @@ services:
   # Grafana pentru vizualizare
   grafana:
     image: grafana/grafana:latest
+    container_name: wastewise-grafana-dev
     volumes:
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
       - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
@@ -141,6 +143,7 @@ services:
   # Node Exporter pentru metrici sistem
   node-exporter:
     image: prom/node-exporter:latest
+    container_name: wastewise-node-exporter-dev
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -156,6 +159,7 @@ services:
   # cAdvisor pentru metrici containere
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
+    container_name: wastewise-cadvisor-dev
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:ro
@@ -169,6 +173,7 @@ services:
   # Loki pentru logging
   loki:
     image: grafana/loki:latest
+    container_name: wastewise-loki-dev
     ports:
       - "3100:3100"
     volumes:
@@ -180,6 +185,7 @@ services:
   # Promtail pentru colectare log-uri
   promtail:
     image: grafana/promtail:latest
+    container_name: wastewise-promtail-dev
     volumes:
       - /var/log:/var/log
       - ./promtail/promtail-config.yml:/etc/promtail/config.yml

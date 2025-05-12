@@ -14,7 +14,7 @@ set "NC=[0m"
 :log_message
     set "type=%~1"
     set "message=%~2"
-    
+
     if "%type%"=="INFO" (
         echo %BLUE%[INFO]%NC% %message%
     ) else if "%type%"=="SUCCESS" (
@@ -54,24 +54,28 @@ set "NC=[0m"
 :: Funcție pentru pornirea aplicației în mod detașat
 :start_detached
     call :log_message "INFO" "Pornirea aplicației în mod detașat..."
-    
+
     :: Oprirea containerelor existente
     call :log_message "INFO" "Oprirea containerelor existente..."
     docker compose down
-    
+
+    :: Ștergerea containerelor existente pentru a evita sufixul "-1"
+    call :log_message "INFO" "Ștergerea containerelor existente..."
+    docker container prune -f
+
     :: Pornirea containerelor în mod detașat
     call :log_message "INFO" "Pornirea containerelor în mod detașat..."
     docker compose -f docker-compose.dev.yml up -d
-    
+
     if !errorlevel! neq 0 (
         call :log_message "ERROR" "A apărut o eroare la pornirea containerelor."
         exit /b 1
     )
-    
+
     :: Așteptare pentru pornirea serviciilor
     call :log_message "INFO" "Așteptare pentru pornirea serviciilor..."
     timeout /t 5 >nul
-    
+
     :: Verificare backend
     call :log_message "INFO" "Verificare backend..."
     call :check_service_available "localhost" 3000 5 2
@@ -80,7 +84,7 @@ set "NC=[0m"
         exit /b 1
     )
     call :log_message "SUCCESS" "Backend-ul este disponibil."
-    
+
     :: Verificare frontend
     call :log_message "INFO" "Verificare frontend..."
     call :check_service_available "localhost" 5173 5 2
@@ -89,7 +93,7 @@ set "NC=[0m"
         exit /b 1
     )
     call :log_message "SUCCESS" "Frontend-ul este disponibil."
-    
+
     :: Verificare API
     call :log_message "INFO" "Verificare API..."
     curl -s "http://localhost:3000/api/v1/health" | findstr "ok" >nul
@@ -98,11 +102,11 @@ set "NC=[0m"
     ) else (
         call :log_message "WARNING" "API-ul nu răspunde cum era așteptat. Verificați implementarea endpoint-ului /health."
     )
-    
+
     call :log_message "SUCCESS" "Aplicația a fost pornită cu succes în mod detașat."
     call :log_message "INFO" "Pentru a vedea log-urile, folosiți comanda: docker compose logs -f"
     call :log_message "INFO" "Pentru a opri aplicația, folosiți comanda: docker compose down"
-    
+
     exit /b 0
 
 :: Pornirea aplicației în mod detașat
