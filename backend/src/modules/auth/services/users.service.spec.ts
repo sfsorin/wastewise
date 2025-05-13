@@ -2,10 +2,29 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { User } from '../../users/entities/user.entity';
+import { User, UserStatus } from '../../users/entities/user.entity';
 import { PasswordResetToken } from '../entities/password-reset-token.entity';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
+
+// Interfețe pentru obiecte mock
+interface MockUser {
+  id: string;
+  username?: string;
+  email?: string;
+  fullName?: string;
+  status?: string;
+  password?: string;
+}
+
+interface MockPasswordResetToken {
+  id: string;
+  userId: string;
+  token: string;
+  expiresAt: Date;
+  used: boolean;
+  user?: { id: string };
+}
 
 jest.mock('bcrypt');
 
@@ -143,7 +162,7 @@ describe('UsersService', () => {
 
       expect(mockUserRepository.findOne).toHaveBeenCalledWith({
         where: { id: '123' },
-        select: expect.any(Array),
+        select: ['id', 'username', 'email', 'fullName', 'role', 'status'],
       });
       expect(result).toEqual(user);
     });
@@ -154,25 +173,25 @@ describe('UsersService', () => {
       await expect(service.findOne('nonexistent')).rejects.toThrow(NotFoundException);
       expect(mockUserRepository.findOne).toHaveBeenCalledWith({
         where: { id: 'nonexistent' },
-        select: expect.any(Array),
+        select: ['id', 'username', 'email', 'fullName', 'role', 'status'],
       });
     });
   });
 
   describe('createPasswordResetToken', () => {
     it('should create a password reset token for an active user', async () => {
-      const user = {
+      const user: MockUser = {
         id: '123',
         email: 'test@example.com',
         username: 'testuser',
-        status: 'active',
+        status: UserStatus.ACTIVE,
       };
       const token = 'reset-token';
-      const passwordResetToken = {
+      const passwordResetToken: MockPasswordResetToken = {
         id: '456',
         userId: user.id,
         token,
-        expiresAt: expect.any(Date),
+        expiresAt: new Date(Date.now() + 3600000), // 1 hour in the future
         used: false,
       };
 
@@ -184,22 +203,23 @@ describe('UsersService', () => {
       jest.spyOn(crypto, 'randomBytes').mockImplementation(
         () =>
           ({
-            toString: () => token,
-          }) as any,
+            toString: (): string => token,
+          }) as Buffer,
       );
 
       const result = await service.createPasswordResetToken('test@example.com');
 
       expect(mockUserRepository.findOne).toHaveBeenCalledWith({
-        where: { email: 'test@example.com', status: 'active' },
+        where: { email: 'test@example.com', status: UserStatus.ACTIVE },
       });
       expect(mockPasswordResetTokenRepository.update).toHaveBeenCalled();
-      expect(mockPasswordResetTokenRepository.create).toHaveBeenCalledWith({
-        userId: user.id,
-        token,
-        expiresAt: expect.any(Date),
-        used: false,
-      });
+      expect(mockPasswordResetTokenRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          userId: user.id,
+          token,
+          used: false,
+        }),
+      );
       expect(mockPasswordResetTokenRepository.save).toHaveBeenCalledWith(passwordResetToken);
       expect(result).toEqual({ token, user });
     });
@@ -211,7 +231,7 @@ describe('UsersService', () => {
         NotFoundException,
       );
       expect(mockUserRepository.findOne).toHaveBeenCalledWith({
-        where: { email: 'nonexistent@example.com', status: 'active' },
+        where: { email: 'nonexistent@example.com', status: UserStatus.ACTIVE },
       });
       expect(mockPasswordResetTokenRepository.update).not.toHaveBeenCalled();
       expect(mockPasswordResetTokenRepository.create).not.toHaveBeenCalled();
@@ -221,7 +241,7 @@ describe('UsersService', () => {
 
   describe('resetPassword', () => {
     it('should reset the password if token is valid', async () => {
-      const passwordResetToken = {
+      const passwordResetToken: MockPasswordResetToken = {
         id: '456',
         userId: '123',
         token: 'valid-token',
@@ -267,7 +287,7 @@ describe('UsersService', () => {
     });
 
     it('should throw BadRequestException if token has expired', async () => {
-      const passwordResetToken = {
+      const passwordResetToken: MockPasswordResetToken = {
         id: '456',
         userId: '123',
         token: 'expired-token',

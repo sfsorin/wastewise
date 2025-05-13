@@ -25,7 +25,7 @@ import { HealthModule } from './health/health.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService): Record<string, unknown> => {
-        const dbConfig = configService.get('database') as Record<string, unknown> | undefined;
+        const dbConfig = configService.get<Record<string, unknown>>('database');
         return dbConfig ? { ...dbConfig } : {};
       },
     }),

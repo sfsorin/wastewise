@@ -2,29 +2,34 @@ name: Production Deployment
 
 on:
   push:
-    branches: [ main ]
-    tags: [ 'v*' ]
+    branches: [main]
+    tags: ["v*"]
   workflow_dispatch:
     inputs:
       deploy_backend:
-        description: 'Deploy backend'
+        description: "Deploy backend"
         required: true
-        default: 'true'
+        default: true
         type: boolean
       deploy_frontend:
-        description: 'Deploy frontend'
+        description: "Deploy frontend"
         required: true
-        default: 'true'
+        default: true
         type: boolean
       deploy_database:
-        description: 'Run database migrations'
+        description: "Run database migrations"
         required: true
-        default: 'true'
+        default: true
         type: boolean
       version:
-        description: 'Version to deploy (leave empty for latest)'
+        description: "Version to deploy (leave empty for latest)"
         required: false
         type: string
+
+# Adăugăm permisiuni pentru GITHUB_TOKEN
+permissions:
+  contents: read
+  packages: write
 
 jobs:
   prepare:
@@ -51,7 +56,7 @@ jobs:
             echo "deploy_backend=${{ github.event.inputs.deploy_backend }}" >> $GITHUB_OUTPUT
             echo "deploy_frontend=${{ github.event.inputs.deploy_frontend }}" >> $GITHUB_OUTPUT
             echo "deploy_database=${{ github.event.inputs.deploy_database }}" >> $GITHUB_OUTPUT
-            
+
             if [ -n "${{ github.event.inputs.version }}" ]; then
               echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
             else
@@ -70,11 +75,11 @@ jobs:
             VERSION=$(date +'%Y%m%d%H%M%S')-${GITHUB_SHA::8}
             echo "version=$VERSION" >> $GITHUB_OUTPUT
           fi
-          
+
           # Obținem versiunea anterioară pentru rollback
           PREV_VERSION=$(curl -s https://${{ secrets.PRODUCTION_API_URL }}/version || echo "unknown")
           echo "previous_version=$PREV_VERSION" >> $GITHUB_OUTPUT
-          
+
           echo "Deployment version: $(cat $GITHUB_OUTPUT | grep version | cut -d= -f2)"
           echo "Previous version: $(cat $GITHUB_OUTPUT | grep previous_version | cut -d= -f2)"
 
@@ -95,7 +100,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract metadata for Docker
@@ -135,7 +140,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract metadata for Docker
@@ -204,7 +209,7 @@ jobs:
           NODE_ENV=production
           VERSION=${{ needs.prepare.outputs.version }}
           PREVIOUS_VERSION=${{ needs.prepare.outputs.previous_version }}
-          
+
           # Configurare bază de date
           DB_HOST=${{ secrets.PRODUCTION_DB_HOST }}
           DB_PORT=${{ secrets.PRODUCTION_DB_PORT }}
@@ -212,24 +217,24 @@ jobs:
           DB_PASSWORD=${{ secrets.PRODUCTION_DB_PASSWORD }}
           DB_DATABASE=${{ secrets.PRODUCTION_DB_DATABASE }}
           DB_SSL=${{ secrets.PRODUCTION_DB_SSL }}
-          
+
           # Configurare Redis
           REDIS_HOST=${{ secrets.PRODUCTION_REDIS_HOST }}
           REDIS_PORT=${{ secrets.PRODUCTION_REDIS_PORT }}
           REDIS_PASSWORD=${{ secrets.PRODUCTION_REDIS_PASSWORD }}
-          
+
           # Configurare JWT
           JWT_SECRET=${{ secrets.PRODUCTION_JWT_SECRET }}
           JWT_EXPIRATION=${{ secrets.PRODUCTION_JWT_EXPIRATION }}
-          
+
           # Configurare API
           PORT=3000
           API_PREFIX=api
           API_VERSION=v1
-          
+
           # Configurare frontend
           FRONTEND_URL=${{ secrets.PRODUCTION_FRONTEND_URL }}
-          
+
           # Configurare MinIO
           MINIO_ROOT_USER=${{ secrets.PRODUCTION_MINIO_ROOT_USER }}
           MINIO_ROOT_PASSWORD=${{ secrets.PRODUCTION_MINIO_ROOT_PASSWORD }}
@@ -250,49 +255,49 @@ jobs:
           # Transferăm fișierele necesare
           scp -P ${{ secrets.PRODUCTION_SSH_PORT }} .env ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SERVER }}:${{ secrets.PRODUCTION_DEPLOY_PATH }}/.env
           scp -P ${{ secrets.PRODUCTION_SSH_PORT }} docker-compose.prod.yml ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SERVER }}:${{ secrets.PRODUCTION_DEPLOY_PATH }}/docker-compose.yml
-          
+
           # Executăm comenzile de deployment
           ssh -p ${{ secrets.PRODUCTION_SSH_PORT }} ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SERVER }} << 'ENDSSH'
             cd ${{ secrets.PRODUCTION_DEPLOY_PATH }}
-            
+
             # Autentificare la GitHub Container Registry
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+
             # Backup imagini curente pentru rollback
             if [ "${{ needs.prepare.outputs.deploy_backend }}" == "true" ]; then
               docker pull ghcr.io/${{ github.repository }}/backend:production || true
               docker tag ghcr.io/${{ github.repository }}/backend:production ghcr.io/${{ github.repository }}/backend:rollback || true
             fi
-            
+
             if [ "${{ needs.prepare.outputs.deploy_frontend }}" == "true" ]; then
               docker pull ghcr.io/${{ github.repository }}/frontend:production || true
               docker tag ghcr.io/${{ github.repository }}/frontend:production ghcr.io/${{ github.repository }}/frontend:rollback || true
             fi
-            
+
             # Actualizare imagini
             if [ "${{ needs.prepare.outputs.deploy_backend }}" == "true" ]; then
               docker pull ghcr.io/${{ github.repository }}/backend:${{ needs.prepare.outputs.version }}
               docker tag ghcr.io/${{ github.repository }}/backend:${{ needs.prepare.outputs.version }} ghcr.io/${{ github.repository }}/backend:production
             fi
-            
+
             if [ "${{ needs.prepare.outputs.deploy_frontend }}" == "true" ]; then
               docker pull ghcr.io/${{ github.repository }}/frontend:${{ needs.prepare.outputs.version }}
               docker tag ghcr.io/${{ github.repository }}/frontend:${{ needs.prepare.outputs.version }} ghcr.io/${{ github.repository }}/frontend:production
             fi
-            
+
             # Rulare migrări bază de date (dacă este necesar)
             if [ "${{ needs.prepare.outputs.deploy_database }}" == "true" ]; then
               # Backup bază de date înainte de migrare
-              docker-compose exec -T postgres pg_dump -U $DB_USERNAME $DB_DATABASE > backup_$(date +%Y%m%d%H%M%S).sql
-              
+              docker compose exec -T postgres pg_dump -U $DB_USERNAME $DB_DATABASE > backup_$(date +%Y%m%d%H%M%S).sql
+
               # Rulare migrări
-              docker-compose run --rm backend npm run migration:run
+              docker compose run --rm backend npm run migration:run
             fi
-            
+
             # Repornire servicii
-            docker-compose down
-            docker-compose up -d
-            
+            docker compose down
+            docker compose up -d
+
             # Curățare imagini vechi
             docker image prune -af
           ENDSSH
@@ -318,7 +323,7 @@ jobs:
               echo "Backend health check failed with status $STATUS. Retrying in 10s... ($i/10)"
               sleep 10
             fi
-            
+
             if [ $i -eq 10 ]; then
               echo "Backend health check failed after 10 attempts!"
               echo "status=failure" >> $GITHUB_OUTPUT
@@ -340,7 +345,7 @@ jobs:
               echo "Frontend availability check failed with status $STATUS. Retrying in 10s... ($i/10)"
               sleep 10
             fi
-            
+
             if [ $i -eq 10 ]; then
               echo "Frontend availability check failed after 10 attempts!"
               echo "status=failure" >> $GITHUB_OUTPUT
@@ -351,29 +356,29 @@ jobs:
         if: steps.check-backend.outputs.status == 'failure' || steps.check-frontend.outputs.status == 'failure'
         run: |
           echo "Verification failed! Rolling back to previous version..."
-          
+
           ssh -p ${{ secrets.PRODUCTION_SSH_PORT }} ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SERVER }} << 'ENDSSH'
             cd ${{ secrets.PRODUCTION_DEPLOY_PATH }}
-            
+
             # Rollback imagini
             if [ "${{ needs.prepare.outputs.deploy_backend }}" == "true" ]; then
               docker tag ghcr.io/${{ github.repository }}/backend:rollback ghcr.io/${{ github.repository }}/backend:production || true
             fi
-            
+
             if [ "${{ needs.prepare.outputs.deploy_frontend }}" == "true" ]; then
               docker tag ghcr.io/${{ github.repository }}/frontend:rollback ghcr.io/${{ github.repository }}/frontend:production || true
             fi
-            
+
             # Repornire servicii
-            docker-compose down
-            docker-compose up -d
-            
+            docker compose down
+            docker compose up -d
+
             echo "Rollback completed!"
           ENDSSH
-          
+
           # Notificare rollback
           curl -X POST -H 'Content-type: application/json' --data '{"text":"⚠️ *ROLLBACK TRIGGERED*: Deployment to production failed verification and was rolled back to previous version."}' ${{ secrets.SLACK_WEBHOOK }}
-          
+
           # Eșuăm workflow-ul
           exit 1
 

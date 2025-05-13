@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, BadRequestException, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from '../../users/users.service';
@@ -7,10 +7,13 @@ import { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from '../dto/register.dto';
 import { ForgotPasswordDto } from '../dto/forgot-password.dto';
 import { ResetPasswordDto } from '../dto/reset-password.dto';
-import { UserStatus } from '../../users/entities/user.entity';
+import { UserStatus, UserRole } from '../../users/entities/user.entity';
+import { Role } from '../../users/entities/role.entity';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
@@ -18,33 +21,74 @@ export class AuthService {
     private mailService: MailService,
   ) {}
 
-  async validateUser(username: string, password: string): Promise<any> {
+  async validateUser(
+    username: string,
+    password: string,
+  ): Promise<{
+    id: string;
+    username: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    fullName: string;
+    role: UserRole;
+    status: UserStatus;
+    isActive: boolean;
+    lastLogin: Date;
+    createdAt: Date;
+    updatedAt: Date;
+    roles: Role[];
+  } | null> {
     try {
-      console.log(`Încercare de autentificare pentru utilizatorul: ${username}`);
+      this.logger.debug(`Încercare de autentificare pentru utilizatorul: ${username}`);
       const user = await this.usersService.findByUsernameOrEmail(username);
 
       if (!user) {
-        console.log(`Utilizatorul ${username} nu a fost găsit`);
+        this.logger.debug(`Utilizatorul ${username} nu a fost găsit`);
         return null;
       }
 
-      console.log(`Utilizatorul ${username} găsit, verificare parolă...`);
+      this.logger.debug(`Utilizatorul ${username} găsit, verificare parolă...`);
       const isPasswordValid = await user.validatePassword(password);
-      console.log(`Rezultat validare parolă: ${isPasswordValid}`);
+      this.logger.debug(`Rezultat validare parolă: ${isPasswordValid}`);
 
       if (isPasswordValid) {
         const { password: _password, ...result } = user;
-        return result;
+        return result as {
+          id: string;
+          username: string;
+          email: string;
+          firstName: string;
+          lastName: string;
+          fullName: string;
+          role: UserRole;
+          status: UserStatus;
+          isActive: boolean;
+          lastLogin: Date;
+          createdAt: Date;
+          updatedAt: Date;
+          roles: Role[];
+        };
       }
 
       return null;
-    } catch (error: any) {
-      console.error(`Eroare la validarea utilizatorului: ${error.message}`);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.logger.error(`Eroare la validarea utilizatorului: ${errorMessage}`);
       return null;
     }
   }
 
-  async login(loginDto: LoginDto) {
+  async login(loginDto: LoginDto): Promise<{
+    access_token: string;
+    user: {
+      id: string;
+      username: string;
+      email: string;
+      fullName?: string;
+      role: string;
+    };
+  }> {
     const user = await this.validateUser(loginDto.username, loginDto.password);
 
     if (!user) {
@@ -77,7 +121,16 @@ export class AuthService {
     };
   }
 
-  async register(registerDto: RegisterDto) {
+  async register(registerDto: RegisterDto): Promise<{
+    access_token: string;
+    user: {
+      id: string;
+      username: string;
+      email: string;
+      fullName?: string;
+      role: string;
+    };
+  }> {
     const user = await this.usersService.create(registerDto);
 
     const payload = {
@@ -99,8 +152,21 @@ export class AuthService {
     };
   }
 
-  async getProfile(userId: string) {
-    return this.usersService.findOne(userId);
+  async getProfile(userId: string): Promise<{
+    id: string;
+    username: string;
+    email: string;
+    fullName?: string;
+    role: string;
+  }> {
+    const user = await this.usersService.findOne(userId);
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      fullName: user.fullName,
+      role: user.role,
+    };
   }
 
   async forgotPassword(forgotPasswordDto: ForgotPasswordDto): Promise<void> {

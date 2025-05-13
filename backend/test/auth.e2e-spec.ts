@@ -7,6 +7,35 @@ import { PasswordResetToken } from '../src/modules/auth/entities/password-reset-
 import { Repository } from 'typeorm';
 import { TestAppModule } from './test-app.module';
 
+// Interfețe pentru răspunsurile API
+interface UserResponse {
+  id: string;
+  username: string;
+  email: string;
+  fullName: string;
+  role: string;
+  status: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+interface AuthResponse {
+  access_token: string;
+  user: UserResponse;
+}
+
+interface MessageResponse {
+  message: string;
+}
+
+interface ValidTokenResponse {
+  valid: boolean;
+}
+
+// Tipul pentru aplicația de test
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+type App = any;
+
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
   let userRepository: Repository<User>;
@@ -61,17 +90,19 @@ describe('AuthController (e2e)', () => {
         .send(registerDto)
         .expect(201);
 
-      expect(response.body).toHaveProperty('access_token');
-      expect(response.body).toHaveProperty('user');
-      expect(response.body.user).toHaveProperty('id');
-      expect(response.body.user.username).toBe(registerDto.username);
-      expect(response.body.user.email).toBe(registerDto.email);
-      expect(response.body.user.fullName).toBe(registerDto.fullName);
-      expect(response.body.user).not.toHaveProperty('password');
+      const authResponse = response.body as AuthResponse;
+
+      expect(authResponse).toHaveProperty('access_token');
+      expect(authResponse).toHaveProperty('user');
+      expect(authResponse.user).toHaveProperty('id');
+      expect(authResponse.user.username).toBe(registerDto.username);
+      expect(authResponse.user.email).toBe(registerDto.email);
+      expect(authResponse.user.fullName).toBe(registerDto.fullName);
+      expect(authResponse.user).not.toHaveProperty('password');
 
       // Save user ID and JWT token for later tests
-      userId = response.body.user.id;
-      jwtToken = response.body.access_token;
+      userId = authResponse.user.id;
+      jwtToken = authResponse.access_token;
     });
 
     it('/auth/register (POST) - should return 409 if username already exists', async () => {
@@ -87,8 +118,10 @@ describe('AuthController (e2e)', () => {
         .send(registerDto)
         .expect(409);
 
-      expect(response.body).toHaveProperty('message');
-      expect(response.body.message).toContain('Există deja un utilizator cu numele testuser');
+      const errorResponse = response.body as MessageResponse;
+
+      expect(errorResponse).toHaveProperty('message');
+      expect(errorResponse.message).toContain('Există deja un utilizator cu numele testuser');
     });
 
     it('/auth/register (POST) - should return 409 if email already exists', async () => {
@@ -104,8 +137,10 @@ describe('AuthController (e2e)', () => {
         .send(registerDto)
         .expect(409);
 
-      expect(response.body).toHaveProperty('message');
-      expect(response.body.message).toContain(
+      const errorResponse = response.body as MessageResponse;
+
+      expect(errorResponse).toHaveProperty('message');
+      expect(errorResponse.message).toContain(
         'Există deja un utilizator cu adresa de email test@example.com',
       );
     });
@@ -121,9 +156,11 @@ describe('AuthController (e2e)', () => {
         .send(loginDto)
         .expect(200);
 
-      expect(response.body).toHaveProperty('access_token');
-      expect(response.body).toHaveProperty('user');
-      expect(response.body.user.username).toBe(loginDto.username);
+      const authResponse = response.body as AuthResponse;
+
+      expect(authResponse).toHaveProperty('access_token');
+      expect(authResponse).toHaveProperty('user');
+      expect(authResponse.user.username).toBe(loginDto.username);
     });
 
     it('/auth/login (POST) - should return 401 with invalid credentials', async () => {
@@ -137,8 +174,10 @@ describe('AuthController (e2e)', () => {
         .send(loginDto)
         .expect(401);
 
-      expect(response.body).toHaveProperty('message');
-      expect(response.body.message).toBe('Credențiale invalide');
+      const errorResponse = response.body as MessageResponse;
+
+      expect(errorResponse).toHaveProperty('message');
+      expect(errorResponse.message).toBe('Credențiale invalide');
     });
 
     it('/auth/profile (GET) - should return user profile with valid token', async () => {
@@ -147,11 +186,13 @@ describe('AuthController (e2e)', () => {
         .set('Authorization', `Bearer ${jwtToken}`)
         .expect(200);
 
-      expect(response.body).toHaveProperty('id');
-      expect(response.body.id).toBe(userId);
-      expect(response.body.username).toBe('testuser');
-      expect(response.body.email).toBe('test@example.com');
-      expect(response.body).not.toHaveProperty('password');
+      const userResponse = response.body as UserResponse;
+
+      expect(userResponse).toHaveProperty('id');
+      expect(userResponse.id).toBe(userId);
+      expect(userResponse.username).toBe('testuser');
+      expect(userResponse.email).toBe('test@example.com');
+      expect(userResponse).not.toHaveProperty('password');
     });
 
     it('/auth/profile (GET) - should return 401 without token', async () => {
@@ -196,8 +237,10 @@ describe('AuthController (e2e)', () => {
         .get(`/auth/validate-reset-token?token=${resetToken}`)
         .expect(200);
 
-      expect(response.body).toHaveProperty('valid');
-      expect(response.body.valid).toBe(true);
+      const validResponse = response.body as ValidTokenResponse;
+
+      expect(validResponse).toHaveProperty('valid');
+      expect(validResponse.valid).toBe(true);
     });
 
     it('/auth/validate-reset-token (GET) - should invalidate non-existent token', async () => {
@@ -205,8 +248,10 @@ describe('AuthController (e2e)', () => {
         .get('/auth/validate-reset-token?token=nonexistent-token')
         .expect(200);
 
-      expect(response.body).toHaveProperty('valid');
-      expect(response.body.valid).toBe(false);
+      const validResponse = response.body as ValidTokenResponse;
+
+      expect(validResponse).toHaveProperty('valid');
+      expect(validResponse.valid).toBe(false);
     });
 
     it('/auth/reset-password (POST) - should reset password with valid token', async () => {
@@ -261,8 +306,10 @@ describe('AuthController (e2e)', () => {
         .send(resetPasswordDto)
         .expect(400);
 
-      expect(response.body).toHaveProperty('message');
-      expect(response.body.message).toBe('Parola și confirmarea parolei nu coincid');
+      const errorResponse = response.body as MessageResponse;
+
+      expect(errorResponse).toHaveProperty('message');
+      expect(errorResponse.message).toBe('Parola și confirmarea parolei nu coincid');
     });
 
     it('/auth/reset-password (POST) - should return 400 for invalid token', async () => {
@@ -277,8 +324,10 @@ describe('AuthController (e2e)', () => {
         .send(resetPasswordDto)
         .expect(400);
 
-      expect(response.body).toHaveProperty('message');
-      expect(response.body.message).toBe(
+      const errorResponse = response.body as MessageResponse;
+
+      expect(errorResponse).toHaveProperty('message');
+      expect(errorResponse.message).toBe(
         'Token-ul de resetare a parolei este invalid sau a expirat',
       );
     });

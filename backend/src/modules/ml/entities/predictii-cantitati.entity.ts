@@ -118,7 +118,7 @@ export class PredictiiCantitati {
     example: { n_estimators: 100, max_depth: 10 },
   })
   @Column({ type: 'jsonb', nullable: true })
-  parametriModel: Record<string, any>;
+  parametriModel: Record<string, number | string | boolean | null>;
 
   @ApiProperty({
     description: 'Data creării înregistrării',

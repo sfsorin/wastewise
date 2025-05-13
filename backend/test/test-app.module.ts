@@ -18,11 +18,19 @@ import { PasswordResetToken } from '../src/modules/auth/entities/password-reset-
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        ...configService.get('database'),
-        entities: [User, PasswordResetToken],
-        synchronize: true,
-      }),
+      useFactory: (configService: ConfigService) => {
+        const dbConfig = configService.get<Record<string, unknown>>('database');
+        return {
+          type: dbConfig?.type,
+          host: dbConfig?.host,
+          port: dbConfig?.port,
+          username: dbConfig?.username,
+          password: dbConfig?.password,
+          database: dbConfig?.database,
+          entities: [User, PasswordResetToken],
+          synchronize: true,
+        };
+      },
     }),
     AuthModule,
   ],

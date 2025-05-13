@@ -6,6 +6,18 @@ import { CreateContractDto } from '../dto/create-contract.dto';
 import { UpdateContractDto } from '../dto/update-contract.dto';
 import { ClientService } from '../../clients/services/client.service';
 
+// Interfață pentru datele de actualizare
+interface UpdateData {
+  clientId?: string;
+  numarContract?: string;
+  dataInceput?: Date;
+  dataSfarsit?: Date;
+  valoare?: number;
+  moneda?: string;
+  status?: string;
+  detalii?: string;
+}
+
 @Injectable()
 export class ContractService {
   constructor(
@@ -135,7 +147,14 @@ export class ContractService {
     }
 
     // Pregătire date pentru actualizare
-    const updateData: any = { ...updateContractDto };
+    const updateData: UpdateData = {
+      clientId: updateContractDto.clientId,
+      numarContract: updateContractDto.numarContract,
+      valoare: updateContractDto.valoare,
+      moneda: updateContractDto.moneda,
+      status: updateContractDto.status,
+      detalii: updateContractDto.detalii,
+    };
 
     // Conversie date din string în Date
     if (updateContractDto.dataInceput) {

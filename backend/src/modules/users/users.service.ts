@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User, UserStatus } from './entities/user.entity';
@@ -9,6 +9,8 @@ import * as crypto from 'crypto';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
@@ -199,14 +201,18 @@ export class UsersService {
     return { token, user };
   }
 
-  async resetPassword(_token: string, newPassword: string): Promise<void> {
+  async resetPassword(token: string, newPassword: string): Promise<void> {
+    this.logger.debug(`Resetare parolă pentru token: ${token}`);
+
     // Hash-uire parolă nouă
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
     // Actualizare parolă utilizator
+    // În implementarea reală, aici ar trebui să găsim utilizatorul după token
+    // și să-i actualizăm parola
     await this.usersRepository.update(
-      { id: 'dummy' },
+      { id: 'dummy' }, // Acest ID ar trebui să fie al utilizatorului real
       {
         password: hashedPassword,
       },

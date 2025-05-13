@@ -165,5 +165,5 @@ export class CreatePredictiiCantitatiDto {
     required: false,
   })
   @IsOptional()
-  parametriModel?: Record<string, any>;
+  parametriModel?: Record<string, number | string | boolean | null>;
 }

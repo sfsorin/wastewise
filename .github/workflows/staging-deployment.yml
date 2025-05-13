@@ -2,24 +2,29 @@ name: Staging Deployment
 
 on:
   push:
-    branches: [ develop ]
+    branches: [develop]
   workflow_dispatch:
     inputs:
       deploy_backend:
-        description: 'Deploy backend'
+        description: "Deploy backend"
         required: true
-        default: 'true'
+        default: "true"
         type: boolean
       deploy_frontend:
-        description: 'Deploy frontend'
+        description: "Deploy frontend"
         required: true
-        default: 'true'
+        default: "true"
         type: boolean
       deploy_database:
-        description: 'Run database migrations'
+        description: "Run database migrations"
         required: true
-        default: 'true'
+        default: "true"
         type: boolean
+
+# Adăugăm permisiuni pentru GITHUB_TOKEN
+permissions:
+  contents: read
+  packages: write
 
 jobs:
   prepare:
@@ -50,7 +55,7 @@ jobs:
             echo "deploy_frontend=true" >> $GITHUB_OUTPUT
             echo "deploy_database=true" >> $GITHUB_OUTPUT
           fi
-          
+
           # Generăm versiunea pentru deployment
           VERSION=$(date +'%Y%m%d%H%M%S')-${GITHUB_SHA::8}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
@@ -73,7 +78,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract metadata for Docker
@@ -113,7 +118,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract metadata for Docker
@@ -143,18 +148,38 @@ jobs:
     needs: [prepare, build-backend, build-frontend]
     if: always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled')
 
+    # Verificăm dacă avem toate secretele necesare pentru deployment
+    # Dacă nu, vom sări peste deployment și vom marca job-ul ca reușit
+    # Acest lucru este util pentru mediile de dezvoltare sau testare
+    # unde nu avem un server de staging configurat
+    env:
+      HAS_DEPLOYMENT_SECRETS: ${{ secrets.STAGING_SSH_PRIVATE_KEY != '' && secrets.STAGING_SERVER != '' }}
+
     steps:
+      - name: Check deployment configuration
+        id: check-config
+        run: |
+          if [ "${{ env.HAS_DEPLOYMENT_SECRETS }}" == "true" ]; then
+            echo "Deployment configuration is available. Proceeding with deployment."
+            echo "deploy=true" >> $GITHUB_OUTPUT
+          else
+            echo "Deployment configuration is not available. Skipping deployment."
+            echo "deploy=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Checkout code
+        if: steps.check-config.outputs.deploy == 'true'
         uses: actions/checkout@v4
 
       - name: Create .env file
+        if: steps.check-config.outputs.deploy == 'true'
         run: |
           # Creăm fișierul .env pentru deployment
           cat > .env << EOL
           # Configurare generată automat pentru deployment în staging
           NODE_ENV=staging
           VERSION=${{ needs.prepare.outputs.version }}
-          
+
           # Configurare bază de date
           DB_HOST=${{ secrets.STAGING_DB_HOST }}
           DB_PORT=${{ secrets.STAGING_DB_PORT }}
@@ -162,83 +187,115 @@ jobs:
           DB_PASSWORD=${{ secrets.STAGING_DB_PASSWORD }}
           DB_DATABASE=${{ secrets.STAGING_DB_DATABASE }}
           DB_SSL=${{ secrets.STAGING_DB_SSL }}
-          
+
           # Configurare Redis
           REDIS_HOST=${{ secrets.STAGING_REDIS_HOST }}
           REDIS_PORT=${{ secrets.STAGING_REDIS_PORT }}
           REDIS_PASSWORD=${{ secrets.STAGING_REDIS_PASSWORD }}
-          
+
           # Configurare JWT
           JWT_SECRET=${{ secrets.STAGING_JWT_SECRET }}
           JWT_EXPIRATION=${{ secrets.STAGING_JWT_EXPIRATION }}
-          
+
           # Configurare API
           PORT=3000
           API_PREFIX=api
           API_VERSION=v1
-          
+
           # Configurare frontend
           FRONTEND_URL=${{ secrets.STAGING_FRONTEND_URL }}
-          
+
           # Configurare MinIO
           MINIO_ROOT_USER=${{ secrets.STAGING_MINIO_ROOT_USER }}
           MINIO_ROOT_PASSWORD=${{ secrets.STAGING_MINIO_ROOT_PASSWORD }}
           EOL
 
       - name: Setup SSH key
+        if: steps.check-config.outputs.deploy == 'true'
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
 
       - name: Add host key to known_hosts
+        if: steps.check-config.outputs.deploy == 'true'
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -p ${{ secrets.STAGING_SSH_PORT }} ${{ secrets.STAGING_SERVER }} >> ~/.ssh/known_hosts
 
       - name: Deploy to staging server
+        if: steps.check-config.outputs.deploy == 'true'
         run: |
           # Transferăm fișierele necesare
           scp -P ${{ secrets.STAGING_SSH_PORT }} .env ${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_SERVER }}:${{ secrets.STAGING_DEPLOY_PATH }}/.env
           scp -P ${{ secrets.STAGING_SSH_PORT }} docker-compose.prod.yml ${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_SERVER }}:${{ secrets.STAGING_DEPLOY_PATH }}/docker-compose.yml
-          
+
           # Executăm comenzile de deployment
           ssh -p ${{ secrets.STAGING_SSH_PORT }} ${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_SERVER }} << 'ENDSSH'
             cd ${{ secrets.STAGING_DEPLOY_PATH }}
-            
+
             # Autentificare la GitHub Container Registry
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+
             # Actualizare imagini
             if [ "${{ needs.prepare.outputs.deploy_backend }}" == "true" ]; then
               docker pull ghcr.io/${{ github.repository }}/backend:${{ needs.prepare.outputs.version }}
               docker tag ghcr.io/${{ github.repository }}/backend:${{ needs.prepare.outputs.version }} ghcr.io/${{ github.repository }}/backend:staging
             fi
-            
+
             if [ "${{ needs.prepare.outputs.deploy_frontend }}" == "true" ]; then
               docker pull ghcr.io/${{ github.repository }}/frontend:${{ needs.prepare.outputs.version }}
               docker tag ghcr.io/${{ github.repository }}/frontend:${{ needs.prepare.outputs.version }} ghcr.io/${{ github.repository }}/frontend:staging
             fi
-            
+
             # Rulare migrări bază de date (dacă este necesar)
             if [ "${{ needs.prepare.outputs.deploy_database }}" == "true" ]; then
-              docker-compose run --rm backend npm run migration:run
+              docker compose run --rm backend npm run migration:run
             fi
-            
+
             # Repornire servicii
-            docker-compose down
-            docker-compose up -d
-            
+            docker compose down
+            docker compose up -d
+
             # Curățare imagini vechi
             docker image prune -af
           ENDSSH
+
+      - name: Deployment skipped
+        if: steps.check-config.outputs.deploy != 'true'
+        run: |
+          echo "Deployment to staging server was skipped because the required secrets are not configured."
+          echo "This is normal in development or testing environments."
+          echo "To enable deployment, configure the following secrets:"
+          echo "- STAGING_SSH_PRIVATE_KEY"
+          echo "- STAGING_SERVER"
+          echo "- STAGING_SSH_PORT"
+          echo "- STAGING_SSH_USER"
+          echo "- STAGING_DEPLOY_PATH"
 
   verify:
     name: Verify Deployment
     runs-on: ubuntu-latest
     needs: deploy
 
+    # Verificăm dacă avem toate secretele necesare pentru verificare
+    # Dacă nu, vom sări peste verificare și vom marca job-ul ca reușit
+    env:
+      HAS_VERIFICATION_SECRETS: ${{ secrets.STAGING_API_URL != '' && secrets.STAGING_FRONTEND_URL != '' }}
+
     steps:
+      - name: Check verification configuration
+        id: check-config
+        run: |
+          if [ "${{ env.HAS_VERIFICATION_SECRETS }}" == "true" ]; then
+            echo "Verification configuration is available. Proceeding with verification."
+            echo "verify=true" >> $GITHUB_OUTPUT
+          else
+            echo "Verification configuration is not available. Skipping verification."
+            echo "verify=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Check backend health
+        if: steps.check-config.outputs.verify == 'true'
         run: |
           # Verificăm dacă backend-ul este disponibil
           echo "Checking backend health..."
@@ -251,6 +308,7 @@ jobs:
           fi
 
       - name: Check frontend availability
+        if: steps.check-config.outputs.verify == 'true'
         run: |
           # Verificăm dacă frontend-ul este disponibil
           echo "Checking frontend availability..."
@@ -261,6 +319,15 @@ jobs:
             echo "Frontend availability check failed!"
             exit 1
           fi
+
+      - name: Verification skipped
+        if: steps.check-config.outputs.verify != 'true'
+        run: |
+          echo "Verification of deployment was skipped because the required secrets are not configured."
+          echo "This is normal in development or testing environments."
+          echo "To enable verification, configure the following secrets:"
+          echo "- STAGING_API_URL"
+          echo "- STAGING_FRONTEND_URL"
 
       - name: Send notification
         if: always()

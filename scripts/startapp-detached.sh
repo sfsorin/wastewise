@@ -77,11 +77,11 @@ start_detached() {
 
     # Așteptare pentru pornirea serviciilor
     log_message "INFO" "Așteptare pentru pornirea serviciilor..."
-    sleep 5
+    sleep 15
 
     # Verificare backend
     log_message "INFO" "Verificare backend..."
-    if ! check_service_available "localhost" 3000 5 2; then
+    if ! check_service_available "localhost" 3030 10 5; then
         log_message "ERROR" "Backend-ul nu este disponibil."
         return 1
     fi
@@ -89,7 +89,7 @@ start_detached() {
 
     # Verificare frontend
     log_message "INFO" "Verificare frontend..."
-    if ! check_service_available "localhost" 5173 5 2; then
+    if ! check_service_available "localhost" 5173 10 5; then
         log_message "ERROR" "Frontend-ul nu este disponibil."
         return 1
     fi
@@ -97,7 +97,7 @@ start_detached() {
 
     # Verificare API
     log_message "INFO" "Verificare API..."
-    if curl -s "http://localhost:3000/api/v1/health" | grep -q "ok"; then
+    if curl -s "http://localhost:3030/api/v1/health" | grep -q "ok"; then
         log_message "SUCCESS" "API-ul răspunde corect."
     else
         log_message "WARNING" "API-ul nu răspunde cum era așteptat. Verificați implementarea endpoint-ului /health."

@@ -9,7 +9,24 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super();
   }
 
-  async validate(username: string, password: string): Promise<any> {
+  async validate(
+    username: string,
+    password: string,
+  ): Promise<{
+    id: string;
+    username: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    fullName: string;
+    role: any;
+    status: any;
+    isActive: boolean;
+    lastLogin: Date;
+    createdAt: Date;
+    updatedAt: Date;
+    roles: any[];
+  }> {
     const user = await this.authService.validateUser(username, password);
     if (!user) {
       throw new UnauthorizedException('Credențiale invalide');
