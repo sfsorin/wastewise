@@ -6,7 +6,6 @@ import { User } from '../src/modules/users/entities/user.entity';
 import { PasswordResetToken } from '../src/modules/auth/entities/password-reset-token.entity';
 import { Repository } from 'typeorm';
 import { TestAppModule } from './test-app.module';
-import { Express } from 'express';
 
 // Interfețe pentru răspunsurile API
 interface UserResponse {
@@ -34,7 +33,7 @@ interface ValidTokenResponse {
 }
 
 // Tipul pentru aplicația de test
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type App = any;
 
 describe('AuthController (e2e)', () => {
