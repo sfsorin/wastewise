@@ -39,6 +39,24 @@ export class CreateUATDto {
   localitateId?: string;
 
   @ApiProperty({
+    description: 'ID-ul zonei ADI',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    required: false,
+  })
+  @IsOptional()
+  @IsUUID('4', { message: 'ID-ul zonei ADI trebuie să fie un UUID valid' })
+  zonaADIId?: string;
+
+  @ApiProperty({
+    description: 'ID-ul zonei Iridex',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    required: false,
+  })
+  @IsOptional()
+  @IsUUID('4', { message: 'ID-ul zonei Iridex trebuie să fie un UUID valid' })
+  zonaIridexId?: string;
+
+  @ApiProperty({
     description: 'Codul SIRUTA al UAT-ului',
     example: '1001',
     required: false,

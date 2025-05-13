@@ -71,20 +71,20 @@
 - [x] Implementare repository pentru CategorieDeseu și Serviciu
 - [x] Testare relații și CRUD
 
-### 2.1.6 Creare entități pentru zone ADI și zone Iridex 🟡 (1 zi)
+### 2.1.6 Creare entități pentru zone ADI și zone Iridex 🟡 (1 zi) ✅
 
-- [ ] Creare entitate ZonaADI
-  - [ ] Definire proprietăți (id, nume, cod, descriere, etc.)
-  - [ ] Configurare indexuri și validări
-- [ ] Creare entitate ZonaIridex
-  - [ ] Definire proprietăți (id, nume, cod, descriere, etc.)
-  - [ ] Configurare indexuri și validări
-- [ ] Actualizare entitate UAT
-  - [ ] Adăugare relație many-to-one cu ZonaADI
-  - [ ] Adăugare relație many-to-one cu ZonaIridex
-  - [ ] Configurare restricții pentru unicitatea relațiilor
-- [ ] Implementare repository pentru ZonaADI și ZonaIridex
-- [ ] Testare relații și CRUD
+- [x] Creare entitate ZonaADI
+  - [x] Definire proprietăți (id, nume, cod, descriere, etc.)
+  - [x] Configurare indexuri și validări
+- [x] Creare entitate ZonaIridex
+  - [x] Definire proprietăți (id, nume, cod, descriere, etc.)
+  - [x] Configurare indexuri și validări
+- [x] Actualizare entitate UAT
+  - [x] Adăugare relație many-to-one cu ZonaADI
+  - [x] Adăugare relație many-to-one cu ZonaIridex
+  - [x] Configurare restricții pentru unicitatea relațiilor
+- [x] Implementare repository pentru ZonaADI și ZonaIridex
+- [x] Testare relații și CRUD
 
 ### 2.1.7 Configurare relații între entități 🔴 (2 zile)
 

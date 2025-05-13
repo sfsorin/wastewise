@@ -11,6 +11,8 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { Judet } from './judet.entity';
 import { Localitate } from './localitate.entity';
+import { ZonaADI } from './zona-adi.entity';
+import { ZonaIridex } from './zona-iridex.entity';
 import { DateIstorice } from '../../ml/entities/date-istorice.entity';
 import { PredictiiCantitati } from '../../ml/entities/predictii-cantitati.entity';
 
@@ -36,6 +38,20 @@ export class UAT {
   })
   @Column({ nullable: true })
   localitateId: string;
+
+  @ApiProperty({
+    description: 'ID-ul zonei ADI',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @Column({ nullable: true })
+  zonaADIId: string;
+
+  @ApiProperty({
+    description: 'ID-ul zonei Iridex',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @Column({ nullable: true })
+  zonaIridexId: string;
 
   @ApiProperty({
     description: 'Numele UAT-ului',
@@ -143,6 +159,14 @@ export class UAT {
   @ManyToOne(() => Localitate)
   @JoinColumn({ name: 'localitate_id' })
   localitate: Localitate;
+
+  @ManyToOne(() => ZonaADI, zonaADI => zonaADI.uaturi)
+  @JoinColumn({ name: 'zona_adi_id' })
+  zonaADI: ZonaADI;
+
+  @ManyToOne(() => ZonaIridex, zonaIridex => zonaIridex.uaturi)
+  @JoinColumn({ name: 'zona_iridex_id' })
+  zonaIridex: ZonaIridex;
 
   @OneToMany(() => DateIstorice, dateIstorice => dateIstorice.uat)
   dateIstorice: DateIstorice[];

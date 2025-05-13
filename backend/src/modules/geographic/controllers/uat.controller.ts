@@ -104,6 +104,40 @@ export class UATController {
     return this.uatService.findByLocalitate(localitateId);
   }
 
+  @Get('zona-adi/:zonaADIId')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Obținere UAT-uri după zona ADI' })
+  @ApiParam({ name: 'zonaADIId', description: 'ID-ul zonei ADI' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Lista de UAT-uri a fost obținută cu succes.',
+    type: [UAT],
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Zona ADI nu a fost găsită.',
+  })
+  findByZonaADI(@Param('zonaADIId') zonaADIId: string): Promise<UAT[]> {
+    return this.uatService.findByZonaADI(zonaADIId);
+  }
+
+  @Get('zona-iridex/:zonaIridexId')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Obținere UAT-uri după zona Iridex' })
+  @ApiParam({ name: 'zonaIridexId', description: 'ID-ul zonei Iridex' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Lista de UAT-uri a fost obținută cu succes.',
+    type: [UAT],
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Zona Iridex nu a fost găsită.',
+  })
+  findByZonaIridex(@Param('zonaIridexId') zonaIridexId: string): Promise<UAT[]> {
+    return this.uatService.findByZonaIridex(zonaIridexId);
+  }
+
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere UAT după ID' })
