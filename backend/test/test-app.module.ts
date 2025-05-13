@@ -19,9 +19,14 @@ import { PasswordResetToken } from '../src/modules/auth/entities/password-reset-
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const dbConfig = configService.get('database');
+        const dbConfig = configService.get<Record<string, unknown>>('database');
         return {
-          ...dbConfig,
+          type: dbConfig?.type,
+          host: dbConfig?.host,
+          port: dbConfig?.port,
+          username: dbConfig?.username,
+          password: dbConfig?.password,
+          database: dbConfig?.database,
           entities: [User, PasswordResetToken],
           synchronize: true,
         };

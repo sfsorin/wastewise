@@ -10,11 +10,6 @@ interface AuthenticatedUser {
   role: string;
 }
 
-// Interfață pentru request cu utilizator autentificat
-interface RequestWithUser extends Request {
-  user?: AuthenticatedUser;
-}
-
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
@@ -30,7 +25,7 @@ export class RolesGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
-    const user = request.user;
+    const user = request.user as AuthenticatedUser | undefined;
 
     if (!user) {
       return false;

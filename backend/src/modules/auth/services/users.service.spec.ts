@@ -191,7 +191,7 @@ describe('UsersService', () => {
         id: '456',
         userId: user.id,
         token,
-        expiresAt: expect.any(Date),
+        expiresAt: new Date(Date.now() + 3600000), // 1 hour in the future
         used: false,
       };
 
