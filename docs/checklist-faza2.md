@@ -34,15 +34,15 @@
 - [x] Implementare repository pentru Localitate
 - [x] Testare relații și CRUD
 
-### 2.1.3 Creare entități pentru UAT-uri 🟡 (1 zi)
+### 2.1.3 Creare entități pentru UAT-uri 🟡 (1 zi) ✅
 
-- [ ] Creare entitate UAT
-  - [ ] Definire proprietăți (id, nume, strada, numar, telefon, telefon secundar, .)
-  - [ ] Configurare relație many-to-one cu Judet
-  - [ ] Configurare relație many-to-one cu Localitate
-  - [ ] Configurare indexuri și validări
-- [ ] Implementare repository pentru UAT
-- [ ] Testare relații și CRUD
+- [x] Creare entitate UAT
+  - [x] Definire proprietăți (id, codSiruta, nume, strada, numar, telefon, telefon secundar, E-mail, E-mail secundar, Cod fiscal, etc.)
+  - [x] Configurare relație many-to-one cu Judet
+  - [x] Configurare relație many-to-one cu Localitate
+  - [x] Configurare indexuri și validări
+- [x] Implementare repository pentru UAT
+- [x] Testare relații și CRUD
 
 ### 2.1.4 Creare entități pentru clienți 🟡 (1 zi)
 

@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Judet } from './judet.entity';
+import { Localitate } from './localitate.entity';
 import { DateIstorice } from '../../ml/entities/date-istorice.entity';
 import { PredictiiCantitati } from '../../ml/entities/predictii-cantitati.entity';
 
@@ -28,6 +29,13 @@ export class UAT {
   })
   @Column({ nullable: true })
   judetId: string;
+
+  @ApiProperty({
+    description: 'ID-ul localității',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @Column({ nullable: true })
+  localitateId: string;
 
   @ApiProperty({
     description: 'Numele UAT-ului',
@@ -58,6 +66,62 @@ export class UAT {
   suprafata: number;
 
   @ApiProperty({
+    description: 'Strada',
+    example: 'Calea Moților',
+  })
+  @Column({ length: 200, nullable: true })
+  strada: string;
+
+  @ApiProperty({
+    description: 'Număr',
+    example: '5A',
+  })
+  @Column({ length: 20, nullable: true })
+  numar: string;
+
+  @ApiProperty({
+    description: 'Telefon',
+    example: '+40258123456',
+  })
+  @Column({ length: 20, nullable: true })
+  telefon: string;
+
+  @ApiProperty({
+    description: 'Telefon secundar',
+    example: '+40258123457',
+  })
+  @Column({ length: 20, nullable: true })
+  telefonSecundar: string;
+
+  @ApiProperty({
+    description: 'Email',
+    example: 'contact@primaria-albaiulia.ro',
+  })
+  @Column({ length: 100, nullable: true })
+  email: string;
+
+  @ApiProperty({
+    description: 'Email secundar',
+    example: 'secretariat@primaria-albaiulia.ro',
+  })
+  @Column({ length: 100, nullable: true })
+  emailSecundar: string;
+
+  @ApiProperty({
+    description: 'Cod fiscal',
+    example: '4562983',
+  })
+  @Column({ length: 20, nullable: true })
+  codFiscal: string;
+
+  @ApiProperty({
+    description: 'Primar',
+    example: 'Ion Popescu',
+  })
+  @Column({ length: 100, nullable: true })
+  primar: string;
+
+  @ApiProperty({
     description: 'Data creării înregistrării',
     example: '2023-01-01T00:00:00Z',
   })
@@ -75,6 +139,10 @@ export class UAT {
   @ManyToOne(() => Judet, judet => judet.uaturi)
   @JoinColumn({ name: 'judet_id' })
   judet: Judet;
+
+  @ManyToOne(() => Localitate)
+  @JoinColumn({ name: 'localitate_id' })
+  localitate: Localitate;
 
   @OneToMany(() => DateIstorice, dateIstorice => dateIstorice.uat)
   dateIstorice: DateIstorice[];

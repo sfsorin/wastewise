@@ -5,6 +5,7 @@ import { UAT } from '../entities/uat.entity';
 import { CreateUATDto } from '../dto/create-uat.dto';
 import { UpdateUATDto } from '../dto/update-uat.dto';
 import { JudeteService } from './judete.service';
+import { LocalitatiService } from './localitati.service';
 
 @Injectable()
 export class UATService {
@@ -12,11 +13,17 @@ export class UATService {
     @InjectRepository(UAT)
     private uatRepository: Repository<UAT>,
     private judeteService: JudeteService,
+    private localitatiService: LocalitatiService,
   ) {}
 
   async create(createUATDto: CreateUATDto): Promise<UAT> {
     // Verificare dacă județul există
     await this.judeteService.findOne(createUATDto.judetId);
+
+    // Verificare dacă localitatea există (dacă a fost specificată)
+    if (createUATDto.localitateId) {
+      await this.localitatiService.findOne(createUATDto.localitateId);
+    }
 
     // Verificare dacă există deja un UAT cu același cod SIRUTA
     if (createUATDto.codSiruta) {
@@ -34,7 +41,7 @@ export class UATService {
 
   async findAll(): Promise<UAT[]> {
     return this.uatRepository.find({
-      relations: ['judet'],
+      relations: ['judet', 'localitate'],
       order: {
         nume: 'ASC',
       },
@@ -44,7 +51,17 @@ export class UATService {
   async findByJudet(judetId: string): Promise<UAT[]> {
     return this.uatRepository.find({
       where: { judetId },
-      relations: ['judet'],
+      relations: ['judet', 'localitate'],
+      order: {
+        nume: 'ASC',
+      },
+    });
+  }
+
+  async findByLocalitate(localitateId: string): Promise<UAT[]> {
+    return this.uatRepository.find({
+      where: { localitateId },
+      relations: ['judet', 'localitate'],
       order: {
         nume: 'ASC',
       },
@@ -54,7 +71,7 @@ export class UATService {
   async findOne(id: string): Promise<UAT> {
     const uat = await this.uatRepository.findOne({
       where: { id },
-      relations: ['judet', 'dateIstorice', 'predictiiCantitati'],
+      relations: ['judet', 'localitate', 'dateIstorice', 'predictiiCantitati'],
     });
 
     if (!uat) {
@@ -70,6 +87,11 @@ export class UATService {
     // Verificare dacă județul există
     if (updateUATDto.judetId) {
       await this.judeteService.findOne(updateUATDto.judetId);
+    }
+
+    // Verificare dacă localitatea există
+    if (updateUATDto.localitateId) {
+      await this.localitatiService.findOne(updateUATDto.localitateId);
     }
 
     // Verificare dacă există deja un UAT cu același cod SIRUTA

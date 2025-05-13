@@ -87,6 +87,23 @@ export class UATController {
     return this.uatService.findByJudet(judetId);
   }
 
+  @Get('localitate/:localitateId')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Obținere UAT-uri după localitatea de care aparțin' })
+  @ApiParam({ name: 'localitateId', description: 'ID-ul localității' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Lista de UAT-uri a fost obținută cu succes.',
+    type: [UAT],
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Localitatea nu a fost găsită.',
+  })
+  findByLocalitate(@Param('localitateId') localitateId: string): Promise<UAT[]> {
+    return this.uatService.findByLocalitate(localitateId);
+  }
+
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere UAT după ID' })
