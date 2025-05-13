@@ -37,7 +37,7 @@
 ### 2.1.3 Creare entități pentru UAT-uri 🟡 (1 zi)
 
 - [ ] Creare entitate UAT
-  - [ ] Definire proprietăți (id, nume, cod_siruta, populatie, etc.)
+  - [ ] Definire proprietăți (id, nume, strada, numar, telefon, telefon secundar, .)
   - [ ] Configurare relație many-to-one cu Judet
   - [ ] Configurare relație many-to-one cu Localitate
   - [ ] Configurare indexuri și validări
