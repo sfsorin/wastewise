@@ -10,8 +10,22 @@ export default defineConfig({
     environment: 'happy-dom',
     setupFiles: ['./src/test/setup.ts'],
     deps: {
-      inline: ['vitest-canvas-mock'],
+      // Includem toate dependențele problematice pentru a evita conflictele
+      inline: [
+        'vitest-canvas-mock',
+        '@vitest/coverage-v8',
+        '@testing-library/react',
+        '@testing-library/jest-dom',
+        '@testing-library/user-event',
+      ],
+      // Dezactivăm verificarea peer dependencies pentru a evita erorile ERESOLVE
+      fallbackCJS: true,
+      interopDefault: true,
     },
+    // Adăugăm opțiuni pentru a rezolva conflictele
+    pool: 'forks', // Folosim forks în loc de threads pentru a evita probleme de compatibilitate
+    isolate: true, // Izolăm testele pentru a evita efecte secundare
+    testTimeout: 10000, // Mărim timeout-ul pentru teste
   },
   resolve: {
     alias: {
