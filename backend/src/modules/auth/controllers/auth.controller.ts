@@ -65,7 +65,7 @@ export class AuthController {
       id: string;
       username: string;
       email: string;
-      fullName: string;
+      fullName?: string;
       role: string;
     };
   }> {
@@ -108,7 +108,7 @@ export class AuthController {
       id: string;
       username: string;
       email: string;
-      fullName: string;
+      fullName?: string;
       role: string;
     };
   }> {

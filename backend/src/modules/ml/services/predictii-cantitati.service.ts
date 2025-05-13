@@ -10,10 +10,22 @@ import { PunctColectareService } from '../../operational/services/punct-colectar
 import { CategorieDeseuriService } from '../../operational/services/categorie-deseuri.service';
 
 // Interfață pentru datele de actualizare
-interface UpdateData extends UpdatePredictiiCantitatiDto {
+interface UpdateData {
+  uatId?: string;
+  clientId?: string;
+  punctColectareId?: string;
+  categorieId?: string;
   dataPredictie?: Date;
   perioadaStart?: Date;
   perioadaEnd?: Date;
+  cantitateEstimata?: number;
+  unitateMasura?: string;
+  limitaInferioara?: number;
+  limitaSuperioara?: number;
+  intervalIncredere?: number;
+  acuratetePredictie?: number;
+  modelUtilizat?: string;
+  parametriModel?: Record<string, number | string | boolean | null>;
 }
 
 @Injectable()
@@ -166,7 +178,26 @@ export class PredictiiCantitatiService {
     }
 
     // Pregătire date pentru actualizare
-    const updateData: UpdateData = { ...updatePredictiiCantitatiDto };
+    const updateData: UpdateData = {
+      uatId: updatePredictiiCantitatiDto.uatId,
+      clientId: updatePredictiiCantitatiDto.clientId,
+      punctColectareId: updatePredictiiCantitatiDto.punctColectareId,
+      categorieId: updatePredictiiCantitatiDto.categorieId,
+      cantitateEstimata: updatePredictiiCantitatiDto.cantitateEstimata,
+      unitateMasura: updatePredictiiCantitatiDto.unitateMasura,
+      acuratetePredictie: updatePredictiiCantitatiDto.acuratetePredictie,
+      modelUtilizat: updatePredictiiCantitatiDto.modelUtilizat,
+      parametriModel: updatePredictiiCantitatiDto.parametriModel,
+    };
+
+    // Adăugare proprietăți pentru intervalul de încredere
+    if (updatePredictiiCantitatiDto.intervalIncredereMin !== undefined) {
+      updateData.limitaInferioara = updatePredictiiCantitatiDto.intervalIncredereMin;
+    }
+
+    if (updatePredictiiCantitatiDto.intervalIncredereMax !== undefined) {
+      updateData.limitaSuperioara = updatePredictiiCantitatiDto.intervalIncredereMax;
+    }
 
     // Conversie date din string în Date
     if (updatePredictiiCantitatiDto.dataPredictie) {

@@ -7,7 +7,8 @@ import { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from '../dto/register.dto';
 import { ForgotPasswordDto } from '../dto/forgot-password.dto';
 import { ResetPasswordDto } from '../dto/reset-password.dto';
-import { User, UserStatus } from '../../users/entities/user.entity';
+import { UserStatus, UserRole } from '../../users/entities/user.entity';
+import { Role } from '../../users/entities/role.entity';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +21,24 @@ export class AuthService {
     private mailService: MailService,
   ) {}
 
-  async validateUser(username: string, password: string): Promise<Omit<User, 'password'> | null> {
+  async validateUser(
+    username: string,
+    password: string,
+  ): Promise<{
+    id: string;
+    username: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    fullName: string;
+    role: UserRole;
+    status: UserStatus;
+    isActive: boolean;
+    lastLogin: Date;
+    createdAt: Date;
+    updatedAt: Date;
+    roles: Role[];
+  } | null> {
     try {
       this.logger.debug(`Încercare de autentificare pentru utilizatorul: ${username}`);
       const user = await this.usersService.findByUsernameOrEmail(username);
@@ -36,7 +54,21 @@ export class AuthService {
 
       if (isPasswordValid) {
         const { password: _password, ...result } = user;
-        return result;
+        return result as {
+          id: string;
+          username: string;
+          email: string;
+          firstName: string;
+          lastName: string;
+          fullName: string;
+          role: UserRole;
+          status: UserStatus;
+          isActive: boolean;
+          lastLogin: Date;
+          createdAt: Date;
+          updatedAt: Date;
+          roles: Role[];
+        };
       }
 
       return null;
@@ -120,8 +152,21 @@ export class AuthService {
     };
   }
 
-  async getProfile(userId: string): Promise<User> {
-    return this.usersService.findOne(userId);
+  async getProfile(userId: string): Promise<{
+    id: string;
+    username: string;
+    email: string;
+    fullName?: string;
+    role: string;
+  }> {
+    const user = await this.usersService.findOne(userId);
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      fullName: user.fullName,
+      role: user.role,
+    };
   }
 
   async forgotPassword(forgotPasswordDto: ForgotPasswordDto): Promise<void> {

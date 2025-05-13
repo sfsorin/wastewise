@@ -2,7 +2,6 @@ import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
-import { User } from '../../../modules/users/entities/user.entity';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -10,7 +9,24 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super();
   }
 
-  async validate(username: string, password: string): Promise<Omit<User, 'password'>> {
+  async validate(
+    username: string,
+    password: string,
+  ): Promise<{
+    id: string;
+    username: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    fullName: string;
+    role: any;
+    status: any;
+    isActive: boolean;
+    lastLogin: Date;
+    createdAt: Date;
+    updatedAt: Date;
+    roles: any[];
+  }> {
     const user = await this.authService.validateUser(username, password);
     if (!user) {
       throw new UnauthorizedException('Credențiale invalide');

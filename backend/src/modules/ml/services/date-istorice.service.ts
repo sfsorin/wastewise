@@ -8,8 +8,17 @@ import { UATService } from '../../geographic/services/uat.service';
 import { CategorieDeseuriService } from '../../operational/services/categorie-deseuri.service';
 
 // Interfață pentru datele de actualizare
-interface UpdateData extends UpdateDateIstoriceDto {
+interface UpdateData {
+  uatId?: string;
+  categorieId?: string;
   data?: Date;
+  cantitate?: number;
+  unitateMasura?: string;
+  temperatura?: number;
+  precipitatii?: number;
+  sezon?: string;
+  evenimentSpecial?: boolean;
+  descriereEveniment?: string;
 }
 
 @Injectable()
@@ -124,7 +133,17 @@ export class DateIstoriceService {
     }
 
     // Pregătire date pentru actualizare
-    const updateData: UpdateData = { ...updateDateIstoriceDto };
+    const updateData: UpdateData = {
+      uatId: updateDateIstoriceDto.uatId,
+      categorieId: updateDateIstoriceDto.categorieId,
+      cantitate: updateDateIstoriceDto.cantitate,
+      unitateMasura: updateDateIstoriceDto.unitateMasura,
+      temperatura: updateDateIstoriceDto.temperatura,
+      precipitatii: updateDateIstoriceDto.precipitatii,
+      sezon: updateDateIstoriceDto.sezon,
+      evenimentSpecial: updateDateIstoriceDto.evenimentSpecial,
+      descriereEveniment: updateDateIstoriceDto.descriereEveniment,
+    };
 
     // Conversie date din string în Date
     if (updateDateIstoriceDto.data) {
