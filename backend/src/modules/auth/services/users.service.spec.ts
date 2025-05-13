@@ -2,10 +2,29 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { User } from '../../users/entities/user.entity';
+import { User, UserStatus } from '../../users/entities/user.entity';
 import { PasswordResetToken } from '../entities/password-reset-token.entity';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
+
+// Interfețe pentru obiecte mock
+interface MockUser {
+  id: string;
+  username?: string;
+  email?: string;
+  fullName?: string;
+  status?: string;
+  password?: string;
+}
+
+interface MockPasswordResetToken {
+  id: string;
+  userId: string;
+  token: string;
+  expiresAt: Date;
+  used: boolean;
+  user?: { id: string };
+}
 
 jest.mock('bcrypt');
 
@@ -161,14 +180,14 @@ describe('UsersService', () => {
 
   describe('createPasswordResetToken', () => {
     it('should create a password reset token for an active user', async () => {
-      const user = {
+      const user: MockUser = {
         id: '123',
         email: 'test@example.com',
         username: 'testuser',
-        status: 'active',
+        status: UserStatus.ACTIVE,
       };
       const token = 'reset-token';
-      const passwordResetToken = {
+      const passwordResetToken: MockPasswordResetToken = {
         id: '456',
         userId: user.id,
         token,
@@ -184,8 +203,8 @@ describe('UsersService', () => {
       jest.spyOn(crypto, 'randomBytes').mockImplementation(
         () =>
           ({
-            toString: () => token,
-          }) as any,
+            toString: (): string => token,
+          }) as Buffer,
       );
 
       const result = await service.createPasswordResetToken('test@example.com');
@@ -221,7 +240,7 @@ describe('UsersService', () => {
 
   describe('resetPassword', () => {
     it('should reset the password if token is valid', async () => {
-      const passwordResetToken = {
+      const passwordResetToken: MockPasswordResetToken = {
         id: '456',
         userId: '123',
         token: 'valid-token',
@@ -267,7 +286,7 @@ describe('UsersService', () => {
     });
 
     it('should throw BadRequestException if token has expired', async () => {
-      const passwordResetToken = {
+      const passwordResetToken: MockPasswordResetToken = {
         id: '456',
         userId: '123',
         token: 'expired-token',

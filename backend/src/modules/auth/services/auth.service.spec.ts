@@ -137,8 +137,8 @@ describe('AuthService', () => {
       expect(validateUserSpy).toHaveBeenCalledWith('testuser', 'password');
       expect(mockUsersService.updateLastLogin).toHaveBeenCalledWith(mockUser.id);
       // Folosim o funcție arrow pentru a evita eroarea unbound-method
-      const signFn = (): unknown => jwtService.sign;
-      expect(signFn()).toBeDefined();
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(jwtService.sign).toBeDefined();
       expect(result.access_token).toBe('jwt-token');
       expect(result.user).toBeDefined();
       expect(result.user.id).toBe(mockUser.id);
@@ -179,8 +179,8 @@ describe('AuthService', () => {
 
       expect(mockUsersService.create).toHaveBeenCalledWith(registerDto);
       // Folosim o funcție arrow pentru a evita eroarea unbound-method
-      const signFn = (): unknown => jwtService.sign;
-      expect(signFn()).toBeDefined();
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(jwtService.sign).toBeDefined();
       expect(result.access_token).toBe('jwt-token');
       expect(result.user).toBeDefined();
       expect(result.user.id).toBe(mockUser.id);
