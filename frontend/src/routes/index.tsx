@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 
 // Layouts
@@ -122,6 +122,22 @@ const router = createBrowserRouter([
         ),
       },
     ],
+  },
+  {
+    path: 'login',
+    element: <Navigate to="/auth/login" replace />,
+  },
+  {
+    path: 'register',
+    element: <Navigate to="/auth/register" replace />,
+  },
+  {
+    path: 'forgot-password',
+    element: <Navigate to="/auth/forgot-password" replace />,
+  },
+  {
+    path: 'reset-password',
+    element: <Navigate to="/auth/reset-password" replace />,
   },
   {
     path: '*',
