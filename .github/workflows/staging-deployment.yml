@@ -249,12 +249,12 @@ jobs:
 
             # Rulare migrări bază de date (dacă este necesar)
             if [ "${{ needs.prepare.outputs.deploy_database }}" == "true" ]; then
-              docker-compose run --rm backend npm run migration:run
+              docker compose run --rm backend npm run migration:run
             fi
 
             # Repornire servicii
-            docker-compose down
-            docker-compose up -d
+            docker compose down
+            docker compose up -d
 
             # Curățare imagini vechi
             docker image prune -af

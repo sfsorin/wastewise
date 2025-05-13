@@ -288,15 +288,15 @@ jobs:
             # Rulare migrări bază de date (dacă este necesar)
             if [ "${{ needs.prepare.outputs.deploy_database }}" == "true" ]; then
               # Backup bază de date înainte de migrare
-              docker-compose exec -T postgres pg_dump -U $DB_USERNAME $DB_DATABASE > backup_$(date +%Y%m%d%H%M%S).sql
+              docker compose exec -T postgres pg_dump -U $DB_USERNAME $DB_DATABASE > backup_$(date +%Y%m%d%H%M%S).sql
 
               # Rulare migrări
-              docker-compose run --rm backend npm run migration:run
+              docker compose run --rm backend npm run migration:run
             fi
 
             # Repornire servicii
-            docker-compose down
-            docker-compose up -d
+            docker compose down
+            docker compose up -d
 
             # Curățare imagini vechi
             docker image prune -af
@@ -370,8 +370,8 @@ jobs:
             fi
 
             # Repornire servicii
-            docker-compose down
-            docker-compose up -d
+            docker compose down
+            docker compose up -d
 
             echo "Rollback completed!"
           ENDSSH
