@@ -54,6 +54,11 @@ export class ZonaIridex {
   updatedAt: Date;
 
   // Relații
-  @OneToMany(() => UAT, uat => uat.zonaIridex)
+  @OneToMany(() => UAT, uat => uat.zonaIridex, {
+    cascade: true,
+    eager: false,
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
   uaturi: UAT[];
 }

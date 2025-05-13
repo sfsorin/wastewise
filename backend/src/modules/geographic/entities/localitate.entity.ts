@@ -65,13 +65,25 @@ export class Localitate {
   updatedAt: Date;
 
   // Relații
-  @ManyToOne(() => Judet, judet => judet.localitati)
+  @ManyToOne(() => Judet, judet => judet.localitati, {
+    nullable: true,
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'judet_id' })
   judet: Judet;
 
-  @OneToMany(() => PunctColectare, punctColectare => punctColectare.localitate)
+  @OneToMany(() => PunctColectare, punctColectare => punctColectare.localitate, {
+    cascade: true,
+    eager: false,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   puncteColectare: PunctColectare[];
 
-  @OneToMany(() => Client, client => client.localitate)
+  @OneToMany(() => Client, client => client.localitate, {
+    cascade: false,
+    eager: false,
+  })
   clienti: Client[];
 }

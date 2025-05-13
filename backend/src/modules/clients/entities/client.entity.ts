@@ -145,24 +145,51 @@ export class Client {
   updatedAt: Date;
 
   // Relații
-  @ManyToOne(() => TipClient, tipClient => tipClient.clienti)
+  @ManyToOne(() => TipClient, tipClient => tipClient.clienti, {
+    nullable: false,
+    onDelete: 'RESTRICT',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'tip_client_id' })
   tipClient: TipClient;
 
-  @ManyToOne(() => Judet)
+  @ManyToOne(() => Judet, {
+    nullable: true,
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'judet_id' })
   judet: Judet;
 
-  @ManyToOne(() => Localitate, localitate => localitate.clienti)
+  @ManyToOne(() => Localitate, localitate => localitate.clienti, {
+    nullable: true,
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'localitate_id' })
   localitate: Localitate;
 
-  @OneToMany(() => PunctColectare, punctColectare => punctColectare.client)
+  @OneToMany(() => PunctColectare, punctColectare => punctColectare.client, {
+    cascade: true,
+    eager: false,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   puncteColectare: PunctColectare[];
 
-  @OneToMany(() => Contract, contract => contract.client)
+  @OneToMany(() => Contract, contract => contract.client, {
+    cascade: true,
+    eager: false,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   contracte: Contract[];
 
-  @OneToMany(() => PredictiiCantitati, predictiiCantitati => predictiiCantitati.client)
+  @OneToMany(() => PredictiiCantitati, predictiiCantitati => predictiiCantitati.client, {
+    cascade: true,
+    eager: false,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   predictiiCantitati: PredictiiCantitati[];
 }

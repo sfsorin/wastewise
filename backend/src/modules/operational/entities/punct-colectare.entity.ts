@@ -101,18 +101,35 @@ export class PunctColectare {
   updatedAt: Date;
 
   // Relații
-  @ManyToOne(() => Client, client => client.puncteColectare)
+  @ManyToOne(() => Client, client => client.puncteColectare, {
+    nullable: true,
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'client_id' })
   client: Client;
 
-  @ManyToOne(() => Judet)
+  @ManyToOne(() => Judet, {
+    nullable: true,
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'judet_id' })
   judet: Judet;
 
-  @ManyToOne(() => Localitate, localitate => localitate.puncteColectare)
+  @ManyToOne(() => Localitate, localitate => localitate.puncteColectare, {
+    nullable: true,
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'localitate_id' })
   localitate: Localitate;
 
-  @OneToMany(() => PredictiiCantitati, predictiiCantitati => predictiiCantitati.punctColectare)
+  @OneToMany(() => PredictiiCantitati, predictiiCantitati => predictiiCantitati.punctColectare, {
+    cascade: true,
+    eager: false,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   predictiiCantitati: PredictiiCantitati[];
 }

@@ -32,6 +32,8 @@ export class Permission {
   @CreateDateColumn()
   createdAt: Date;
 
-  @ManyToMany(() => Role, role => role.permissions)
+  @ManyToMany(() => Role, role => role.permissions, {
+    cascade: false,
+  })
   roles: Role[];
 }

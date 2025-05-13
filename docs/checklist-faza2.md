@@ -86,20 +86,20 @@
 - [x] Implementare repository pentru ZonaADI și ZonaIridex
 - [x] Testare relații și CRUD
 
-### 2.1.7 Configurare relații între entități 🔴 (2 zile)
+### 2.1.7 Configurare relații între entități 🔴 (2 zile) ✅
 
-- [ ] Configurare relații one-to-many
-  - [ ] Judet -> Localitate
-  - [ ] Judet -> UAT
-  - [ ] Client -> PunctColectare
-  - [ ] ZonaADI -> UAT
-  - [ ] ZonaIridex -> UAT
-- [ ] Configurare relații many-to-many
-  - [ ] User <-> Role
-  - [ ] Role <-> Permission
-- [ ] Configurare cascade operations
-- [ ] Configurare lazy/eager loading
-- [ ] Testare relații complexe
+- [x] Configurare relații one-to-many
+  - [x] Judet -> Localitate
+  - [x] Judet -> UAT
+  - [x] Client -> PunctColectare
+  - [x] ZonaADI -> UAT
+  - [x] ZonaIridex -> UAT
+- [x] Configurare relații many-to-many
+  - [x] User <-> Role
+  - [x] Role <-> Permission
+- [x] Configurare cascade operations
+- [x] Configurare lazy/eager loading
+- [x] Testare relații complexe
 
 ### 2.1.8 Creare migrări pentru schema inițială 🟡 (1 zi)
 

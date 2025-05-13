@@ -47,6 +47,9 @@ export class TipClient {
   updatedAt: Date;
 
   // Relații
-  @OneToMany(() => Client, client => client.tipClient)
+  @OneToMany(() => Client, client => client.tipClient, {
+    cascade: false,
+    eager: false,
+  })
   clienti: Client[];
 }

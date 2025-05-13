@@ -152,25 +152,51 @@ export class UAT {
   updatedAt: Date;
 
   // Relații
-  @ManyToOne(() => Judet, judet => judet.uaturi)
+  @ManyToOne(() => Judet, judet => judet.uaturi, {
+    nullable: true,
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'judet_id' })
   judet: Judet;
 
-  @ManyToOne(() => Localitate)
+  @ManyToOne(() => Localitate, {
+    nullable: true,
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'localitate_id' })
   localitate: Localitate;
 
-  @ManyToOne(() => ZonaADI, zonaADI => zonaADI.uaturi)
+  @ManyToOne(() => ZonaADI, zonaADI => zonaADI.uaturi, {
+    nullable: true,
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'zona_adi_id' })
   zonaADI: ZonaADI;
 
-  @ManyToOne(() => ZonaIridex, zonaIridex => zonaIridex.uaturi)
+  @ManyToOne(() => ZonaIridex, zonaIridex => zonaIridex.uaturi, {
+    nullable: true,
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'zona_iridex_id' })
   zonaIridex: ZonaIridex;
 
-  @OneToMany(() => DateIstorice, dateIstorice => dateIstorice.uat)
+  @OneToMany(() => DateIstorice, dateIstorice => dateIstorice.uat, {
+    cascade: true,
+    eager: false,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   dateIstorice: DateIstorice[];
 
-  @OneToMany(() => PredictiiCantitati, predictiiCantitati => predictiiCantitati.uat)
+  @OneToMany(() => PredictiiCantitati, predictiiCantitati => predictiiCantitati.uat, {
+    cascade: true,
+    eager: false,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   predictiiCantitati: PredictiiCantitati[];
 }
