@@ -44,21 +44,21 @@
 - [x] Implementare repository pentru UAT
 - [x] Testare relații și CRUD
 
-### 2.1.4 Creare entități pentru clienți 🟡 (1 zi)
+### 2.1.4 Creare entități pentru clienți 🟡 (1 zi) ✅
 
-- [ ] Creare entitate TipClient
-  - [ ] Definire proprietăți (id, nume, descriere, etc.)
-- [ ] Creare entitate Client
-  - [ ] Definire proprietăți (id, nume, cui, cnp, adresa, etc.)
-  - [ ] Configurare relație many-to-one cu TipClient
-  - [ ] Configurare relație many-to-one cu Judet și Localitate
-  - [ ] Configurare indexuri și validări
-- [ ] Creare entitate PunctColectare
-  - [ ] Definire proprietăți (id, nume, adresa, coordonate, etc.)
-  - [ ] Configurare relație many-to-one cu Client
-  - [ ] Configurare relație many-to-one cu Judet și Localitate
-- [ ] Implementare repository pentru Client și PunctColectare
-- [ ] Testare relații și CRUD
+- [x] Creare entitate TipClient
+  - [x] Definire proprietăți (id, nume, descriere, etc.)
+- [x] Creare entitate Client
+  - [x] Definire proprietăți (id, nume, cui, cnp, adresa, etc.)
+  - [x] Configurare relație many-to-one cu TipClient
+  - [x] Configurare relație many-to-one cu Judet și Localitate
+  - [x] Configurare indexuri și validări
+- [x] Creare entitate PunctColectare
+  - [x] Definire proprietăți (id, nume, adresa, coordonate, etc.)
+  - [x] Configurare relație many-to-one cu Client
+  - [x] Configurare relație many-to-one cu Judet și Localitate
+- [x] Implementare repository pentru Client și PunctColectare
+- [x] Testare relații și CRUD
 
 ### 2.1.5 Creare entități pentru categorii deșeuri 🟡 (1 zi)
 
