@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsOptional, Length, IsNumber, Min } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional, Length, IsNumber, Min, IsUUID } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateServiciuDto {
@@ -41,4 +41,13 @@ export class CreateServiciuDto {
   @IsString({ message: 'Unitatea de măsură trebuie să fie un șir de caractere' })
   @Length(1, 20, { message: 'Unitatea de măsură trebuie să aibă între 1 și 20 de caractere' })
   unitateMasura?: string;
+
+  @ApiProperty({
+    description: 'ID-ul categoriei de deșeuri',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    required: false,
+  })
+  @IsOptional()
+  @IsUUID('4', { message: 'ID-ul categoriei trebuie să fie un UUID valid' })
+  categorieId?: string;
 }

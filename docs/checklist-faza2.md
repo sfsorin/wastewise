@@ -60,16 +60,16 @@
 - [x] Implementare repository pentru Client și PunctColectare
 - [x] Testare relații și CRUD
 
-### 2.1.5 Creare entități pentru categorii deșeuri 🟡 (1 zi)
+### 2.1.5 Creare entități pentru categorii deșeuri 🟡 (1 zi) ✅
 
-- [ ] Creare entitate CategorieDeseu
-  - [ ] Definire proprietăți (id, nume, cod, descriere, etc.)
-  - [ ] Configurare indexuri și validări
-- [ ] Creare entitate Serviciu
-  - [ ] Definire proprietăți (id, nume, descriere, etc.)
-  - [ ] Configurare relație many-to-one cu CategorieDeseu
-- [ ] Implementare repository pentru CategorieDeseu și Serviciu
-- [ ] Testare relații și CRUD
+- [x] Creare entitate CategorieDeseu
+  - [x] Definire proprietăți (id, nume, cod, descriere, etc.)
+  - [x] Configurare indexuri și validări
+- [x] Creare entitate Serviciu
+  - [x] Definire proprietăți (id, nume, descriere, etc.)
+  - [x] Configurare relație many-to-one cu CategorieDeseu
+- [x] Implementare repository pentru CategorieDeseu și Serviciu
+- [x] Testare relații și CRUD
 
 ### 2.1.6 Configurare relații între entități 🔴 (2 zile)
 

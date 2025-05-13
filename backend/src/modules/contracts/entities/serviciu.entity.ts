@@ -5,9 +5,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { ServiciuContractat } from './serviciu-contractat.entity';
+import { CategorieDeseuri } from '../../operational/entities/categorie-deseuri.entity';
 
 @Entity('servicii')
 export class Serviciu {
@@ -47,6 +50,13 @@ export class Serviciu {
   unitateMasura: string;
 
   @ApiProperty({
+    description: 'ID-ul categoriei de deșeuri',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @Column({ nullable: true })
+  categorieId: string;
+
+  @ApiProperty({
     description: 'Data creării înregistrării',
     example: '2023-01-01T00:00:00Z',
   })
@@ -61,6 +71,10 @@ export class Serviciu {
   updatedAt: Date;
 
   // Relații
+  @ManyToOne(() => CategorieDeseuri)
+  @JoinColumn({ name: 'categorie_id' })
+  categorie: CategorieDeseuri;
+
   @OneToMany(() => ServiciuContractat, serviciuContractat => serviciuContractat.serviciu)
   serviciiContractate: ServiciuContractat[];
 }

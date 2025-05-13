@@ -4,12 +4,14 @@ import { Repository } from 'typeorm';
 import { Serviciu } from '../entities/serviciu.entity';
 import { CreateServiciuDto } from '../dto/create-serviciu.dto';
 import { UpdateServiciuDto } from '../dto/update-serviciu.dto';
+import { CategorieDeseuriService } from '../../operational/services/categorie-deseuri.service';
 
 @Injectable()
 export class ServiciuService {
   constructor(
     @InjectRepository(Serviciu)
     private serviciuRepository: Repository<Serviciu>,
+    private categorieDeseuriService: CategorieDeseuriService,
   ) {}
 
   async create(createServiciuDto: CreateServiciuDto): Promise<Serviciu> {
@@ -21,12 +23,28 @@ export class ServiciuService {
       throw new ConflictException(`Există deja un serviciu cu numele ${createServiciuDto.nume}`);
     }
 
+    // Verificare dacă categoria de deșeuri există
+    if (createServiciuDto.categorieId) {
+      await this.categorieDeseuriService.findOne(createServiciuDto.categorieId);
+    }
+
     const serviciu = this.serviciuRepository.create(createServiciuDto);
     return this.serviciuRepository.save(serviciu);
   }
 
   async findAll(): Promise<Serviciu[]> {
     return this.serviciuRepository.find({
+      relations: ['categorie'],
+      order: {
+        nume: 'ASC',
+      },
+    });
+  }
+
+  async findByCategorie(categorieId: string): Promise<Serviciu[]> {
+    return this.serviciuRepository.find({
+      where: { categorieId },
+      relations: ['categorie'],
       order: {
         nume: 'ASC',
       },
@@ -36,7 +54,7 @@ export class ServiciuService {
   async findOne(id: string): Promise<Serviciu> {
     const serviciu = await this.serviciuRepository.findOne({
       where: { id },
-      relations: ['serviciiContractate'],
+      relations: ['categorie', 'serviciiContractate'],
     });
 
     if (!serviciu) {
@@ -57,6 +75,11 @@ export class ServiciuService {
       if (existingByName && existingByName.id !== id) {
         throw new ConflictException(`Există deja un serviciu cu numele ${updateServiciuDto.nume}`);
       }
+    }
+
+    // Verificare dacă categoria de deșeuri există
+    if (updateServiciuDto.categorieId) {
+      await this.categorieDeseuriService.findOne(updateServiciuDto.categorieId);
     }
 
     Object.assign(serviciu, updateServiciuDto);

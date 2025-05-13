@@ -66,6 +66,23 @@ export class ServiciuController {
     return this.serviciuService.findAll();
   }
 
+  @Get('categorie/:categorieId')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Obținere servicii după categoria de deșeuri' })
+  @ApiParam({ name: 'categorieId', description: 'ID-ul categoriei de deșeuri' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Lista de servicii a fost obținută cu succes.',
+    type: [Serviciu],
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Categoria de deșeuri nu a fost găsită.',
+  })
+  findByCategorie(@Param('categorieId') categorieId: string): Promise<Serviciu[]> {
+    return this.serviciuService.findByCategorie(categorieId);
+  }
+
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Obținere serviciu după ID' })
