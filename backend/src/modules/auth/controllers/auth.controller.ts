@@ -59,7 +59,16 @@ export class AuthController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Credențiale invalide.',
   })
-  async login(@Body() loginDto: LoginDto) {
+  async login(@Body() loginDto: LoginDto): Promise<{
+    access_token: string;
+    user: {
+      id: string;
+      username: string;
+      email: string;
+      fullName: string;
+      role: string;
+    };
+  }> {
     return this.authService.login(loginDto);
   }
 
@@ -93,7 +102,16 @@ export class AuthController {
     status: HttpStatus.CONFLICT,
     description: 'Există deja un utilizator cu același nume sau adresă de email.',
   })
-  async register(@Body() registerDto: RegisterDto) {
+  async register(@Body() registerDto: RegisterDto): Promise<{
+    access_token: string;
+    user: {
+      id: string;
+      username: string;
+      email: string;
+      fullName: string;
+      role: string;
+    };
+  }> {
     return this.authService.register(registerDto);
   }
 
@@ -118,7 +136,13 @@ export class AuthController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Utilizatorul nu este autentificat.',
   })
-  getProfile(@Request() req: any): Promise<any> {
+  getProfile(@Request() req: { user: { id: string } }): Promise<{
+    id: string;
+    username: string;
+    email: string;
+    fullName?: string;
+    role: string;
+  }> {
     return this.authService.getProfile(req.user.id);
   }
 
@@ -134,7 +158,7 @@ export class AuthController {
     status: HttpStatus.NOT_FOUND,
     description: 'Utilizatorul nu a fost găsit.',
   })
-  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto): Promise<{ message: string }> {
     await this.authService.forgotPassword(forgotPasswordDto);
     return { message: 'Email-ul de resetare a parolei a fost trimis cu succes.' };
   }
@@ -151,7 +175,7 @@ export class AuthController {
     status: HttpStatus.BAD_REQUEST,
     description: 'Token-ul de resetare a parolei este invalid sau a expirat.',
   })
-  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto): Promise<{ message: string }> {
     await this.authService.resetPassword(resetPasswordDto);
     return { message: 'Parola a fost resetată cu succes.' };
   }
@@ -164,7 +188,7 @@ export class AuthController {
     status: HttpStatus.OK,
     description: 'Token-ul de resetare a parolei este valid.',
   })
-  async validateResetToken(@Query('token') token: string) {
+  async validateResetToken(@Query('token') token: string): Promise<{ valid: boolean }> {
     const isValid = await this.authService.validateResetToken(token);
     return { valid: isValid };
   }

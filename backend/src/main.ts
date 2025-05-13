@@ -38,7 +38,11 @@ async function bootstrap(): Promise<void> {
   app.enableCors();
 
   // Adăugare middleware pentru redirecționare de la ruta principală
-  const expressApp = app.getHttpAdapter().getInstance();
+  const httpAdapter = app.getHttpAdapter();
+  const expressApp = httpAdapter.getInstance() as {
+    use: (path: string, handler: (req: Request, res: Response, next: NextFunction) => void) => void;
+  };
+
   expressApp.use('/', (req: Request, res: Response, next: NextFunction) => {
     if (req.originalUrl === '/') {
       return res.redirect('/docs');
