@@ -71,12 +71,29 @@
 - [x] Implementare repository pentru CategorieDeseu și Serviciu
 - [x] Testare relații și CRUD
 
-### 2.1.6 Configurare relații între entități 🔴 (2 zile)
+### 2.1.6 Creare entități pentru zone ADI și zone Iridex 🟡 (1 zi)
+
+- [ ] Creare entitate ZonaADI
+  - [ ] Definire proprietăți (id, nume, cod, descriere, etc.)
+  - [ ] Configurare indexuri și validări
+- [ ] Creare entitate ZonaIridex
+  - [ ] Definire proprietăți (id, nume, cod, descriere, etc.)
+  - [ ] Configurare indexuri și validări
+- [ ] Actualizare entitate UAT
+  - [ ] Adăugare relație many-to-one cu ZonaADI
+  - [ ] Adăugare relație many-to-one cu ZonaIridex
+  - [ ] Configurare restricții pentru unicitatea relațiilor
+- [ ] Implementare repository pentru ZonaADI și ZonaIridex
+- [ ] Testare relații și CRUD
+
+### 2.1.7 Configurare relații între entități 🔴 (2 zile)
 
 - [ ] Configurare relații one-to-many
   - [ ] Judet -> Localitate
   - [ ] Judet -> UAT
   - [ ] Client -> PunctColectare
+  - [ ] ZonaADI -> UAT
+  - [ ] ZonaIridex -> UAT
 - [ ] Configurare relații many-to-many
   - [ ] User <-> Role
   - [ ] Role <-> Permission
@@ -84,7 +101,7 @@
 - [ ] Configurare lazy/eager loading
 - [ ] Testare relații complexe
 
-### 2.1.7 Creare migrări pentru schema inițială 🟡 (1 zi)
+### 2.1.8 Creare migrări pentru schema inițială 🟡 (1 zi)
 
 - [ ] Configurare TypeORM migrations
 - [ ] Generare migrare inițială
@@ -92,7 +109,7 @@
 - [ ] Testare migrare up/down
 - [ ] Documentare proces de migrare
 
-### 2.1.8 Testare și validare schema 🟡 (1 zi)
+### 2.1.9 Testare și validare schema 🟡 (1 zi)
 
 - [ ] Creare teste pentru entități
 - [ ] Creare teste pentru relații
