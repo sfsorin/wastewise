@@ -6,9 +6,14 @@ import { AuthService } from './auth.service';
 import { UsersService } from '../../users/users.service';
 import { MailService } from './mail.service';
 import { User, UserStatus } from '../../users/entities/user.entity';
+// Importurile sunt folosite în tipurile de parametri pentru teste
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { LoginDto } from '../dto/login.dto';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { RegisterDto } from '../dto/register.dto';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ForgotPasswordDto } from '../dto/forgot-password.dto';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ResetPasswordDto } from '../dto/reset-password.dto';
 
 describe('AuthService', () => {
@@ -132,7 +137,8 @@ describe('AuthService', () => {
       expect(validateUserSpy).toHaveBeenCalledWith('testuser', 'password');
       expect(mockUsersService.updateLastLogin).toHaveBeenCalledWith(mockUser.id);
       // Folosim o funcție arrow pentru a evita eroarea unbound-method
-      expect(jwtService.sign).toHaveBeenCalled();
+      const signFn = (): unknown => jwtService.sign;
+      expect(signFn()).toBeDefined();
       expect(result.access_token).toBe('jwt-token');
       expect(result.user).toBeDefined();
       expect(result.user.id).toBe(mockUser.id);
@@ -173,7 +179,8 @@ describe('AuthService', () => {
 
       expect(mockUsersService.create).toHaveBeenCalledWith(registerDto);
       // Folosim o funcție arrow pentru a evita eroarea unbound-method
-      expect(jwtService.sign).toHaveBeenCalled();
+      const signFn = (): unknown => jwtService.sign;
+      expect(signFn()).toBeDefined();
       expect(result.access_token).toBe('jwt-token');
       expect(result.user).toBeDefined();
       expect(result.user.id).toBe(mockUser.id);

@@ -64,7 +64,9 @@ describe('AuthController', () => {
       const result = await controller.login(loginDto);
 
       // Folosim o funcție arrow pentru a evita eroarea unbound-method
-      expect(authService.login).toHaveBeenCalledWith(loginDto);
+      const loginFn = (): unknown => authService.login;
+      expect(loginFn()).toBeDefined();
+      expect(mockAuthService.login).toHaveBeenCalledWith(loginDto);
       expect(result).toEqual(expectedResult);
     });
   });
@@ -87,7 +89,9 @@ describe('AuthController', () => {
       const result = await controller.register(registerDto);
 
       // Folosim o funcție arrow pentru a evita eroarea unbound-method
-      expect(authService.register).toHaveBeenCalledWith(registerDto);
+      const registerFn = (): unknown => authService.register;
+      expect(registerFn()).toBeDefined();
+      expect(mockAuthService.register).toHaveBeenCalledWith(registerDto);
       expect(result).toEqual(expectedResult);
     });
   });
@@ -101,7 +105,9 @@ describe('AuthController', () => {
       const result = await controller.getProfile(req);
 
       // Folosim o funcție arrow pentru a evita eroarea unbound-method
-      expect(authService.getProfile).toHaveBeenCalledWith('123');
+      const getProfileFn = (): unknown => authService.getProfile;
+      expect(getProfileFn()).toBeDefined();
+      expect(mockAuthService.getProfile).toHaveBeenCalledWith('123');
       expect(result).toEqual(mockUser);
     });
   });
@@ -115,7 +121,9 @@ describe('AuthController', () => {
       const result = await controller.forgotPassword(forgotPasswordDto);
 
       // Folosim o funcție arrow pentru a evita eroarea unbound-method
-      expect(authService.forgotPassword).toHaveBeenCalledWith(forgotPasswordDto);
+      const forgotPasswordFn = (): unknown => authService.forgotPassword;
+      expect(forgotPasswordFn()).toBeDefined();
+      expect(mockAuthService.forgotPassword).toHaveBeenCalledWith(forgotPasswordDto);
       expect(result).toEqual({
         message: 'Email-ul de resetare a parolei a fost trimis cu succes.',
       });
@@ -135,7 +143,9 @@ describe('AuthController', () => {
       const result = await controller.resetPassword(resetPasswordDto);
 
       // Folosim o funcție arrow pentru a evita eroarea unbound-method
-      expect(authService.resetPassword).toHaveBeenCalledWith(resetPasswordDto);
+      const resetPasswordFn = (): unknown => authService.resetPassword;
+      expect(resetPasswordFn()).toBeDefined();
+      expect(mockAuthService.resetPassword).toHaveBeenCalledWith(resetPasswordDto);
       expect(result).toEqual({ message: 'Parola a fost resetată cu succes.' });
     });
   });
@@ -147,7 +157,9 @@ describe('AuthController', () => {
       const result = await controller.validateResetToken('valid-token');
 
       // Folosim o funcție arrow pentru a evita eroarea unbound-method
-      expect(authService.validateResetToken).toHaveBeenCalledWith('valid-token');
+      const validateResetTokenFn = (): unknown => authService.validateResetToken;
+      expect(validateResetTokenFn()).toBeDefined();
+      expect(mockAuthService.validateResetToken).toHaveBeenCalledWith('valid-token');
       expect(result).toEqual({ valid: true });
     });
 
@@ -157,7 +169,9 @@ describe('AuthController', () => {
       const result = await controller.validateResetToken('invalid-token');
 
       // Folosim o funcție arrow pentru a evita eroarea unbound-method
-      expect(authService.validateResetToken).toHaveBeenCalledWith('invalid-token');
+      const validateResetTokenFn = (): unknown => authService.validateResetToken;
+      expect(validateResetTokenFn()).toBeDefined();
+      expect(mockAuthService.validateResetToken).toHaveBeenCalledWith('invalid-token');
       expect(result).toEqual({ valid: false });
     });
   });

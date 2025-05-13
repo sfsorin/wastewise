@@ -7,31 +7,31 @@ export class Logger implements LoggerService {
     this.context = context;
   }
 
-  error(message: string | object | unknown, trace?: string, context?: string): void {
+  error(message: string | Error | Record<string, unknown>, trace?: string, context?: string): void {
     const formattedMessage = this.formatMessage(message);
     // eslint-disable-next-line no-console
     console.error(`[ERROR] ${this.getContext(context)} - ${formattedMessage}`, trace);
   }
 
-  warn(message: string | object | unknown, context?: string): void {
+  warn(message: string | Error | Record<string, unknown>, context?: string): void {
     const formattedMessage = this.formatMessage(message);
     // eslint-disable-next-line no-console
     console.warn(`[WARN] ${this.getContext(context)} - ${formattedMessage}`);
   }
 
-  log(message: string | object | unknown, context?: string): void {
+  log(message: string | Error | Record<string, unknown>, context?: string): void {
     const formattedMessage = this.formatMessage(message);
     // eslint-disable-next-line no-console
     console.log(`[LOG] ${this.getContext(context)} - ${formattedMessage}`);
   }
 
-  debug(message: string | object | unknown, context?: string): void {
+  debug(message: string | Error | Record<string, unknown>, context?: string): void {
     const formattedMessage = this.formatMessage(message);
     // eslint-disable-next-line no-console
     console.debug(`[DEBUG] ${this.getContext(context)} - ${formattedMessage}`);
   }
 
-  info(message: string | object | unknown, context?: string): void {
+  info(message: string | Error | Record<string, unknown>, context?: string): void {
     const formattedMessage = this.formatMessage(message);
     // eslint-disable-next-line no-console
     console.info(`[INFO] ${this.getContext(context)} - ${formattedMessage}`);
@@ -41,7 +41,9 @@ export class Logger implements LoggerService {
     return context || this.context || '';
   }
 
-  private formatMessage(message: string | object | unknown): string {
+  private formatMessage(
+    message: string | Error | Record<string, unknown> | null | undefined,
+  ): string {
     if (typeof message === 'string') {
       return message;
     } else if (message instanceof Error) {
@@ -54,9 +56,11 @@ export class Logger implements LoggerService {
       try {
         return JSON.stringify(message);
       } catch {
-        return String(message);
+        // Folosim o conversie sigură pentru obiecte
+        return `[Object ${Object.prototype.toString.call(message)}]`;
       }
     }
-    return String(message);
+    // Acest caz nu ar trebui să apară niciodată datorită tipurilor de mai sus
+    return '[Unknown]';
   }
 }
