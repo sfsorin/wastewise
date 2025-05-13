@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { ApiProperty, ApiHideProperty } from '@nestjs/swagger';
+import { Logger } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { Role } from './role.entity';
 
@@ -29,6 +30,7 @@ export enum UserStatus {
 
 @Entity('users')
 export class User {
+  private static readonly logger = new Logger(User.name);
   @ApiProperty({
     description: 'ID-ul unic al utilizatorului',
     example: '123e4567-e89b-12d3-a456-426614174000',
@@ -144,7 +146,7 @@ export class User {
 
   @BeforeInsert()
   @BeforeUpdate()
-  async hashPassword() {
+  async hashPassword(): Promise<void> {
     if (this.password) {
       const salt = await bcrypt.genSalt();
       this.password = await bcrypt.hash(this.password, salt);
@@ -152,20 +154,21 @@ export class User {
   }
 
   async validatePassword(password: string): Promise<boolean> {
-    console.log(`Validare parolă pentru utilizatorul: ${this.username}`);
-    console.log(`Hash parolă stocat: ${this.password}`);
+    User.logger.debug(`Validare parolă pentru utilizatorul: ${this.username}`);
+    User.logger.debug(`Hash parolă stocat: ${this.password}`);
     try {
       const isValid = await bcrypt.compare(password, this.password);
-      console.log(`Rezultat comparare bcrypt: ${isValid}`);
+      User.logger.debug(`Rezultat comparare bcrypt: ${isValid}`);
       return isValid;
-    } catch (error: any) {
-      console.error(`Eroare la compararea parolelor: ${error.message}`);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      User.logger.error(`Eroare la compararea parolelor: ${errorMessage}`);
       return false;
     }
   }
 
   // Metodă utilă pentru a genera numele complet din prenume și nume
-  generateFullName() {
+  generateFullName(): void {
     if (this.firstName && this.lastName) {
       this.fullName = `${this.firstName} ${this.lastName}`;
     }
