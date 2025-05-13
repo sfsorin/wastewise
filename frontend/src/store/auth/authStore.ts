@@ -39,8 +39,8 @@ const AuthService = {
       user: {
         id: '2',
         email: userData.email,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
+        firstName: userData.fullName?.split(' ')[0] || '',
+        lastName: userData.fullName?.split(' ').slice(1).join(' ') || '',
         role: 'user',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),

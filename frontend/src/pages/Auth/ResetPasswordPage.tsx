@@ -70,6 +70,10 @@ const ResetPasswordPage = () => {
       });
 
       setIsSubmitted(true);
+      // Opțional: Redirecționare după un timp
+      setTimeout(() => {
+        navigate('/auth/login');
+      }, 3000);
     } catch (err) {
       const errorMessage =
         err instanceof Error
