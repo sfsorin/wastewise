@@ -50,5 +50,11 @@ module.exports = {
         '@typescript-eslint/no-unsafe-argument': 'off',
       },
     },
+    {
+      files: ['**/users.service.spec.ts'],
+      rules: {
+        '@typescript-eslint/no-unsafe-assignment': 'off',
+      },
+    },
   ],
 };
