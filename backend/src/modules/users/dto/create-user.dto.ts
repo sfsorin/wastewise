@@ -7,6 +7,8 @@ import {
   MinLength,
   MaxLength,
   Matches,
+  IsArray,
+  IsUUID,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserRole, UserStatus } from '../entities/user.entity';
@@ -93,4 +95,14 @@ export class CreateUserDto {
   @IsOptional()
   @IsEnum(UserStatus, { message: 'Statusul trebuie să fie unul dintre valorile valide' })
   status?: UserStatus;
+
+  @ApiPropertyOptional({
+    description: 'Lista de ID-uri ale rolurilor asociate utilizatorului',
+    example: ['123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001'],
+    type: [String],
+  })
+  @IsOptional()
+  @IsArray({ message: 'Lista de roluri trebuie să fie un array' })
+  @IsUUID('4', { each: true, message: 'Fiecare ID de rol trebuie să fie un UUID valid' })
+  roleIds?: string[];
 }

@@ -101,15 +101,15 @@
 - [x] Configurare lazy/eager loading
 - [x] Testare relații complexe
 
-### 2.1.8 Creare migrări pentru schema inițială 🟡 (1 zi)
+### 2.1.8 Creare migrări pentru schema inițială 🟡 (1 zi) ✅
 
-- [ ] Configurare TypeORM migrations
-- [ ] Generare migrare inițială
-- [ ] Implementare migrare pentru date de bază (seed)
-- [ ] Testare migrare up/down
-- [ ] Documentare proces de migrare
+- [x] Configurare TypeORM migrations
+- [x] Generare migrare inițială
+- [x] Implementare migrare pentru date de bază (seed)
+- [x] Testare migrare up/down
+- [x] Documentare proces de migrare
 
-### 2.1.9 Testare și validare schema 🟡 (1 zi)
+### 2.1.9 Testare și validare schema 🟡 (1 zi) 🟨
 
 - [ ] Creare teste pentru entități
 - [ ] Creare teste pentru relații

@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, ConflictException, Logger } from '@nestj
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User, UserStatus } from './entities/user.entity';
+import { Role } from './entities/role.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
@@ -14,6 +15,8 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @InjectRepository(Role)
+    private roleRepository: Repository<Role>,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -44,6 +47,25 @@ export class UsersService {
     // Setare status implicit dacă nu este furnizat
     if (!user.status) {
       user.status = UserStatus.ACTIVE;
+    }
+
+    // Adăugare roluri dacă sunt specificate
+    if (createUserDto.roleIds && createUserDto.roleIds.length > 0) {
+      const roles = await Promise.all(
+        createUserDto.roleIds.map(id => this.roleRepository.findOne({ where: { id } })),
+      );
+
+      const validRoles = roles.filter(r => r !== null);
+
+      if (validRoles.length !== createUserDto.roleIds.length) {
+        const foundIds = validRoles.map(r => r.id);
+        const missingIds = createUserDto.roleIds.filter(id => !foundIds.includes(id));
+        throw new NotFoundException(
+          `Rolurile cu ID-urile ${missingIds.join(', ')} nu au fost găsite`,
+        );
+      }
+
+      user.roles = validRoles;
     }
 
     return this.usersRepository.save(user);
@@ -85,6 +107,7 @@ export class UsersService {
         'createdAt',
         'updatedAt',
       ],
+      relations: ['roles', 'roles.permissions'],
     });
 
     if (!user) {
@@ -176,6 +199,32 @@ export class UsersService {
   async remove(id: string): Promise<void> {
     const user = await this.findOne(id);
     await this.usersRepository.remove(user);
+  }
+
+  async updateRoles(userId: string, roleIds: string[]): Promise<User> {
+    const user = await this.findOne(userId);
+
+    if (roleIds.length === 0) {
+      user.roles = [];
+    } else {
+      const roles = await Promise.all(
+        roleIds.map(id => this.roleRepository.findOne({ where: { id } })),
+      );
+
+      const validRoles = roles.filter(r => r !== null);
+
+      if (validRoles.length !== roleIds.length) {
+        const foundIds = validRoles.map(r => r.id);
+        const missingIds = roleIds.filter(id => !foundIds.includes(id));
+        throw new NotFoundException(
+          `Rolurile cu ID-urile ${missingIds.join(', ')} nu au fost găsite`,
+        );
+      }
+
+      user.roles = validRoles;
+    }
+
+    return this.usersRepository.save(user);
   }
 
   // Metode pentru resetarea parolei

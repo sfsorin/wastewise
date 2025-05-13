@@ -9,8 +9,8 @@ export default registerAs('database', () => ({
   database: process.env.DB_DATABASE || 'wastewise',
   autoLoadEntities: true,
   migrations: ['dist/migrations/*{.ts,.js}'],
-  migrationsRun: false,
-  synchronize: process.env.NODE_ENV !== 'production',
+  migrationsRun: true,
+  synchronize: false,
   logging: process.env.NODE_ENV !== 'production',
   ssl: process.env.DB_SSL === 'true',
 }));

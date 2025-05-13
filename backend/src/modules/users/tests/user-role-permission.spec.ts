@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { Role } from '../entities/role.entity';
 import { Permission } from '../entities/permission.entity';
-import { UsersService } from '../services/users.service';
+import { UsersService } from '../users.service';
 import { RolesService } from '../services/roles.service';
 import { PermissionsService } from '../services/permissions.service';
 import { CreateUserDto } from '../dto/create-user.dto';
@@ -18,7 +18,7 @@ describe('User-Role-Permission Relations (e2e)', () => {
   let usersService: UsersService;
   let rolesService: RolesService;
   let permissionsService: PermissionsService;
-  
+
   let userRepository: Repository<User>;
   let roleRepository: Repository<Role>;
   let permissionRepository: Repository<Permission>;
@@ -50,11 +50,7 @@ describe('User-Role-Permission Relations (e2e)', () => {
         }),
         TypeOrmModule.forFeature([User, Role, Permission]),
       ],
-      providers: [
-        UsersService,
-        RolesService,
-        PermissionsService,
-      ],
+      providers: [UsersService, RolesService, PermissionsService],
     }).compile();
 
     usersService = module.get<UsersService>(UsersService);
@@ -68,18 +64,44 @@ describe('User-Role-Permission Relations (e2e)', () => {
     // Curățăm datele existente
     await userRepository.query('DELETE FROM user_roles');
     await roleRepository.query('DELETE FROM role_permissions');
-    await userRepository.delete({});
-    await roleRepository.delete({});
-    await permissionRepository.delete({});
+
+    // Obținem toate ID-urile pentru a le șterge individual
+    const users = await userRepository.find();
+    for (const user of users) {
+      await userRepository.delete(user.id);
+    }
+
+    const roles = await roleRepository.find();
+    for (const role of roles) {
+      await roleRepository.delete(role.id);
+    }
+
+    const permissions = await permissionRepository.find();
+    for (const permission of permissions) {
+      await permissionRepository.delete(permission.id);
+    }
   });
 
   afterAll(async () => {
     // Curățăm datele după teste
     await userRepository.query('DELETE FROM user_roles');
     await roleRepository.query('DELETE FROM role_permissions');
-    await userRepository.delete({});
-    await roleRepository.delete({});
-    await permissionRepository.delete({});
+
+    // Obținem toate ID-urile pentru a le șterge individual
+    const users = await userRepository.find();
+    for (const user of users) {
+      await userRepository.delete(user.id);
+    }
+
+    const roles = await roleRepository.find();
+    for (const role of roles) {
+      await roleRepository.delete(role.id);
+    }
+
+    const permissions = await permissionRepository.find();
+    for (const permission of permissions) {
+      await permissionRepository.delete(permission.id);
+    }
   });
 
   it('should create entities with many-to-many relationships', async () => {
@@ -171,15 +193,15 @@ describe('User-Role-Permission Relations (e2e)', () => {
     const updatedUser = await usersService.updateRoles(userId, [roleId, newRoleId]);
     expect(updatedUser.roles).toBeDefined();
     expect(updatedUser.roles.length).toBe(2);
-    expect(updatedUser.roles.map(role => role.id)).toContain(roleId);
-    expect(updatedUser.roles.map(role => role.id)).toContain(newRoleId);
+    expect(updatedUser.roles.map((role: Role) => role.id)).toContain(roleId);
+    expect(updatedUser.roles.map((role: Role) => role.id)).toContain(newRoleId);
 
     // Verificăm că utilizatorul are ambele roluri
     const userWithRoles = await usersService.findOne(userId);
     expect(userWithRoles.roles).toBeDefined();
     expect(userWithRoles.roles.length).toBe(2);
-    expect(userWithRoles.roles.map(role => role.id)).toContain(roleId);
-    expect(userWithRoles.roles.map(role => role.id)).toContain(newRoleId);
+    expect(userWithRoles.roles.map((role: Role) => role.id)).toContain(roleId);
+    expect(userWithRoles.roles.map((role: Role) => role.id)).toContain(newRoleId);
   });
 
   it('should update role permissions', async () => {
@@ -192,18 +214,29 @@ describe('User-Role-Permission Relations (e2e)', () => {
     const newPermissionId = newPermission.id;
 
     // Actualizăm permisiunile rolului
-    const updatedRole = await rolesService.updatePermissions(roleId, [permissionId, newPermissionId]);
+    const updatedRole = await rolesService.updatePermissions(roleId, [
+      permissionId,
+      newPermissionId,
+    ]);
     expect(updatedRole.permissions).toBeDefined();
     expect(updatedRole.permissions.length).toBe(2);
-    expect(updatedRole.permissions.map(permission => permission.id)).toContain(permissionId);
-    expect(updatedRole.permissions.map(permission => permission.id)).toContain(newPermissionId);
+    expect(updatedRole.permissions.map((permission: Permission) => permission.id)).toContain(
+      permissionId,
+    );
+    expect(updatedRole.permissions.map((permission: Permission) => permission.id)).toContain(
+      newPermissionId,
+    );
 
     // Verificăm că rolul are ambele permisiuni
     const roleWithPermissions = await rolesService.findOne(roleId);
     expect(roleWithPermissions.permissions).toBeDefined();
     expect(roleWithPermissions.permissions.length).toBe(2);
-    expect(roleWithPermissions.permissions.map(permission => permission.id)).toContain(permissionId);
-    expect(roleWithPermissions.permissions.map(permission => permission.id)).toContain(newPermissionId);
+    expect(
+      roleWithPermissions.permissions.map((permission: Permission) => permission.id),
+    ).toContain(permissionId);
+    expect(
+      roleWithPermissions.permissions.map((permission: Permission) => permission.id),
+    ).toContain(newPermissionId);
   });
 
   it('should cascade delete user-role relationships when deleting a user', async () => {
