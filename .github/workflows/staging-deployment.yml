@@ -148,11 +148,31 @@ jobs:
     needs: [prepare, build-backend, build-frontend]
     if: always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled')
 
+    # Verificăm dacă avem toate secretele necesare pentru deployment
+    # Dacă nu, vom sări peste deployment și vom marca job-ul ca reușit
+    # Acest lucru este util pentru mediile de dezvoltare sau testare
+    # unde nu avem un server de staging configurat
+    env:
+      HAS_DEPLOYMENT_SECRETS: ${{ secrets.STAGING_SSH_PRIVATE_KEY != '' && secrets.STAGING_SERVER != '' }}
+
     steps:
+      - name: Check deployment configuration
+        id: check-config
+        run: |
+          if [ "${{ env.HAS_DEPLOYMENT_SECRETS }}" == "true" ]; then
+            echo "Deployment configuration is available. Proceeding with deployment."
+            echo "deploy=true" >> $GITHUB_OUTPUT
+          else
+            echo "Deployment configuration is not available. Skipping deployment."
+            echo "deploy=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Checkout code
+        if: steps.check-config.outputs.deploy == 'true'
         uses: actions/checkout@v4
 
       - name: Create .env file
+        if: steps.check-config.outputs.deploy == 'true'
         run: |
           # Creăm fișierul .env pentru deployment
           cat > .env << EOL
@@ -191,16 +211,19 @@ jobs:
           EOL
 
       - name: Setup SSH key
+        if: steps.check-config.outputs.deploy == 'true'
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
 
       - name: Add host key to known_hosts
+        if: steps.check-config.outputs.deploy == 'true'
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -p ${{ secrets.STAGING_SSH_PORT }} ${{ secrets.STAGING_SERVER }} >> ~/.ssh/known_hosts
 
       - name: Deploy to staging server
+        if: steps.check-config.outputs.deploy == 'true'
         run: |
           # Transferăm fișierele necesare
           scp -P ${{ secrets.STAGING_SSH_PORT }} .env ${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_SERVER }}:${{ secrets.STAGING_DEPLOY_PATH }}/.env
@@ -237,13 +260,42 @@ jobs:
             docker image prune -af
           ENDSSH
 
+      - name: Deployment skipped
+        if: steps.check-config.outputs.deploy != 'true'
+        run: |
+          echo "Deployment to staging server was skipped because the required secrets are not configured."
+          echo "This is normal in development or testing environments."
+          echo "To enable deployment, configure the following secrets:"
+          echo "- STAGING_SSH_PRIVATE_KEY"
+          echo "- STAGING_SERVER"
+          echo "- STAGING_SSH_PORT"
+          echo "- STAGING_SSH_USER"
+          echo "- STAGING_DEPLOY_PATH"
+
   verify:
     name: Verify Deployment
     runs-on: ubuntu-latest
     needs: deploy
 
+    # Verificăm dacă avem toate secretele necesare pentru verificare
+    # Dacă nu, vom sări peste verificare și vom marca job-ul ca reușit
+    env:
+      HAS_VERIFICATION_SECRETS: ${{ secrets.STAGING_API_URL != '' && secrets.STAGING_FRONTEND_URL != '' }}
+
     steps:
+      - name: Check verification configuration
+        id: check-config
+        run: |
+          if [ "${{ env.HAS_VERIFICATION_SECRETS }}" == "true" ]; then
+            echo "Verification configuration is available. Proceeding with verification."
+            echo "verify=true" >> $GITHUB_OUTPUT
+          else
+            echo "Verification configuration is not available. Skipping verification."
+            echo "verify=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Check backend health
+        if: steps.check-config.outputs.verify == 'true'
         run: |
           # Verificăm dacă backend-ul este disponibil
           echo "Checking backend health..."
@@ -256,6 +308,7 @@ jobs:
           fi
 
       - name: Check frontend availability
+        if: steps.check-config.outputs.verify == 'true'
         run: |
           # Verificăm dacă frontend-ul este disponibil
           echo "Checking frontend availability..."
@@ -267,8 +320,17 @@ jobs:
             exit 1
           fi
 
+      - name: Verification skipped
+        if: steps.check-config.outputs.verify != 'true'
+        run: |
+          echo "Verification of deployment was skipped because the required secrets are not configured."
+          echo "This is normal in development or testing environments."
+          echo "To enable verification, configure the following secrets:"
+          echo "- STAGING_API_URL"
+          echo "- STAGING_FRONTEND_URL"
+
       - name: Send notification
-        if: always()
+        if: always() && secrets.SLACK_WEBHOOK != ''
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
