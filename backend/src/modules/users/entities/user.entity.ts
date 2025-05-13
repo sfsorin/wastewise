@@ -6,10 +6,13 @@ import {
   UpdateDateColumn,
   BeforeInsert,
   BeforeUpdate,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { ApiProperty, ApiHideProperty } from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
+import { Role } from './role.entity';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -124,6 +127,20 @@ export class User {
   })
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @ManyToMany(() => Role, role => role.users)
+  @JoinTable({
+    name: 'user_roles',
+    joinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'role_id',
+      referencedColumnName: 'id',
+    },
+  })
+  roles: Role[];
 
   @BeforeInsert()
   @BeforeUpdate()

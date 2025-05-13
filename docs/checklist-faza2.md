@@ -1,25 +1,28 @@
 # Checklist Detaliat - Faza 2: Implementare Core și Autentificare
 
 ## Legendă
+
 - Nivel de dificultate: 🟢 Ușor | 🟡 Mediu | 🔴 Dificil
 - Status: ⬜ Neînceput | 🟨 În progres | ✅ Finalizat
 
 ## 2.1 Implementare Schema Bază de Date (8 zile)
 
-### 2.1.1 Creare entități pentru utilizatori și roluri 🟡 (1 zi)
-- [ ] Creare entitate User
-  - [ ] Definire proprietăți (id, email, password_hash, etc.)
-  - [ ] Configurare indexuri și validări
-  - [ ] Implementare hooks (beforeInsert, etc.)
-- [ ] Creare entitate Role
-  - [ ] Definire proprietăți (id, name, description, etc.)
-  - [ ] Configurare relație many-to-many cu User
-- [ ] Creare entitate Permission
-  - [ ] Definire proprietăți (id, name, description, etc.)
-  - [ ] Configurare relație many-to-many cu Role
-- [ ] Testare relații și CRUD
+### 2.1.1 Creare entități pentru utilizatori și roluri 🟡 (1 zi) ✅
+
+- [x] Creare entitate User
+  - [x] Definire proprietăți (id, email, password_hash, etc.)
+  - [x] Configurare indexuri și validări
+  - [x] Implementare hooks (beforeInsert, etc.)
+- [x] Creare entitate Role
+  - [x] Definire proprietăți (id, name, description, etc.)
+  - [x] Configurare relație many-to-many cu User
+- [x] Creare entitate Permission
+  - [x] Definire proprietăți (id, name, description, etc.)
+  - [x] Configurare relație many-to-many cu Role
+- [x] Testare relații și CRUD
 
 ### 2.1.2 Creare entități pentru județe și localități 🟡 (1 zi)
+
 - [ ] Creare entitate Judet
   - [ ] Definire proprietăți (id, nume, cod, etc.)
   - [ ] Configurare indexuri și validări
@@ -32,6 +35,7 @@
 - [ ] Testare relații și CRUD
 
 ### 2.1.3 Creare entități pentru UAT-uri 🟡 (1 zi)
+
 - [ ] Creare entitate UAT
   - [ ] Definire proprietăți (id, nume, cod_siruta, populatie, etc.)
   - [ ] Configurare relație many-to-one cu Judet
@@ -41,6 +45,7 @@
 - [ ] Testare relații și CRUD
 
 ### 2.1.4 Creare entități pentru clienți 🟡 (1 zi)
+
 - [ ] Creare entitate TipClient
   - [ ] Definire proprietăți (id, nume, descriere, etc.)
 - [ ] Creare entitate Client
@@ -56,6 +61,7 @@
 - [ ] Testare relații și CRUD
 
 ### 2.1.5 Creare entități pentru categorii deșeuri 🟡 (1 zi)
+
 - [ ] Creare entitate CategorieDeseu
   - [ ] Definire proprietăți (id, nume, cod, descriere, etc.)
   - [ ] Configurare indexuri și validări
@@ -66,6 +72,7 @@
 - [ ] Testare relații și CRUD
 
 ### 2.1.6 Configurare relații între entități 🔴 (2 zile)
+
 - [ ] Configurare relații one-to-many
   - [ ] Judet -> Localitate
   - [ ] Judet -> UAT
@@ -78,6 +85,7 @@
 - [ ] Testare relații complexe
 
 ### 2.1.7 Creare migrări pentru schema inițială 🟡 (1 zi)
+
 - [ ] Configurare TypeORM migrations
 - [ ] Generare migrare inițială
 - [ ] Implementare migrare pentru date de bază (seed)
@@ -85,6 +93,7 @@
 - [ ] Documentare proces de migrare
 
 ### 2.1.8 Testare și validare schema 🟡 (1 zi)
+
 - [ ] Creare teste pentru entități
 - [ ] Creare teste pentru relații
 - [ ] Creare teste pentru repository-uri
@@ -94,6 +103,7 @@
 ## 2.2 Implementare Autentificare și Autorizare (7 zile)
 
 ### 2.2.1 Implementare înregistrare utilizatori 🟡 (1 zi)
+
 - [ ] Creare DTO pentru înregistrare
 - [ ] Implementare validare date înregistrare
 - [ ] Implementare service pentru înregistrare
@@ -103,6 +113,7 @@
 - [ ] Testare funcționalitate
 
 ### 2.2.2 Implementare autentificare cu JWT 🟡 (1 zi)
+
 - [ ] Configurare JWT module
 - [ ] Creare DTO pentru autentificare
 - [ ] Implementare service pentru autentificare
@@ -112,6 +123,7 @@
 - [ ] Testare funcționalitate
 
 ### 2.2.3 Implementare refresh token 🟡 (1 zi)
+
 - [ ] Creare entitate RefreshToken
 - [ ] Implementare generare refresh token
 - [ ] Implementare validare refresh token
@@ -120,6 +132,7 @@
 - [ ] Testare funcționalitate
 
 ### 2.2.4 Implementare recuperare parolă 🟡 (1 zi)
+
 - [ ] Creare DTO pentru recuperare parolă
 - [ ] Implementare generare token unic
 - [ ] Implementare trimitere email cu link recuperare
@@ -128,6 +141,7 @@
 - [ ] Testare funcționalitate
 
 ### 2.2.5 Implementare RBAC (Role-Based Access Control) 🔴 (2 zile)
+
 - [ ] Implementare decorator pentru roluri
 - [ ] Implementare guard pentru verificare roluri
 - [ ] Implementare service pentru gestionare permisiuni
@@ -136,6 +150,7 @@
 - [ ] Testare funcționalitate cu diferite roluri
 
 ### 2.2.6 Implementare guards și decoratori pentru autorizare 🟡 (1 zi)
+
 - [ ] Implementare JwtAuthGuard
 - [ ] Implementare RolesGuard
 - [ ] Implementare PermissionsGuard
@@ -145,6 +160,7 @@
 - [ ] Testare guards și decoratori
 
 ### 2.2.7 Testare și securizare autentificare 🔴 (2 zile)
+
 - [ ] Implementare rate limiting
 - [ ] Implementare protecție CSRF
 - [ ] Implementare validare token JWT
@@ -156,6 +172,7 @@
 ## 2.3 Implementare Gestionare Utilizatori și Roluri (5 zile)
 
 ### 2.3.1 Implementare CRUD pentru utilizatori 🟡 (1 zi)
+
 - [ ] Creare DTO-uri pentru utilizatori (create, update, response)
 - [ ] Implementare service pentru utilizatori
 - [ ] Implementare controller pentru utilizatori
@@ -164,6 +181,7 @@
 - [ ] Testare funcționalitate
 
 ### 2.3.2 Implementare CRUD pentru roluri 🟡 (1 zi)
+
 - [ ] Creare DTO-uri pentru roluri (create, update, response)
 - [ ] Implementare service pentru roluri
 - [ ] Implementare controller pentru roluri
@@ -172,6 +190,7 @@
 - [ ] Testare funcționalitate
 
 ### 2.3.3 Implementare asignare roluri utilizatorilor 🟡 (1 zi)
+
 - [ ] Creare DTO pentru asignare roluri
 - [ ] Implementare service pentru asignare roluri
 - [ ] Implementare controller pentru asignare roluri
@@ -180,6 +199,7 @@
 - [ ] Testare funcționalitate
 
 ### 2.3.4 Implementare gestionare permisiuni 🟡 (1 zi)
+
 - [ ] Creare DTO-uri pentru permisiuni (create, update, response)
 - [ ] Implementare service pentru permisiuni
 - [ ] Implementare controller pentru permisiuni
@@ -188,6 +208,7 @@
 - [ ] Testare funcționalitate
 
 ### 2.3.5 Implementare interfață administrare utilizatori 🟡 (2 zile)
+
 - [ ] Creare componente pentru listare utilizatori
 - [ ] Creare componente pentru creare/editare utilizatori
 - [ ] Creare componente pentru gestionare roluri
@@ -197,6 +218,7 @@
 - [ ] Testare interfață
 
 ### 2.3.6 Testare și validare funcționalități 🟡 (1 zi)
+
 - [ ] Creare teste pentru servicii
 - [ ] Creare teste pentru controllere
 - [ ] Creare teste pentru componente frontend
@@ -206,6 +228,7 @@
 ## 2.4 Implementare Layout Principal Frontend (8 zile)
 
 ### 2.4.1 Creare componente layout (Header, Sidebar, Footer) 🟡 (2 zile)
+
 - [ ] Implementare Header
   - [ ] Logo și branding
   - [ ] Meniu principal
@@ -224,6 +247,7 @@
 - [ ] Testare componente
 
 ### 2.4.2 Implementare navigare și meniu 🟡 (1 zi)
+
 - [ ] Definire structură meniu
 - [ ] Implementare generare dinamică meniu bazată pe permisiuni
 - [ ] Implementare navigare între pagini
@@ -232,6 +256,7 @@
 - [ ] Testare navigare
 
 ### 2.4.3 Implementare responsive design 🟡 (2 zile)
+
 - [ ] Implementare layout responsive
 - [ ] Implementare sidebar colapsabil pe mobile
 - [ ] Implementare meniu hamburger pe mobile
@@ -239,6 +264,7 @@
 - [ ] Testare pe diferite dispozitive și rezoluții
 
 ### 2.4.4 Implementare teme (light/dark) 🟡 (1 zi)
+
 - [ ] Configurare variabile CSS pentru teme
 - [ ] Implementare comutator temă
 - [ ] Implementare persistență preferință temă
@@ -246,6 +272,7 @@
 - [ ] Testare teme
 
 ### 2.4.5 Implementare context pentru autentificare 🟡 (1 zi)
+
 - [ ] Creare AuthContext
 - [ ] Implementare provider pentru AuthContext
 - [ ] Implementare hook useAuth
@@ -254,6 +281,7 @@
 - [ ] Testare context
 
 ### 2.4.6 Implementare rute protejate 🟡 (1 zi)
+
 - [ ] Creare componenta ProtectedRoute
 - [ ] Implementare verificare autentificare
 - [ ] Implementare verificare permisiuni
@@ -264,6 +292,7 @@
 ## 2.5 Implementare Componente UI de Bază (9 zile)
 
 ### 2.5.1 Creare componente Button, Input, Select 🟡 (1 zi)
+
 - [ ] Implementare Button
   - [ ] Variante (primary, secondary, outline, etc.)
   - [ ] Dimensiuni (sm, md, lg)
@@ -282,6 +311,7 @@
 - [ ] Testare componente
 
 ### 2.5.2 Creare componente Modal, Tooltip, Dropdown 🟡 (1 zi)
+
 - [ ] Implementare Modal
   - [ ] Header, body, footer
   - [ ] Dimensiuni
@@ -298,6 +328,7 @@
 - [ ] Testare componente
 
 ### 2.5.3 Creare componente Card, Table, Pagination 🟡 (2 zile)
+
 - [ ] Implementare Card
   - [ ] Header, body, footer
   - [ ] Variante și stiluri
@@ -316,6 +347,7 @@
 - [ ] Testare componente
 
 ### 2.5.4 Creare componente Form și validare 🟡 (2 zile)
+
 - [ ] Implementare Form
   - [ ] Layout (vertical, horizontal, inline)
   - [ ] Grupare câmpuri
@@ -330,6 +362,7 @@
 - [ ] Testare componente
 
 ### 2.5.5 Creare componente de notificare și alerte 🟡 (1 zi)
+
 - [ ] Implementare Toast
   - [ ] Variante (success, error, warning, info)
   - [ ] Auto-dismiss
@@ -345,6 +378,7 @@
 - [ ] Testare componente
 
 ### 2.5.6 Documentare componente în Storybook 🟡 (2 zile)
+
 - [ ] Configurare Storybook
 - [ ] Creare stories pentru fiecare componentă
 - [ ] Documentare props și variante
