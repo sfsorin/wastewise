@@ -9,6 +9,13 @@ import { ClientService } from '../../clients/services/client.service';
 import { PunctColectareService } from '../../operational/services/punct-colectare.service';
 import { CategorieDeseuriService } from '../../operational/services/categorie-deseuri.service';
 
+// Interfață pentru datele de actualizare
+interface UpdateData extends UpdatePredictiiCantitatiDto {
+  dataPredictie?: Date;
+  perioadaStart?: Date;
+  perioadaEnd?: Date;
+}
+
 @Injectable()
 export class PredictiiCantitatiService {
   constructor(
@@ -159,7 +166,7 @@ export class PredictiiCantitatiService {
     }
 
     // Pregătire date pentru actualizare
-    const updateData: any = { ...updatePredictiiCantitatiDto };
+    const updateData: UpdateData = { ...updatePredictiiCantitatiDto };
 
     // Conversie date din string în Date
     if (updatePredictiiCantitatiDto.dataPredictie) {

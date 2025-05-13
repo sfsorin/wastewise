@@ -7,6 +7,11 @@ import { UpdateDateIstoriceDto } from '../dto/update-date-istorice.dto';
 import { UATService } from '../../geographic/services/uat.service';
 import { CategorieDeseuriService } from '../../operational/services/categorie-deseuri.service';
 
+// Interfață pentru datele de actualizare
+interface UpdateData extends UpdateDateIstoriceDto {
+  data?: Date;
+}
+
 @Injectable()
 export class DateIstoriceService {
   constructor(
@@ -119,7 +124,7 @@ export class DateIstoriceService {
     }
 
     // Pregătire date pentru actualizare
-    const updateData: any = { ...updateDateIstoriceDto };
+    const updateData: UpdateData = { ...updateDateIstoriceDto };
 
     // Conversie date din string în Date
     if (updateDateIstoriceDto.data) {
