@@ -7,10 +7,13 @@ import { UsersService } from '../../users/users.service';
 import { MailService } from './mail.service';
 import { User, UserStatus } from '../../users/entities/user.entity';
 // Importurile sunt folosite în tipurile de parametri pentru teste
-import { LoginDto } from '../dto/login.dto';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from '../dto/register.dto';
-import { ForgotPasswordDto } from '../dto/forgot-password.dto';
-import { ResetPasswordDto } from '../dto/reset-password.dto';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { ForgotPasswordDto } from '../dto/forgot-password.dto';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { ResetPasswordDto } from '../dto/reset-password.dto';
 
 describe('AuthService', () => {
   let service: AuthService;

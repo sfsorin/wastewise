@@ -162,7 +162,7 @@ describe('UsersService', () => {
 
       expect(mockUserRepository.findOne).toHaveBeenCalledWith({
         where: { id: '123' },
-        select: expect.any(Array),
+        select: ['id', 'username', 'email', 'fullName', 'role', 'status'],
       });
       expect(result).toEqual(user);
     });
@@ -173,7 +173,7 @@ describe('UsersService', () => {
       await expect(service.findOne('nonexistent')).rejects.toThrow(NotFoundException);
       expect(mockUserRepository.findOne).toHaveBeenCalledWith({
         where: { id: 'nonexistent' },
-        select: expect.any(Array),
+        select: ['id', 'username', 'email', 'fullName', 'role', 'status'],
       });
     });
   });
@@ -213,10 +213,11 @@ describe('UsersService', () => {
         where: { email: 'test@example.com', status: UserStatus.ACTIVE },
       });
       expect(mockPasswordResetTokenRepository.update).toHaveBeenCalled();
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       expect(mockPasswordResetTokenRepository.create).toHaveBeenCalledWith({
         userId: user.id,
         token,
-        expiresAt: expect.any(Date),
+        expiresAt: expect.objectContaining({}),
         used: false,
       });
       expect(mockPasswordResetTokenRepository.save).toHaveBeenCalledWith(passwordResetToken);
