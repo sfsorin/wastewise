@@ -28,6 +28,7 @@ module.exports = {
     ],
     '@typescript-eslint/no-unsafe-assignment': 'warn',
     '@typescript-eslint/no-unsafe-argument': 'warn',
+    'prettier/prettier': ['error', { endOfLine: 'auto' }],
   },
   overrides: [
     {
