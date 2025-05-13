@@ -56,5 +56,11 @@ module.exports = {
         '@typescript-eslint/no-unsafe-assignment': 'off',
       },
     },
+    {
+      files: ['**/shared/utils/logger.util.ts'],
+      rules: {
+        'no-console': 'off',
+      },
+    },
   ],
 };
