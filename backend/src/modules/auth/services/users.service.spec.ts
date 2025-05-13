@@ -213,11 +213,10 @@ describe('UsersService', () => {
         where: { email: 'test@example.com', status: UserStatus.ACTIVE },
       });
       expect(mockPasswordResetTokenRepository.update).toHaveBeenCalled();
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       expect(mockPasswordResetTokenRepository.create).toHaveBeenCalledWith({
         userId: user.id,
         token,
-        expiresAt: expect.objectContaining({}),
+        expiresAt: expect.any(Date),
         used: false,
       });
       expect(mockPasswordResetTokenRepository.save).toHaveBeenCalledWith(passwordResetToken);

@@ -22,7 +22,10 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     'no-console': ['warn', { allow: ['error', 'warn', 'info', 'debug'] }],
-    '@typescript-eslint/no-unused-vars': ['error', { 'argsIgnorePattern': '^_', 'varsIgnorePattern': '^_' }],
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+    ],
   },
   overrides: [
     {
@@ -34,9 +37,15 @@ module.exports = {
       },
     },
     {
-      files: ['**/logger.util.ts'],
+      files: ['**/logger.util.ts', '**/shared/utils/logger.util.ts'],
       rules: {
         'no-console': 'off',
+      },
+    },
+    {
+      files: ['**/auth.e2e-spec.ts'],
+      rules: {
+        '@typescript-eslint/no-unsafe-argument': 'off',
       },
     },
   ],
