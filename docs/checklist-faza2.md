@@ -21,18 +21,18 @@
   - [x] Configurare relație many-to-many cu Role
 - [x] Testare relații și CRUD
 
-### 2.1.2 Creare entități pentru județe și localități 🟡 (1 zi)
+### 2.1.2 Creare entități pentru județe și localități 🟡 (1 zi) ✅
 
-- [ ] Creare entitate Judet
-  - [ ] Definire proprietăți (id, nume, cod, etc.)
-  - [ ] Configurare indexuri și validări
-- [ ] Creare entitate Localitate
-  - [ ] Definire proprietăți (id, nume, tip, cod_postal, etc.)
-  - [ ] Configurare relație many-to-one cu Judet
-  - [ ] Configurare indexuri și validări
-- [ ] Implementare repository pentru Judet
-- [ ] Implementare repository pentru Localitate
-- [ ] Testare relații și CRUD
+- [x] Creare entitate Judet
+  - [x] Definire proprietăți (id, nume, cod, etc.)
+  - [x] Configurare indexuri și validări
+- [x] Creare entitate Localitate
+  - [x] Definire proprietăți (id, nume, tip, cod_postal, etc.)
+  - [x] Configurare relație many-to-one cu Judet
+  - [x] Configurare indexuri și validări
+- [x] Implementare repository pentru Judet
+- [x] Implementare repository pentru Localitate
+- [x] Testare relații și CRUD
 
 ### 2.1.3 Creare entități pentru UAT-uri 🟡 (1 zi)
 
