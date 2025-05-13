@@ -19,10 +19,10 @@ export interface User {
  * Tipul pentru datele de înregistrare
  */
 export interface RegisterData {
+  username: string;
   email: string;
   password: string;
-  firstName: string;
-  lastName: string;
+  fullName?: string;
 }
 
 /**
