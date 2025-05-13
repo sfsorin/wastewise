@@ -9,31 +9,26 @@ export class Logger implements LoggerService {
 
   error(message: string | Error | Record<string, unknown>, trace?: string, context?: string): void {
     const formattedMessage = this.formatMessage(message);
-    // eslint-disable-next-line no-console
     console.error(`[ERROR] ${this.getContext(context)} - ${formattedMessage}`, trace);
   }
 
   warn(message: string | Error | Record<string, unknown>, context?: string): void {
     const formattedMessage = this.formatMessage(message);
-    // eslint-disable-next-line no-console
     console.warn(`[WARN] ${this.getContext(context)} - ${formattedMessage}`);
   }
 
   log(message: string | Error | Record<string, unknown>, context?: string): void {
     const formattedMessage = this.formatMessage(message);
-    // eslint-disable-next-line no-console
     console.log(`[LOG] ${this.getContext(context)} - ${formattedMessage}`);
   }
 
   debug(message: string | Error | Record<string, unknown>, context?: string): void {
     const formattedMessage = this.formatMessage(message);
-    // eslint-disable-next-line no-console
     console.debug(`[DEBUG] ${this.getContext(context)} - ${formattedMessage}`);
   }
 
   info(message: string | Error | Record<string, unknown>, context?: string): void {
     const formattedMessage = this.formatMessage(message);
-    // eslint-disable-next-line no-console
     console.info(`[INFO] ${this.getContext(context)} - ${formattedMessage}`);
   }
 

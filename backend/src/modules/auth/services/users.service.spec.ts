@@ -210,7 +210,7 @@ describe('UsersService', () => {
       const result = await service.createPasswordResetToken('test@example.com');
 
       expect(mockUserRepository.findOne).toHaveBeenCalledWith({
-        where: { email: 'test@example.com', status: 'active' },
+        where: { email: 'test@example.com', status: UserStatus.ACTIVE },
       });
       expect(mockPasswordResetTokenRepository.update).toHaveBeenCalled();
       expect(mockPasswordResetTokenRepository.create).toHaveBeenCalledWith({
@@ -230,7 +230,7 @@ describe('UsersService', () => {
         NotFoundException,
       );
       expect(mockUserRepository.findOne).toHaveBeenCalledWith({
-        where: { email: 'nonexistent@example.com', status: 'active' },
+        where: { email: 'nonexistent@example.com', status: UserStatus.ACTIVE },
       });
       expect(mockPasswordResetTokenRepository.update).not.toHaveBeenCalled();
       expect(mockPasswordResetTokenRepository.create).not.toHaveBeenCalled();

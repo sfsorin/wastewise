@@ -6,6 +6,7 @@ import { User } from '../src/modules/users/entities/user.entity';
 import { PasswordResetToken } from '../src/modules/auth/entities/password-reset-token.entity';
 import { Repository } from 'typeorm';
 import { TestAppModule } from './test-app.module';
+import { Express } from 'express';
 
 // Interfețe pentru răspunsurile API
 interface UserResponse {
@@ -31,6 +32,9 @@ interface MessageResponse {
 interface ValidTokenResponse {
   valid: boolean;
 }
+
+// Tipul pentru aplicația de test
+type App = Express;
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
