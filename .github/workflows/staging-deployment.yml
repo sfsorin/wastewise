@@ -2,24 +2,29 @@ name: Staging Deployment
 
 on:
   push:
-    branches: [ develop ]
+    branches: [develop]
   workflow_dispatch:
     inputs:
       deploy_backend:
-        description: 'Deploy backend'
+        description: "Deploy backend"
         required: true
-        default: 'true'
+        default: "true"
         type: boolean
       deploy_frontend:
-        description: 'Deploy frontend'
+        description: "Deploy frontend"
         required: true
-        default: 'true'
+        default: "true"
         type: boolean
       deploy_database:
-        description: 'Run database migrations'
+        description: "Run database migrations"
         required: true
-        default: 'true'
+        default: "true"
         type: boolean
+
+# Adăugăm permisiuni pentru GITHUB_TOKEN
+permissions:
+  contents: read
+  packages: write
 
 jobs:
   prepare:
@@ -50,7 +55,7 @@ jobs:
             echo "deploy_frontend=true" >> $GITHUB_OUTPUT
             echo "deploy_database=true" >> $GITHUB_OUTPUT
           fi
-          
+
           # Generăm versiunea pentru deployment
           VERSION=$(date +'%Y%m%d%H%M%S')-${GITHUB_SHA::8}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
@@ -73,7 +78,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract metadata for Docker
@@ -113,7 +118,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract metadata for Docker
@@ -154,7 +159,7 @@ jobs:
           # Configurare generată automat pentru deployment în staging
           NODE_ENV=staging
           VERSION=${{ needs.prepare.outputs.version }}
-          
+
           # Configurare bază de date
           DB_HOST=${{ secrets.STAGING_DB_HOST }}
           DB_PORT=${{ secrets.STAGING_DB_PORT }}
@@ -162,24 +167,24 @@ jobs:
           DB_PASSWORD=${{ secrets.STAGING_DB_PASSWORD }}
           DB_DATABASE=${{ secrets.STAGING_DB_DATABASE }}
           DB_SSL=${{ secrets.STAGING_DB_SSL }}
-          
+
           # Configurare Redis
           REDIS_HOST=${{ secrets.STAGING_REDIS_HOST }}
           REDIS_PORT=${{ secrets.STAGING_REDIS_PORT }}
           REDIS_PASSWORD=${{ secrets.STAGING_REDIS_PASSWORD }}
-          
+
           # Configurare JWT
           JWT_SECRET=${{ secrets.STAGING_JWT_SECRET }}
           JWT_EXPIRATION=${{ secrets.STAGING_JWT_EXPIRATION }}
-          
+
           # Configurare API
           PORT=3000
           API_PREFIX=api
           API_VERSION=v1
-          
+
           # Configurare frontend
           FRONTEND_URL=${{ secrets.STAGING_FRONTEND_URL }}
-          
+
           # Configurare MinIO
           MINIO_ROOT_USER=${{ secrets.STAGING_MINIO_ROOT_USER }}
           MINIO_ROOT_PASSWORD=${{ secrets.STAGING_MINIO_ROOT_PASSWORD }}
@@ -200,34 +205,34 @@ jobs:
           # Transferăm fișierele necesare
           scp -P ${{ secrets.STAGING_SSH_PORT }} .env ${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_SERVER }}:${{ secrets.STAGING_DEPLOY_PATH }}/.env
           scp -P ${{ secrets.STAGING_SSH_PORT }} docker-compose.prod.yml ${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_SERVER }}:${{ secrets.STAGING_DEPLOY_PATH }}/docker-compose.yml
-          
+
           # Executăm comenzile de deployment
           ssh -p ${{ secrets.STAGING_SSH_PORT }} ${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_SERVER }} << 'ENDSSH'
             cd ${{ secrets.STAGING_DEPLOY_PATH }}
-            
+
             # Autentificare la GitHub Container Registry
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+
             # Actualizare imagini
             if [ "${{ needs.prepare.outputs.deploy_backend }}" == "true" ]; then
               docker pull ghcr.io/${{ github.repository }}/backend:${{ needs.prepare.outputs.version }}
               docker tag ghcr.io/${{ github.repository }}/backend:${{ needs.prepare.outputs.version }} ghcr.io/${{ github.repository }}/backend:staging
             fi
-            
+
             if [ "${{ needs.prepare.outputs.deploy_frontend }}" == "true" ]; then
               docker pull ghcr.io/${{ github.repository }}/frontend:${{ needs.prepare.outputs.version }}
               docker tag ghcr.io/${{ github.repository }}/frontend:${{ needs.prepare.outputs.version }} ghcr.io/${{ github.repository }}/frontend:staging
             fi
-            
+
             # Rulare migrări bază de date (dacă este necesar)
             if [ "${{ needs.prepare.outputs.deploy_database }}" == "true" ]; then
               docker-compose run --rm backend npm run migration:run
             fi
-            
+
             # Repornire servicii
             docker-compose down
             docker-compose up -d
-            
+
             # Curățare imagini vechi
             docker image prune -af
           ENDSSH

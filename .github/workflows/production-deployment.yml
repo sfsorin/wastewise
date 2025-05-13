@@ -100,7 +100,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract metadata for Docker
@@ -140,7 +140,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract metadata for Docker
@@ -261,7 +261,7 @@ jobs:
             cd ${{ secrets.PRODUCTION_DEPLOY_PATH }}
 
             # Autentificare la GitHub Container Registry
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
             # Backup imagini curente pentru rollback
             if [ "${{ needs.prepare.outputs.deploy_backend }}" == "true" ]; then
