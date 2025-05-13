@@ -60,7 +60,7 @@ const RegisterPage = () => {
         username: formData.name,
         email: formData.email,
         password: formData.password,
-        fullName: formData.fullName,
+        fullName: formData.name, // Folosim name ca fullName
       });
 
       // Dacă înregistrarea a reușit, utilizatorul va fi redirecționat automat
