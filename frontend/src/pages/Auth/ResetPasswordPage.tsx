@@ -16,7 +16,7 @@ const ResetPasswordPage = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const _navigate = useNavigate();
+  const navigate = useNavigate();
 
   // Verificăm validitatea token-ului la încărcarea paginii
   useEffect(() => {
