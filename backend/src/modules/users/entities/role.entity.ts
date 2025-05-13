@@ -3,6 +3,7 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  UpdateDateColumn,
   ManyToMany,
   JoinTable,
 } from 'typeorm';
@@ -39,6 +40,13 @@ export class Role {
   })
   @CreateDateColumn()
   createdAt: Date;
+
+  @ApiProperty({
+    description: 'Data ultimei actualizări a rolului',
+    example: '2023-01-01T00:00:00Z',
+  })
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @ManyToMany(() => User, user => user.roles, {
     cascade: false,

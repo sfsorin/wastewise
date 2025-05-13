@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToMany,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Role } from './role.entity';
 
@@ -31,6 +38,13 @@ export class Permission {
   })
   @CreateDateColumn()
   createdAt: Date;
+
+  @ApiProperty({
+    description: 'Data ultimei actualizări a permisiunii',
+    example: '2023-01-01T00:00:00Z',
+  })
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @ManyToMany(() => Role, role => role.permissions, {
     cascade: false,
