@@ -34,14 +34,14 @@ jobs:
 
       - name: Install dependencies
         run: |
-          # Încercăm să instalăm dependențele cu npm ci
-          npm ci || {
+          # Încercăm să instalăm dependențele cu npm ci și --legacy-peer-deps
+          npm ci --legacy-peer-deps || {
             # Dacă npm ci eșuează, încercăm o abordare alternativă
             echo "npm ci a eșuat, încercăm o abordare alternativă"
             # Ștergem node_modules și package-lock.json pentru a forța o instalare curată
             rm -rf node_modules package-lock.json
-            # Instalăm dependențele cu npm install
-            npm install
+            # Instalăm dependențele cu npm install și --legacy-peer-deps
+            npm install --legacy-peer-deps
           }
 
       - name: Create .env file
