@@ -33,7 +33,7 @@ interface ValidTokenResponse {
 }
 
 // Tipul pentru aplicația de test
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
 type App = any;
 
 describe('AuthController (e2e)', () => {
