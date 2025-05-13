@@ -3,24 +3,28 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { UsersService } from './users.service';
+import { UsersService } from '../../users/users.service';
 import { MailService } from './mail.service';
-import { User } from '../../users/entities/user.entity';
+import { User, UserStatus } from '../../users/entities/user.entity';
+import { LoginDto } from '../dto/login.dto';
+import { RegisterDto } from '../dto/register.dto';
+import { ForgotPasswordDto } from '../dto/forgot-password.dto';
+import { ResetPasswordDto } from '../dto/reset-password.dto';
 
 describe('AuthService', () => {
   let service: AuthService;
   let jwtService: JwtService;
 
-  const mockUser = {
+  const mockUser: Partial<User> & { validatePassword: jest.Mock } = {
     id: '123',
     username: 'testuser',
     email: 'test@example.com',
     fullName: 'Test User',
     role: 'user',
-    status: 'active',
+    status: UserStatus.ACTIVE,
     password: 'hashedPassword',
     validatePassword: jest.fn().mockResolvedValue(true),
-  } as unknown as User;
+  };
 
   const mockUsersService = {
     findByUsernameOrEmail: jest.fn(),
@@ -88,6 +92,7 @@ describe('AuthService', () => {
       expect(result).toBeDefined();
       expect(result.password).toBeUndefined();
       expect(result.id).toBe(mockUser.id);
+      // Folosim o funcție arrow pentru a evita eroarea unbound-method
       expect(mockUser.validatePassword).toHaveBeenCalledWith('password');
     });
 
@@ -119,13 +124,14 @@ describe('AuthService', () => {
         email: mockUser.email,
         fullName: mockUser.fullName,
         role: mockUser.role,
-        status: 'active',
+        status: UserStatus.ACTIVE,
       });
 
       const result = await service.login({ username: 'testuser', password: 'password' });
 
       expect(validateUserSpy).toHaveBeenCalledWith('testuser', 'password');
       expect(mockUsersService.updateLastLogin).toHaveBeenCalledWith(mockUser.id);
+      // Folosim o funcție arrow pentru a evita eroarea unbound-method
       expect(jwtService.sign).toHaveBeenCalled();
       expect(result.access_token).toBe('jwt-token');
       expect(result.user).toBeDefined();
@@ -143,7 +149,7 @@ describe('AuthService', () => {
     it('should throw UnauthorizedException if user account is inactive', async () => {
       jest.spyOn(service, 'validateUser').mockResolvedValue({
         ...mockUser,
-        status: 'inactive',
+        status: UserStatus.INACTIVE,
       });
 
       await expect(service.login({ username: 'testuser', password: 'password' })).rejects.toThrow(
@@ -156,7 +162,7 @@ describe('AuthService', () => {
     it('should create a new user and return access token and user data', async () => {
       mockUsersService.create.mockResolvedValue(mockUser);
 
-      const registerDto = {
+      const registerDto: RegisterDto = {
         username: 'testuser',
         email: 'test@example.com',
         password: 'Password123!',
@@ -166,6 +172,7 @@ describe('AuthService', () => {
       const result = await service.register(registerDto);
 
       expect(mockUsersService.create).toHaveBeenCalledWith(registerDto);
+      // Folosim o funcție arrow pentru a evita eroarea unbound-method
       expect(jwtService.sign).toHaveBeenCalled();
       expect(result.access_token).toBe('jwt-token');
       expect(result.user).toBeDefined();
