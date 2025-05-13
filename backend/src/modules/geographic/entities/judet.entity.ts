@@ -55,9 +55,9 @@ export class Judet {
   updatedAt: Date;
 
   // Relații
-  @OneToMany(() => Localitate, (localitate) => localitate.judet)
+  @OneToMany(() => Localitate, localitate => localitate.judet)
   localitati: Localitate[];
 
-  @OneToMany(() => UAT, (uat) => uat.judet)
+  @OneToMany(() => UAT, uat => uat.judet)
   uaturi: UAT[];
 }

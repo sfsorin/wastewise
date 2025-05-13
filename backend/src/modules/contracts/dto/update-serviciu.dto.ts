@@ -1,11 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsOptional,
-  IsString,
-  Length,
-  IsNumber,
-  Min,
-} from 'class-validator';
+import { IsOptional, IsString, Length, IsNumber, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateServiciuDto } from './create-serviciu.dto';
@@ -32,7 +26,7 @@ export class UpdateServiciuDto extends PartialType(CreateServiciuDto) {
 
   @ApiProperty({
     description: 'Prețul unitar',
-    example: 100.00,
+    example: 100.0,
     required: false,
   })
   @IsOptional()

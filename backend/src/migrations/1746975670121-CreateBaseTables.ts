@@ -5,7 +5,7 @@ export class CreateBaseTables1746975670121 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     // Activare extensie uuid-ossp pentru generarea UUID-urilor
-    await queryRunner.query(`CREATE EXTENSION IF NOT EXISTS 'uuid-ossp'`);
+    await queryRunner.query("CREATE EXTENSION IF NOT EXISTS 'uuid-ossp'");
 
     // Tabela pentru tipuri de clienți
     await queryRunner.query(`
@@ -199,48 +199,50 @@ export class CreateBaseTables1746975670121 implements MigrationInterface {
 
     // Adăugare comentarii pentru tabele
     await queryRunner.query(
-      `COMMENT ON TABLE "tipuri_client" IS 'Tipuri de clienți (persoană fizică, persoană juridică, etc.)'`,
+      'COMMENT ON TABLE "tipuri_client" IS \'Tipuri de clienți (persoană fizică, persoană juridică, etc.)\'',
     );
-    await queryRunner.query(`COMMENT ON TABLE "judete" IS 'Județele din România'`);
-    await queryRunner.query(`COMMENT ON TABLE "localitati" IS 'Localitățile din România'`);
+    await queryRunner.query('COMMENT ON TABLE "judete" IS \'Județele din România\'');
+    await queryRunner.query('COMMENT ON TABLE "localitati" IS \'Localitățile din România\'');
     await queryRunner.query(
-      `COMMENT ON TABLE "uat" IS 'Unitățile Administrativ-Teritoriale din România'`,
+      'COMMENT ON TABLE "uat" IS \'Unitățile Administrativ-Teritoriale din România\'',
     );
-    await queryRunner.query(`COMMENT ON TABLE "clienti" IS 'Clienții aplicației WasteWise'`);
+    await queryRunner.query('COMMENT ON TABLE "clienti" IS \'Clienții aplicației WasteWise\'');
     await queryRunner.query(
-      `COMMENT ON TABLE "categorii_deseuri" IS 'Categoriile de deșeuri gestionate'`,
-    );
-    await queryRunner.query(
-      `COMMENT ON TABLE "puncte_colectare" IS 'Punctele de colectare a deșeurilor'`,
-    );
-    await queryRunner.query(`COMMENT ON TABLE "contracte" IS 'Contractele încheiate cu clienții'`);
-    await queryRunner.query(
-      `COMMENT ON TABLE "servicii" IS 'Serviciile oferite de aplicația WasteWise'`,
+      'COMMENT ON TABLE "categorii_deseuri" IS \'Categoriile de deșeuri gestionate\'',
     );
     await queryRunner.query(
-      `COMMENT ON TABLE "servicii_contractate" IS 'Serviciile contractate de clienți'`,
+      'COMMENT ON TABLE "puncte_colectare" IS \'Punctele de colectare a deșeurilor\'',
     );
     await queryRunner.query(
-      `COMMENT ON TABLE "date_istorice" IS 'Date istorice pentru antrenarea modelelor ML'`,
+      'COMMENT ON TABLE "contracte" IS \'Contractele încheiate cu clienții\'',
     );
     await queryRunner.query(
-      `COMMENT ON TABLE "predictii_cantitati" IS 'Predicții pentru cantitățile de deșeuri'`,
+      'COMMENT ON TABLE "servicii" IS \'Serviciile oferite de aplicația WasteWise\'',
+    );
+    await queryRunner.query(
+      'COMMENT ON TABLE "servicii_contractate" IS \'Serviciile contractate de clienți\'',
+    );
+    await queryRunner.query(
+      'COMMENT ON TABLE "date_istorice" IS \'Date istorice pentru antrenarea modelelor ML\'',
+    );
+    await queryRunner.query(
+      'COMMENT ON TABLE "predictii_cantitati" IS \'Predicții pentru cantitățile de deșeuri\'',
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     // Ștergere tabele în ordinea inversă creării (pentru a respecta constrângerile de cheie străină)
-    await queryRunner.query(`DROP TABLE "predictii_cantitati"`);
-    await queryRunner.query(`DROP TABLE "date_istorice"`);
-    await queryRunner.query(`DROP TABLE "servicii_contractate"`);
-    await queryRunner.query(`DROP TABLE "servicii"`);
-    await queryRunner.query(`DROP TABLE "contracte"`);
-    await queryRunner.query(`DROP TABLE "puncte_colectare"`);
-    await queryRunner.query(`DROP TABLE "categorii_deseuri"`);
-    await queryRunner.query(`DROP TABLE "clienti"`);
-    await queryRunner.query(`DROP TABLE "uat"`);
-    await queryRunner.query(`DROP TABLE "localitati"`);
-    await queryRunner.query(`DROP TABLE "judete"`);
-    await queryRunner.query(`DROP TABLE "tipuri_client"`);
+    await queryRunner.query('DROP TABLE "predictii_cantitati"');
+    await queryRunner.query('DROP TABLE "date_istorice"');
+    await queryRunner.query('DROP TABLE "servicii_contractate"');
+    await queryRunner.query('DROP TABLE "servicii"');
+    await queryRunner.query('DROP TABLE "contracte"');
+    await queryRunner.query('DROP TABLE "puncte_colectare"');
+    await queryRunner.query('DROP TABLE "categorii_deseuri"');
+    await queryRunner.query('DROP TABLE "clienti"');
+    await queryRunner.query('DROP TABLE "uat"');
+    await queryRunner.query('DROP TABLE "localitati"');
+    await queryRunner.query('DROP TABLE "judete"');
+    await queryRunner.query('DROP TABLE "tipuri_client"');
   }
 }

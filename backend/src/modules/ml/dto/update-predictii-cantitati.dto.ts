@@ -1,13 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsOptional,
-  IsString,
-  IsUUID,
-  IsNumber,
-  Min,
-  Max,
-  IsISO8601,
-} from 'class-validator';
+import { IsOptional, IsString, IsUUID, IsNumber, Min, Max, IsISO8601 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { PartialType } from '@nestjs/mapped-types';
 import { CreatePredictiiCantitatiDto } from './create-predictii-cantitati.dto';
@@ -55,7 +47,10 @@ export class UpdatePredictiiCantitatiDto extends PartialType(CreatePredictiiCant
     required: false,
   })
   @IsOptional()
-  @IsISO8601({}, { message: 'Data efectuării predicției trebuie să fie în format ISO 8601 (YYYY-MM-DD)' })
+  @IsISO8601(
+    {},
+    { message: 'Data efectuării predicției trebuie să fie în format ISO 8601 (YYYY-MM-DD)' },
+  )
   dataPredictie?: string;
 
   @ApiProperty({
@@ -64,7 +59,13 @@ export class UpdatePredictiiCantitatiDto extends PartialType(CreatePredictiiCant
     required: false,
   })
   @IsOptional()
-  @IsISO8601({}, { message: 'Data de început a perioadei de predicție trebuie să fie în format ISO 8601 (YYYY-MM-DD)' })
+  @IsISO8601(
+    {},
+    {
+      message:
+        'Data de început a perioadei de predicție trebuie să fie în format ISO 8601 (YYYY-MM-DD)',
+    },
+  )
   perioadaStart?: string;
 
   @ApiProperty({
@@ -73,12 +74,18 @@ export class UpdatePredictiiCantitatiDto extends PartialType(CreatePredictiiCant
     required: false,
   })
   @IsOptional()
-  @IsISO8601({}, { message: 'Data de sfârșit a perioadei de predicție trebuie să fie în format ISO 8601 (YYYY-MM-DD)' })
+  @IsISO8601(
+    {},
+    {
+      message:
+        'Data de sfârșit a perioadei de predicție trebuie să fie în format ISO 8601 (YYYY-MM-DD)',
+    },
+  )
   perioadaEnd?: string;
 
   @ApiProperty({
     description: 'Cantitatea estimată de deșeuri',
-    example: 1000.00,
+    example: 1000.0,
     required: false,
   })
   @IsOptional()
@@ -98,23 +105,33 @@ export class UpdatePredictiiCantitatiDto extends PartialType(CreatePredictiiCant
 
   @ApiProperty({
     description: 'Limita inferioară a intervalului de încredere',
-    example: 900.00,
+    example: 900.0,
     required: false,
   })
   @IsOptional()
-  @IsNumber({}, { message: 'Limita inferioară a intervalului de încredere trebuie să fie un număr' })
-  @Min(0, { message: 'Limita inferioară a intervalului de încredere trebuie să fie un număr pozitiv' })
+  @IsNumber(
+    {},
+    { message: 'Limita inferioară a intervalului de încredere trebuie să fie un număr' },
+  )
+  @Min(0, {
+    message: 'Limita inferioară a intervalului de încredere trebuie să fie un număr pozitiv',
+  })
   @Type(() => Number)
   intervalIncredereMin?: number;
 
   @ApiProperty({
     description: 'Limita superioară a intervalului de încredere',
-    example: 1100.00,
+    example: 1100.0,
     required: false,
   })
   @IsOptional()
-  @IsNumber({}, { message: 'Limita superioară a intervalului de încredere trebuie să fie un număr' })
-  @Min(0, { message: 'Limita superioară a intervalului de încredere trebuie să fie un număr pozitiv' })
+  @IsNumber(
+    {},
+    { message: 'Limita superioară a intervalului de încredere trebuie să fie un număr' },
+  )
+  @Min(0, {
+    message: 'Limita superioară a intervalului de încredere trebuie să fie un număr pozitiv',
+  })
   @Type(() => Number)
   intervalIncredereMax?: number;
 

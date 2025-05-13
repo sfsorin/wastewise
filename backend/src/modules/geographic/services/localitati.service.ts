@@ -24,7 +24,9 @@ export class LocalitatiService {
         where: { codSiruta: createLocalitateDto.codSiruta },
       });
       if (existingBySiruta) {
-        throw new ConflictException(`Există deja o localitate cu codul SIRUTA ${createLocalitateDto.codSiruta}`);
+        throw new ConflictException(
+          `Există deja o localitate cu codul SIRUTA ${createLocalitateDto.codSiruta}`,
+        );
       }
     }
 
@@ -78,7 +80,9 @@ export class LocalitatiService {
         where: { codSiruta: updateLocalitateDto.codSiruta },
       });
       if (existingBySiruta && existingBySiruta.id !== id) {
-        throw new ConflictException(`Există deja o localitate cu codul SIRUTA ${updateLocalitateDto.codSiruta}`);
+        throw new ConflictException(
+          `Există deja o localitate cu codul SIRUTA ${updateLocalitateDto.codSiruta}`,
+        );
       }
     }
 

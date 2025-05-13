@@ -43,7 +43,7 @@ export class UpdateDateIstoriceDto extends PartialType(CreateDateIstoriceDto) {
 
   @ApiProperty({
     description: 'Cantitatea de deșeuri',
-    example: 100.00,
+    example: 100.0,
     required: false,
   })
   @IsOptional()
@@ -99,7 +99,9 @@ export class UpdateDateIstoriceDto extends PartialType(CreateDateIstoriceDto) {
     required: false,
   })
   @IsOptional()
-  @IsBoolean({ message: 'Indicatorul pentru evenimente speciale trebuie să fie o valoare booleană' })
+  @IsBoolean({
+    message: 'Indicatorul pentru evenimente speciale trebuie să fie o valoare booleană',
+  })
   @Type(() => Boolean)
   evenimentSpecial?: boolean;
 

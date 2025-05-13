@@ -10,7 +10,25 @@ export default tseslint.config(
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
-  eslintPluginPrettierRecommended,
+  {
+    plugins: {
+      prettier: eslintPluginPrettierRecommended.plugins.prettier,
+    },
+    rules: {
+      ...eslintPluginPrettierRecommended.rules,
+      'prettier/prettier': [
+        'error',
+        {
+          singleQuote: true,
+          trailingComma: 'all',
+          printWidth: 100,
+          tabWidth: 2,
+          semi: true,
+          endOfLine: 'crlf',
+        },
+      ],
+    },
+  },
   {
     languageOptions: {
       globals: {

@@ -36,21 +36,21 @@ export class ServiciuContractat {
 
   @ApiProperty({
     description: 'Cantitatea contractată',
-    example: 10.00,
+    example: 10.0,
   })
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   cantitate: number;
 
   @ApiProperty({
     description: 'Prețul unitar negociat',
-    example: 100.00,
+    example: 100.0,
   })
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   pretUnitar: number;
 
   @ApiProperty({
     description: 'Discount-ul aplicat',
-    example: 10.00,
+    example: 10.0,
   })
   @Column({ type: 'decimal', precision: 5, scale: 2, default: 0 })
   discount: number;
@@ -70,11 +70,11 @@ export class ServiciuContractat {
   updatedAt: Date;
 
   // Relații
-  @ManyToOne(() => Contract, (contract) => contract.serviciiContractate)
+  @ManyToOne(() => Contract, contract => contract.serviciiContractate)
   @JoinColumn({ name: 'contract_id' })
   contract: Contract;
 
-  @ManyToOne(() => Serviciu, (serviciu) => serviciu.serviciiContractate)
+  @ManyToOne(() => Serviciu, serviciu => serviciu.serviciiContractate)
   @JoinColumn({ name: 'serviciu_id' })
   serviciu: Serviciu;
 }

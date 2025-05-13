@@ -4,8 +4,9 @@ import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from '@app/app.module';
 import { Logger } from '@utils/logger.util';
+import { Request, Response, NextFunction } from 'express';
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
   const logger = new Logger('Bootstrap');
   const app = await NestFactory.create(AppModule);
 
@@ -35,6 +36,15 @@ async function bootstrap() {
 
   // Configurare CORS
   app.enableCors();
+
+  // Adăugare middleware pentru redirecționare de la ruta principală
+  const expressApp = app.getHttpAdapter().getInstance();
+  expressApp.use('/', (req: Request, res: Response, next: NextFunction) => {
+    if (req.originalUrl === '/') {
+      return res.redirect('/docs');
+    }
+    next();
+  });
 
   // Configurare Swagger
   const swaggerConfig = new DocumentBuilder()
@@ -70,4 +80,4 @@ async function bootstrap() {
   logger.info(`Aplicația rulează pe: http://localhost:${port}`);
   logger.info(`Documentație API: http://localhost:${port}/docs`);
 }
-bootstrap();
+void bootstrap();

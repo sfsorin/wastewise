@@ -1,12 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsNotEmpty,
-  IsString,
-  IsOptional,
-  Length,
-  IsNumber,
-  Min,
-} from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional, Length, IsNumber, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateServiciuDto {
@@ -30,7 +23,7 @@ export class CreateServiciuDto {
 
   @ApiProperty({
     description: 'Prețul unitar',
-    example: 100.00,
+    example: 100.0,
     required: false,
   })
   @IsOptional()

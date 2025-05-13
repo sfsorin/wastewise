@@ -18,7 +18,9 @@ export class CategorieDeseuriService {
       where: { nume: createCategorieDeseuriDto.nume },
     });
     if (existingByName) {
-      throw new ConflictException(`Există deja o categorie cu numele ${createCategorieDeseuriDto.nume}`);
+      throw new ConflictException(
+        `Există deja o categorie cu numele ${createCategorieDeseuriDto.nume}`,
+      );
     }
 
     if (createCategorieDeseuriDto.cod) {
@@ -26,7 +28,9 @@ export class CategorieDeseuriService {
         where: { cod: createCategorieDeseuriDto.cod },
       });
       if (existingByCode) {
-        throw new ConflictException(`Există deja o categorie cu codul ${createCategorieDeseuriDto.cod}`);
+        throw new ConflictException(
+          `Există deja o categorie cu codul ${createCategorieDeseuriDto.cod}`,
+        );
       }
     }
 
@@ -67,16 +71,24 @@ export class CategorieDeseuriService {
     return categorieDeseuri;
   }
 
-  async update(id: string, updateCategorieDeseuriDto: UpdateCategorieDeseuriDto): Promise<CategorieDeseuri> {
+  async update(
+    id: string,
+    updateCategorieDeseuriDto: UpdateCategorieDeseuriDto,
+  ): Promise<CategorieDeseuri> {
     const categorieDeseuri = await this.findOne(id);
 
     // Verificare dacă există deja o categorie cu același nume sau cod
-    if (updateCategorieDeseuriDto.nume && updateCategorieDeseuriDto.nume !== categorieDeseuri.nume) {
+    if (
+      updateCategorieDeseuriDto.nume &&
+      updateCategorieDeseuriDto.nume !== categorieDeseuri.nume
+    ) {
       const existingByName = await this.categorieDeseuriRepository.findOne({
         where: { nume: updateCategorieDeseuriDto.nume },
       });
       if (existingByName && existingByName.id !== id) {
-        throw new ConflictException(`Există deja o categorie cu numele ${updateCategorieDeseuriDto.nume}`);
+        throw new ConflictException(
+          `Există deja o categorie cu numele ${updateCategorieDeseuriDto.nume}`,
+        );
       }
     }
 
@@ -85,7 +97,9 @@ export class CategorieDeseuriService {
         where: { cod: updateCategorieDeseuriDto.cod },
       });
       if (existingByCode && existingByCode.id !== id) {
-        throw new ConflictException(`Există deja o categorie cu codul ${updateCategorieDeseuriDto.cod}`);
+        throw new ConflictException(
+          `Există deja o categorie cu codul ${updateCategorieDeseuriDto.cod}`,
+        );
       }
     }
 

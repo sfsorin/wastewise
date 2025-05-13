@@ -109,17 +109,21 @@ export class CreateRolesAndPermissions1746975670122 implements MigrationInterfac
     `);
 
     // Adăugare comentarii pentru tabele
-    await queryRunner.query(`COMMENT ON TABLE 'roles' IS 'Roluri pentru utilizatori'`);
-    await queryRunner.query(`COMMENT ON TABLE 'permissions' IS 'Permisiuni pentru roluri'`);
-    await queryRunner.query(`COMMENT ON TABLE 'user_roles' IS 'Relația dintre utilizatori și roluri'`);
-    await queryRunner.query(`COMMENT ON TABLE 'role_permissions' IS 'Relația dintre roluri și permisiuni'`);
+    await queryRunner.query("COMMENT ON TABLE 'roles' IS 'Roluri pentru utilizatori'");
+    await queryRunner.query("COMMENT ON TABLE 'permissions' IS 'Permisiuni pentru roluri'");
+    await queryRunner.query(
+      "COMMENT ON TABLE 'user_roles' IS 'Relația dintre utilizatori și roluri'",
+    );
+    await queryRunner.query(
+      "COMMENT ON TABLE 'role_permissions' IS 'Relația dintre roluri și permisiuni'",
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     // Ștergere tabele în ordinea inversă creării (pentru a respecta constrângerile de cheie străină)
-    await queryRunner.query(`DROP TABLE IF EXISTS 'role_permissions'`);
-    await queryRunner.query(`DROP TABLE IF EXISTS 'user_roles'`);
-    await queryRunner.query(`DROP TABLE IF EXISTS 'permissions'`);
-    await queryRunner.query(`DROP TABLE IF EXISTS 'roles'`);
+    await queryRunner.query("DROP TABLE IF EXISTS 'role_permissions'");
+    await queryRunner.query("DROP TABLE IF EXISTS 'user_roles'");
+    await queryRunner.query("DROP TABLE IF EXISTS 'permissions'");
+    await queryRunner.query("DROP TABLE IF EXISTS 'roles'");
   }
 }

@@ -20,7 +20,9 @@ export class PredictiiCantitatiService {
     private categorieDeseuriService: CategorieDeseuriService,
   ) {}
 
-  async create(createPredictiiCantitatiDto: CreatePredictiiCantitatiDto): Promise<PredictiiCantitati> {
+  async create(
+    createPredictiiCantitatiDto: CreatePredictiiCantitatiDto,
+  ): Promise<PredictiiCantitati> {
     // Verificare dacă UAT-ul există
     if (createPredictiiCantitatiDto.uatId) {
       await this.uatService.findOne(createPredictiiCantitatiDto.uatId);
@@ -130,7 +132,10 @@ export class PredictiiCantitatiService {
     return predictiiCantitati;
   }
 
-  async update(id: string, updatePredictiiCantitatiDto: UpdatePredictiiCantitatiDto): Promise<PredictiiCantitati> {
+  async update(
+    id: string,
+    updatePredictiiCantitatiDto: UpdatePredictiiCantitatiDto,
+  ): Promise<PredictiiCantitati> {
     const predictiiCantitati = await this.findOne(id);
 
     // Verificare dacă UAT-ul există

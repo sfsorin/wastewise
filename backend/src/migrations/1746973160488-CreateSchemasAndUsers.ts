@@ -1,14 +1,16 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 import * as fs from 'fs';
 import * as path from 'path';
+import { Logger } from '@nestjs/common';
 
 export class CreateSchemasAndUsers1746973160488 implements MigrationInterface {
   name = 'CreateSchemasAndUsers1746973160488';
+  private readonly logger = new Logger(CreateSchemasAndUsers1746973160488.name);
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     try {
       // Verificăm dacă baza de date există
-      console.log('Verificăm dacă baza de date wastewise există...');
+      this.logger.log('Verificăm dacă baza de date wastewise există...');
 
       // Citirea și executarea scriptului SQL pentru crearea schemelor și utilizatorilor
       const createScriptPath = path.join(
@@ -23,21 +25,24 @@ export class CreateSchemasAndUsers1746973160488 implements MigrationInterface {
       // Executarea scriptului SQL
       await queryRunner.query(createScript);
 
-      console.log('Schemele și utilizatorii au fost create cu succes.');
+      this.logger.log('Schemele și utilizatorii au fost create cu succes.');
     } catch (error) {
-      console.error('Eroare la crearea schemelor și utilizatorilor:', error);
+      this.logger.error(
+        'Eroare la crearea schemelor și utilizatorilor:',
+        error instanceof Error ? error.stack : String(error),
+      );
 
       const errorMessage = error instanceof Error ? error.message : String(error);
       if (errorMessage.includes('database "wastewise" does not exist')) {
-        console.error(
+        this.logger.error(
           '\nBaza de date "wastewise" nu există. Trebuie să o creați manual înainte de a rula migrările.',
         );
-        console.error('Puteți crea baza de date folosind una din următoarele metode:');
-        console.error('1. Folosind pgAdmin');
-        console.error(
+        this.logger.error('Puteți crea baza de date folosind una din următoarele metode:');
+        this.logger.error('1. Folosind pgAdmin');
+        this.logger.error(
           '2. Folosind comanda: psql -h <host> -U postgres -c "CREATE DATABASE wastewise;"',
         );
-        console.error(
+        this.logger.error(
           '3. Folosind scriptul: psql -h <host> -U postgres -f src/database/scripts/create-database.sql',
         );
       }
@@ -60,6 +65,6 @@ export class CreateSchemasAndUsers1746973160488 implements MigrationInterface {
     // Executarea scriptului SQL
     await queryRunner.query(dropScript);
 
-    console.log('Schemele și utilizatorii au fost șterse cu succes.');
+    this.logger.log('Schemele și utilizatorii au fost șterse cu succes.');
   }
 }

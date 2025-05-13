@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { UsersService } from './users.service';
+import { UsersService } from '../../users/users.service';
 import { MailService } from './mail.service';
 import { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from '../dto/register.dto';
@@ -20,15 +20,26 @@ export class AuthService {
 
   async validateUser(username: string, password: string): Promise<any> {
     try {
+      console.log(`Încercare de autentificare pentru utilizatorul: ${username}`);
       const user = await this.usersService.findByUsernameOrEmail(username);
 
-      if (user && (await user.validatePassword(password))) {
-        const { password, ...result } = user;
+      if (!user) {
+        console.log(`Utilizatorul ${username} nu a fost găsit`);
+        return null;
+      }
+
+      console.log(`Utilizatorul ${username} găsit, verificare parolă...`);
+      const isPasswordValid = await user.validatePassword(password);
+      console.log(`Rezultat validare parolă: ${isPasswordValid}`);
+
+      if (isPasswordValid) {
+        const { password: _password, ...result } = user;
         return result;
       }
 
       return null;
-    } catch (error) {
+    } catch (error: any) {
+      console.error(`Eroare la validarea utilizatorului: ${error.message}`);
       return null;
     }
   }

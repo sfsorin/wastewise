@@ -43,7 +43,7 @@ export class DateIstorice {
 
   @ApiProperty({
     description: 'Cantitatea de deșeuri',
-    example: 100.00,
+    example: 100.0,
   })
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   cantitate: number;
@@ -105,11 +105,11 @@ export class DateIstorice {
   updatedAt: Date;
 
   // Relații
-  @ManyToOne(() => UAT, (uat) => uat.dateIstorice)
+  @ManyToOne(() => UAT, uat => uat.dateIstorice)
   @JoinColumn({ name: 'uat_id' })
   uat: UAT;
 
-  @ManyToOne(() => CategorieDeseuri, (categorieDeseuri) => categorieDeseuri.dateIstorice)
+  @ManyToOne(() => CategorieDeseuri, categorieDeseuri => categorieDeseuri.dateIstorice)
   @JoinColumn({ name: 'categorie_id' })
   categorie: CategorieDeseuri;
 }

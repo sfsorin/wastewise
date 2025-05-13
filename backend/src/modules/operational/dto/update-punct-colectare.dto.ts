@@ -1,13 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsOptional,
-  IsString,
-  Length,
-  IsUUID,
-  IsNumber,
-  Min,
-  Max,
-} from 'class-validator';
+import { IsOptional, IsString, Length, IsUUID, IsNumber, Min, Max } from 'class-validator';
 import { Type } from 'class-transformer';
 import { PartialType } from '@nestjs/mapped-types';
 import { CreatePunctColectareDto } from './create-punct-colectare.dto';
@@ -20,7 +12,9 @@ export class UpdatePunctColectareDto extends PartialType(CreatePunctColectareDto
   })
   @IsOptional()
   @IsString({ message: 'Numele punctului de colectare trebuie să fie un șir de caractere' })
-  @Length(2, 100, { message: 'Numele punctului de colectare trebuie să aibă între 2 și 100 de caractere' })
+  @Length(2, 100, {
+    message: 'Numele punctului de colectare trebuie să aibă între 2 și 100 de caractere',
+  })
   nume?: string;
 
   @ApiProperty({

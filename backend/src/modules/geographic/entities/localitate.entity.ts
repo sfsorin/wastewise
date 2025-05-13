@@ -65,13 +65,13 @@ export class Localitate {
   updatedAt: Date;
 
   // Relații
-  @ManyToOne(() => Judet, (judet) => judet.localitati)
+  @ManyToOne(() => Judet, judet => judet.localitati)
   @JoinColumn({ name: 'judet_id' })
   judet: Judet;
 
-  @OneToMany(() => PunctColectare, (punctColectare) => punctColectare.localitate)
+  @OneToMany(() => PunctColectare, punctColectare => punctColectare.localitate)
   puncteColectare: PunctColectare[];
 
-  @OneToMany(() => Client, (client) => client.localitate)
+  @OneToMany(() => Client, client => client.localitate)
   clienti: Client[];
 }

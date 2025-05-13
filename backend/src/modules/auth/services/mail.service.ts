@@ -18,11 +18,7 @@ export class MailService {
     });
   }
 
-  async sendPasswordResetEmail(
-    to: string,
-    resetLink: string,
-    username: string,
-  ): Promise<void> {
+  async sendPasswordResetEmail(to: string, resetLink: string, username: string): Promise<void> {
     const mailOptions = {
       from: `"WasteWise" <${this.configService.get<string>('MAIL_FROM')}>`,
       to,

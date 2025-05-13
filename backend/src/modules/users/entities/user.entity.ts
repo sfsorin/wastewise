@@ -152,7 +152,16 @@ export class User {
   }
 
   async validatePassword(password: string): Promise<boolean> {
-    return bcrypt.compare(password, this.password);
+    console.log(`Validare parolă pentru utilizatorul: ${this.username}`);
+    console.log(`Hash parolă stocat: ${this.password}`);
+    try {
+      const isValid = await bcrypt.compare(password, this.password);
+      console.log(`Rezultat comparare bcrypt: ${isValid}`);
+      return isValid;
+    } catch (error: any) {
+      console.error(`Eroare la compararea parolelor: ${error.message}`);
+      return false;
+    }
   }
 
   // Metodă utilă pentru a genera numele complet din prenume și nume

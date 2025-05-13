@@ -1,11 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsOptional,
-  IsUUID,
-  IsNumber,
-  Min,
-  Max,
-} from 'class-validator';
+import { IsOptional, IsUUID, IsNumber, Min, Max } from 'class-validator';
 import { Type } from 'class-transformer';
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateServiciuContractatDto } from './create-serviciu-contractat.dto';
@@ -31,7 +25,7 @@ export class UpdateServiciuContractatDto extends PartialType(CreateServiciuContr
 
   @ApiProperty({
     description: 'Cantitatea contractată',
-    example: 10.00,
+    example: 10.0,
     required: false,
   })
   @IsOptional()
@@ -42,7 +36,7 @@ export class UpdateServiciuContractatDto extends PartialType(CreateServiciuContr
 
   @ApiProperty({
     description: 'Prețul unitar negociat',
-    example: 100.00,
+    example: 100.0,
     required: false,
   })
   @IsOptional()
@@ -53,7 +47,7 @@ export class UpdateServiciuContractatDto extends PartialType(CreateServiciuContr
 
   @ApiProperty({
     description: 'Discount-ul aplicat',
-    example: 10.00,
+    example: 10.0,
     required: false,
   })
   @IsOptional()

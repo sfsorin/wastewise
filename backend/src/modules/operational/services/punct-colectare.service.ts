@@ -95,7 +95,10 @@ export class PunctColectareService {
     return punctColectare;
   }
 
-  async update(id: string, updatePunctColectareDto: UpdatePunctColectareDto): Promise<PunctColectare> {
+  async update(
+    id: string,
+    updatePunctColectareDto: UpdatePunctColectareDto,
+  ): Promise<PunctColectare> {
     const punctColectare = await this.findOne(id);
 
     // Verificare dacă județul există

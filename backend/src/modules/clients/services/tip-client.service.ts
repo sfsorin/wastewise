@@ -18,7 +18,9 @@ export class TipClientService {
       where: { nume: createTipClientDto.nume },
     });
     if (existingByName) {
-      throw new ConflictException(`Există deja un tip de client cu numele ${createTipClientDto.nume}`);
+      throw new ConflictException(
+        `Există deja un tip de client cu numele ${createTipClientDto.nume}`,
+      );
     }
 
     const tipClient = this.tipClientRepository.create(createTipClientDto);
@@ -55,7 +57,9 @@ export class TipClientService {
         where: { nume: updateTipClientDto.nume },
       });
       if (existingByName && existingByName.id !== id) {
-        throw new ConflictException(`Există deja un tip de client cu numele ${updateTipClientDto.nume}`);
+        throw new ConflictException(
+          `Există deja un tip de client cu numele ${updateTipClientDto.nume}`,
+        );
       }
     }
 

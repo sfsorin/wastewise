@@ -55,9 +55,9 @@ export class CategorieDeseuri {
   updatedAt: Date;
 
   // Relații
-  @OneToMany(() => DateIstorice, (dateIstorice) => dateIstorice.categorie)
+  @OneToMany(() => DateIstorice, dateIstorice => dateIstorice.categorie)
   dateIstorice: DateIstorice[];
 
-  @OneToMany(() => PredictiiCantitati, (predictiiCantitati) => predictiiCantitati.categorie)
+  @OneToMany(() => PredictiiCantitati, predictiiCantitati => predictiiCantitati.categorie)
   predictiiCantitati: PredictiiCantitati[];
 }

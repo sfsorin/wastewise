@@ -7,7 +7,9 @@ export class LoginDto {
     example: 'john.doe',
   })
   @IsNotEmpty({ message: 'Numele de utilizator sau adresa de email este obligatorie' })
-  @IsString({ message: 'Numele de utilizator sau adresa de email trebuie să fie un șir de caractere' })
+  @IsString({
+    message: 'Numele de utilizator sau adresa de email trebuie să fie un șir de caractere',
+  })
   username: string;
 
   @ApiProperty({

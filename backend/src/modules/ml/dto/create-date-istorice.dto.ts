@@ -39,7 +39,7 @@ export class CreateDateIstoriceDto {
 
   @ApiProperty({
     description: 'Cantitatea de deșeuri',
-    example: 100.00,
+    example: 100.0,
   })
   @IsNotEmpty({ message: 'Cantitatea de deșeuri este obligatorie' })
   @IsNumber({}, { message: 'Cantitatea de deșeuri trebuie să fie un număr' })
@@ -96,7 +96,9 @@ export class CreateDateIstoriceDto {
     required: false,
   })
   @IsOptional()
-  @IsBoolean({ message: 'Indicatorul pentru evenimente speciale trebuie să fie o valoare booleană' })
+  @IsBoolean({
+    message: 'Indicatorul pentru evenimente speciale trebuie să fie o valoare booleană',
+  })
   @Type(() => Boolean)
   evenimentSpecial?: boolean;
 

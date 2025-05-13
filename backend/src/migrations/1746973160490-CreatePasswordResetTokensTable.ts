@@ -20,7 +20,7 @@ export class CreatePasswordResetTokensTable1746973160490 implements MigrationInt
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`DROP INDEX IF EXISTS 'IDX_password_reset_tokens_token'`);
-    await queryRunner.query(`DROP TABLE IF EXISTS 'password_reset_tokens'`);
+    await queryRunner.query("DROP INDEX IF EXISTS 'IDX_password_reset_tokens_token'");
+    await queryRunner.query("DROP TABLE IF EXISTS 'password_reset_tokens'");
   }
 }

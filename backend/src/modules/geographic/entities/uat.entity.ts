@@ -72,13 +72,13 @@ export class UAT {
   updatedAt: Date;
 
   // Relații
-  @ManyToOne(() => Judet, (judet) => judet.uaturi)
+  @ManyToOne(() => Judet, judet => judet.uaturi)
   @JoinColumn({ name: 'judet_id' })
   judet: Judet;
 
-  @OneToMany(() => DateIstorice, (dateIstorice) => dateIstorice.uat)
+  @OneToMany(() => DateIstorice, dateIstorice => dateIstorice.uat)
   dateIstorice: DateIstorice[];
 
-  @OneToMany(() => PredictiiCantitati, (predictiiCantitati) => predictiiCantitati.uat)
+  @OneToMany(() => PredictiiCantitati, predictiiCantitati => predictiiCantitati.uat)
   predictiiCantitati: PredictiiCantitati[];
 }

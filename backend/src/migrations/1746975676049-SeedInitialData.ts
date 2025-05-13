@@ -84,11 +84,11 @@ export class SeedInitialData1746975676049 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     // Ștergere date în ordinea inversă inserării
-    await queryRunner.query(`DELETE FROM "servicii"`);
-    await queryRunner.query(`DELETE FROM "categorii_deseuri"`);
-    await queryRunner.query(`DELETE FROM "uat"`);
-    await queryRunner.query(`DELETE FROM "localitati"`);
-    await queryRunner.query(`DELETE FROM "judete"`);
-    await queryRunner.query(`DELETE FROM "tipuri_client"`);
+    await queryRunner.query('DELETE FROM "servicii"');
+    await queryRunner.query('DELETE FROM "categorii_deseuri"');
+    await queryRunner.query('DELETE FROM "uat"');
+    await queryRunner.query('DELETE FROM "localitati"');
+    await queryRunner.query('DELETE FROM "judete"');
+    await queryRunner.query('DELETE FROM "tipuri_client"');
   }
 }

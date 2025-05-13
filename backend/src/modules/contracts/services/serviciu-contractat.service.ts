@@ -16,7 +16,9 @@ export class ServiciuContractatService {
     private serviciuService: ServiciuService,
   ) {}
 
-  async create(createServiciuContractatDto: CreateServiciuContractatDto): Promise<ServiciuContractat> {
+  async create(
+    createServiciuContractatDto: CreateServiciuContractatDto,
+  ): Promise<ServiciuContractat> {
     // Verificare dacă contractul există
     await this.contractService.findOne(createServiciuContractatDto.contractId);
 
@@ -28,7 +30,9 @@ export class ServiciuContractatService {
       createServiciuContractatDto.discount = 0;
     }
 
-    const serviciuContractat = this.serviciuContractatRepository.create(createServiciuContractatDto);
+    const serviciuContractat = this.serviciuContractatRepository.create(
+      createServiciuContractatDto,
+    );
     return this.serviciuContractatRepository.save(serviciuContractat);
   }
 
@@ -65,7 +69,10 @@ export class ServiciuContractatService {
     return serviciuContractat;
   }
 
-  async update(id: string, updateServiciuContractatDto: UpdateServiciuContractatDto): Promise<ServiciuContractat> {
+  async update(
+    id: string,
+    updateServiciuContractatDto: UpdateServiciuContractatDto,
+  ): Promise<ServiciuContractat> {
     const serviciuContractat = await this.findOne(id);
 
     // Verificare dacă contractul există

@@ -52,7 +52,10 @@ export class CreatePredictiiCantitatiDto {
     example: '2023-01-01',
   })
   @IsNotEmpty({ message: 'Data efectuării predicției este obligatorie' })
-  @IsISO8601({}, { message: 'Data efectuării predicției trebuie să fie în format ISO 8601 (YYYY-MM-DD)' })
+  @IsISO8601(
+    {},
+    { message: 'Data efectuării predicției trebuie să fie în format ISO 8601 (YYYY-MM-DD)' },
+  )
   dataPredictie: string;
 
   @ApiProperty({
@@ -60,7 +63,13 @@ export class CreatePredictiiCantitatiDto {
     example: '2023-01-01',
   })
   @IsNotEmpty({ message: 'Data de început a perioadei de predicție este obligatorie' })
-  @IsISO8601({}, { message: 'Data de început a perioadei de predicție trebuie să fie în format ISO 8601 (YYYY-MM-DD)' })
+  @IsISO8601(
+    {},
+    {
+      message:
+        'Data de început a perioadei de predicție trebuie să fie în format ISO 8601 (YYYY-MM-DD)',
+    },
+  )
   perioadaStart: string;
 
   @ApiProperty({
@@ -68,12 +77,18 @@ export class CreatePredictiiCantitatiDto {
     example: '2023-12-31',
   })
   @IsNotEmpty({ message: 'Data de sfârșit a perioadei de predicție este obligatorie' })
-  @IsISO8601({}, { message: 'Data de sfârșit a perioadei de predicție trebuie să fie în format ISO 8601 (YYYY-MM-DD)' })
+  @IsISO8601(
+    {},
+    {
+      message:
+        'Data de sfârșit a perioadei de predicție trebuie să fie în format ISO 8601 (YYYY-MM-DD)',
+    },
+  )
   perioadaEnd: string;
 
   @ApiProperty({
     description: 'Cantitatea estimată de deșeuri',
-    example: 1000.00,
+    example: 1000.0,
   })
   @IsNotEmpty({ message: 'Cantitatea estimată de deșeuri este obligatorie' })
   @IsNumber({}, { message: 'Cantitatea estimată de deșeuri trebuie să fie un număr' })
@@ -93,23 +108,33 @@ export class CreatePredictiiCantitatiDto {
 
   @ApiProperty({
     description: 'Limita inferioară a intervalului de încredere',
-    example: 900.00,
+    example: 900.0,
     required: false,
   })
   @IsOptional()
-  @IsNumber({}, { message: 'Limita inferioară a intervalului de încredere trebuie să fie un număr' })
-  @Min(0, { message: 'Limita inferioară a intervalului de încredere trebuie să fie un număr pozitiv' })
+  @IsNumber(
+    {},
+    { message: 'Limita inferioară a intervalului de încredere trebuie să fie un număr' },
+  )
+  @Min(0, {
+    message: 'Limita inferioară a intervalului de încredere trebuie să fie un număr pozitiv',
+  })
   @Type(() => Number)
   intervalIncredereMin?: number;
 
   @ApiProperty({
     description: 'Limita superioară a intervalului de încredere',
-    example: 1100.00,
+    example: 1100.0,
     required: false,
   })
   @IsOptional()
-  @IsNumber({}, { message: 'Limita superioară a intervalului de încredere trebuie să fie un număr' })
-  @Min(0, { message: 'Limita superioară a intervalului de încredere trebuie să fie un număr pozitiv' })
+  @IsNumber(
+    {},
+    { message: 'Limita superioară a intervalului de încredere trebuie să fie un număr' },
+  )
+  @Min(0, {
+    message: 'Limita superioară a intervalului de încredere trebuie să fie un număr pozitiv',
+  })
   @Type(() => Number)
   intervalIncredereMax?: number;
 

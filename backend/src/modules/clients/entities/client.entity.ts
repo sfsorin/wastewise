@@ -145,7 +145,7 @@ export class Client {
   updatedAt: Date;
 
   // Relații
-  @ManyToOne(() => TipClient, (tipClient) => tipClient.clienti)
+  @ManyToOne(() => TipClient, tipClient => tipClient.clienti)
   @JoinColumn({ name: 'tip_client_id' })
   tipClient: TipClient;
 
@@ -153,16 +153,16 @@ export class Client {
   @JoinColumn({ name: 'judet_id' })
   judet: Judet;
 
-  @ManyToOne(() => Localitate, (localitate) => localitate.clienti)
+  @ManyToOne(() => Localitate, localitate => localitate.clienti)
   @JoinColumn({ name: 'localitate_id' })
   localitate: Localitate;
 
-  @OneToMany(() => PunctColectare, (punctColectare) => punctColectare.client)
+  @OneToMany(() => PunctColectare, punctColectare => punctColectare.client)
   puncteColectare: PunctColectare[];
 
-  @OneToMany(() => Contract, (contract) => contract.client)
+  @OneToMany(() => Contract, contract => contract.client)
   contracte: Contract[];
 
-  @OneToMany(() => PredictiiCantitati, (predictiiCantitati) => predictiiCantitati.client)
+  @OneToMany(() => PredictiiCantitati, predictiiCantitati => predictiiCantitati.client)
   predictiiCantitati: PredictiiCantitati[];
 }

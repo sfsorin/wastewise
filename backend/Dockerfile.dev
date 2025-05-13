@@ -20,7 +20,7 @@ RUN npm ci && \
 COPY . .
 
 # Expunem porturile pentru aplicație și debugging
-EXPOSE 3000 9229
+EXPOSE 3030 9229
 
 # Comanda pentru rularea aplicației în modul de dezvoltare
 CMD ["npm", "run", "start:dev"]

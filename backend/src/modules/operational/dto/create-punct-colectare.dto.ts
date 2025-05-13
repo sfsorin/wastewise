@@ -18,7 +18,9 @@ export class CreatePunctColectareDto {
   })
   @IsNotEmpty({ message: 'Numele punctului de colectare este obligatoriu' })
   @IsString({ message: 'Numele punctului de colectare trebuie să fie un șir de caractere' })
-  @Length(2, 100, { message: 'Numele punctului de colectare trebuie să aibă între 2 și 100 de caractere' })
+  @Length(2, 100, {
+    message: 'Numele punctului de colectare trebuie să aibă între 2 și 100 de caractere',
+  })
   nume: string;
 
   @ApiProperty({

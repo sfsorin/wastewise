@@ -73,7 +73,7 @@ export class PredictiiCantitati {
 
   @ApiProperty({
     description: 'Cantitatea estimată de deșeuri',
-    example: 1000.00,
+    example: 1000.0,
   })
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   cantitateEstimata: number;
@@ -87,14 +87,14 @@ export class PredictiiCantitati {
 
   @ApiProperty({
     description: 'Limita inferioară a intervalului de încredere',
-    example: 900.00,
+    example: 900.0,
   })
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   intervalIncredereMin: number;
 
   @ApiProperty({
     description: 'Limita superioară a intervalului de încredere',
-    example: 1100.00,
+    example: 1100.0,
   })
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   intervalIncredereMax: number;
@@ -135,19 +135,19 @@ export class PredictiiCantitati {
   updatedAt: Date;
 
   // Relații
-  @ManyToOne(() => UAT, (uat) => uat.predictiiCantitati)
+  @ManyToOne(() => UAT, uat => uat.predictiiCantitati)
   @JoinColumn({ name: 'uat_id' })
   uat: UAT;
 
-  @ManyToOne(() => Client, (client) => client.predictiiCantitati)
+  @ManyToOne(() => Client, client => client.predictiiCantitati)
   @JoinColumn({ name: 'client_id' })
   client: Client;
 
-  @ManyToOne(() => PunctColectare, (punctColectare) => punctColectare.predictiiCantitati)
+  @ManyToOne(() => PunctColectare, punctColectare => punctColectare.predictiiCantitati)
   @JoinColumn({ name: 'punct_colectare_id' })
   punctColectare: PunctColectare;
 
-  @ManyToOne(() => CategorieDeseuri, (categorieDeseuri) => categorieDeseuri.predictiiCantitati)
+  @ManyToOne(() => CategorieDeseuri, categorieDeseuri => categorieDeseuri.predictiiCantitati)
   @JoinColumn({ name: 'categorie_id' })
   categorie: CategorieDeseuri;
 }

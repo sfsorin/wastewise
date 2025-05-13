@@ -1,6 +1,5 @@
-import { PartialType } from '@nestjs/swagger';
+import { PartialType, ApiProperty } from '@nestjs/swagger';
 import { CreateUserDto } from './create-user.dto';
-import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsBoolean } from 'class-validator';
 import { UserStatus } from '../entities/user.entity';
 

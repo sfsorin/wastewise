@@ -8,7 +8,9 @@ export class CreateTipClientDto {
   })
   @IsNotEmpty({ message: 'Numele tipului de client este obligatoriu' })
   @IsString({ message: 'Numele tipului de client trebuie să fie un șir de caractere' })
-  @Length(2, 100, { message: 'Numele tipului de client trebuie să aibă între 2 și 100 de caractere' })
+  @Length(2, 100, {
+    message: 'Numele tipului de client trebuie să aibă între 2 și 100 de caractere',
+  })
   nume: string;
 
   @ApiProperty({

@@ -34,7 +34,7 @@ export class Serviciu {
 
   @ApiProperty({
     description: 'Prețul unitar',
-    example: 100.00,
+    example: 100.0,
   })
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   pretUnitar: number;
@@ -61,6 +61,6 @@ export class Serviciu {
   updatedAt: Date;
 
   // Relații
-  @OneToMany(() => ServiciuContractat, (serviciuContractat) => serviciuContractat.serviciu)
+  @OneToMany(() => ServiciuContractat, serviciuContractat => serviciuContractat.serviciu)
   serviciiContractate: ServiciuContractat[];
 }

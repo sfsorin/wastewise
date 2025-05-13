@@ -101,7 +101,7 @@ export class PunctColectare {
   updatedAt: Date;
 
   // Relații
-  @ManyToOne(() => Client, (client) => client.puncteColectare)
+  @ManyToOne(() => Client, client => client.puncteColectare)
   @JoinColumn({ name: 'client_id' })
   client: Client;
 
@@ -109,10 +109,10 @@ export class PunctColectare {
   @JoinColumn({ name: 'judet_id' })
   judet: Judet;
 
-  @ManyToOne(() => Localitate, (localitate) => localitate.puncteColectare)
+  @ManyToOne(() => Localitate, localitate => localitate.puncteColectare)
   @JoinColumn({ name: 'localitate_id' })
   localitate: Localitate;
 
-  @OneToMany(() => PredictiiCantitati, (predictiiCantitati) => predictiiCantitati.punctColectare)
+  @OneToMany(() => PredictiiCantitati, predictiiCantitati => predictiiCantitati.punctColectare)
   predictiiCantitati: PredictiiCantitati[];
 }

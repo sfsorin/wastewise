@@ -48,27 +48,42 @@ describe('Logger', () => {
     it('should log warning message with data', () => {
       const data = { key: 'value' };
       logger.warn('Test warning message', data);
-      expect(consoleWarnSpy).toHaveBeenCalledWith('[WARN] [TestContext] Test warning message', data);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        '[WARN] [TestContext] Test warning message',
+        data,
+      );
     });
   });
 
   describe('error', () => {
     it('should log error message with context', () => {
       logger.error('Test error message');
-      expect(consoleErrorSpy).toHaveBeenCalledWith('[ERROR] [TestContext] Test error message', '', '');
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '[ERROR] [TestContext] Test error message',
+        '',
+        '',
+      );
     });
 
     it('should log error message with trace', () => {
       const trace = 'Error stack trace';
       logger.error('Test error message', trace);
-      expect(consoleErrorSpy).toHaveBeenCalledWith('[ERROR] [TestContext] Test error message', trace, '');
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '[ERROR] [TestContext] Test error message',
+        trace,
+        '',
+      );
     });
 
     it('should log error message with trace and data', () => {
       const trace = 'Error stack trace';
       const data = { key: 'value' };
       logger.error('Test error message', trace, data);
-      expect(consoleErrorSpy).toHaveBeenCalledWith('[ERROR] [TestContext] Test error message', trace, data);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '[ERROR] [TestContext] Test error message',
+        trace,
+        data,
+      );
     });
   });
 
@@ -81,7 +96,10 @@ describe('Logger', () => {
     it('should log debug message with data', () => {
       const data = { key: 'value' };
       logger.debug('Test debug message', data);
-      expect(consoleDebugSpy).toHaveBeenCalledWith('[DEBUG] [TestContext] Test debug message', data);
+      expect(consoleDebugSpy).toHaveBeenCalledWith(
+        '[DEBUG] [TestContext] Test debug message',
+        data,
+      );
     });
   });
 });

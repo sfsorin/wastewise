@@ -4,10 +4,7 @@ import { Profile } from './entities/profile.entity';
 import { UsersModule } from '@modules/users/users.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Profile]),
-    UsersModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Profile]), UsersModule],
   exports: [TypeOrmModule],
 })
 export class ProfilesModule {}

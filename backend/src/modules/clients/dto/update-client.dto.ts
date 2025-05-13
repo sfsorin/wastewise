@@ -1,12 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsOptional,
-  IsString,
-  Length,
-  IsUUID,
-  IsEmail,
-  Matches,
-} from 'class-validator';
+import { IsOptional, IsString, Length, IsUUID, IsEmail, Matches } from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateClientDto } from './create-client.dto';
 
@@ -125,7 +118,9 @@ export class UpdateClientDto extends PartialType(CreateClientDto) {
   })
   @IsOptional()
   @IsString({ message: 'Telefonul persoanei de contact trebuie să fie un șir de caractere' })
-  @Length(5, 20, { message: 'Telefonul persoanei de contact trebuie să aibă între 5 și 20 de caractere' })
+  @Length(5, 20, {
+    message: 'Telefonul persoanei de contact trebuie să aibă între 5 și 20 de caractere',
+  })
   telefonContact?: string;
 
   @ApiProperty({
@@ -135,7 +130,9 @@ export class UpdateClientDto extends PartialType(CreateClientDto) {
   })
   @IsOptional()
   @IsEmail({}, { message: 'Email-ul persoanei de contact trebuie să fie valid' })
-  @Length(5, 255, { message: 'Email-ul persoanei de contact trebuie să aibă între 5 și 255 de caractere' })
+  @Length(5, 255, {
+    message: 'Email-ul persoanei de contact trebuie să aibă între 5 și 255 de caractere',
+  })
   emailContact?: string;
 
   @ApiProperty({

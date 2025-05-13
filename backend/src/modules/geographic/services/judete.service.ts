@@ -19,7 +19,9 @@ export class JudeteService {
         where: { codSiruta: createJudetDto.codSiruta },
       });
       if (existingBySiruta) {
-        throw new ConflictException(`Există deja un județ cu codul SIRUTA ${createJudetDto.codSiruta}`);
+        throw new ConflictException(
+          `Există deja un județ cu codul SIRUTA ${createJudetDto.codSiruta}`,
+        );
       }
     }
 
@@ -78,7 +80,9 @@ export class JudeteService {
         where: { codSiruta: updateJudetDto.codSiruta },
       });
       if (existingBySiruta && existingBySiruta.id !== id) {
-        throw new ConflictException(`Există deja un județ cu codul SIRUTA ${updateJudetDto.codSiruta}`);
+        throw new ConflictException(
+          `Există deja un județ cu codul SIRUTA ${updateJudetDto.codSiruta}`,
+        );
       }
     }
 
