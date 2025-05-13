@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import type { FormEvent } from 'react';
+import { useState, useEffect, type FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import Button from '../../components/common/Button/Button';
 import authService from '../../services/authService';
@@ -17,7 +16,7 @@ const ResetPasswordPage = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
+  const _navigate = useNavigate();
 
   // Verificăm validitatea token-ului la încărcarea paginii
   useEffect(() => {
@@ -31,7 +30,7 @@ const ResetPasswordPage = () => {
       try {
         const isValid = await authService.validateResetToken(token);
         setIsValidToken(isValid);
-      } catch (error) {
+      } catch {
         setIsValidToken(false);
       } finally {
         setIsTokenChecking(false);
@@ -71,8 +70,12 @@ const ResetPasswordPage = () => {
       });
 
       setIsSubmitted(true);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Resetarea parolei a eșuat. Încercați din nou mai târziu.');
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : 'Cererea nu a putut fi procesată. Încercați din nou mai târziu.';
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -82,7 +85,7 @@ const ResetPasswordPage = () => {
   if (isTokenChecking) {
     return (
       <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500 mx-auto mb-4"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500 mx-auto mb-4" />
         <p className="text-gray-600 dark:text-gray-300">Se verifică link-ul de resetare...</p>
       </div>
     );
@@ -112,8 +115,8 @@ const ResetPasswordPage = () => {
         <h1 className="text-2xl font-bold mb-4">Link invalid sau expirat</h1>
 
         <p className="text-gray-600 dark:text-gray-300 mb-6">
-          Link-ul de resetare a parolei este invalid sau a expirat. Vă rugăm să solicitați un nou link de
-          resetare.
+          Link-ul de resetare a parolei este invalid sau a expirat. Vă rugăm să solicitați un nou
+          link de resetare.
         </p>
 
         <Link to="/auth/forgot-password">
@@ -135,12 +138,7 @@ const ResetPasswordPage = () => {
             viewBox="0 0 24 24"
             stroke="currentColor"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M5 13l4 4L19 7"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
 

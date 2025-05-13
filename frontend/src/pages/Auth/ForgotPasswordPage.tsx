@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import type { FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../../components/common/Button/Button';
 import authService from '../../services/authService';
@@ -31,11 +30,12 @@ const ForgotPasswordPage = () => {
 
       // Marcăm solicitarea ca fiind trimisă
       setIsSubmitted(true);
-    } catch (err: any) {
-      setError(
-        err.response?.data?.message ||
-          'Cererea nu a putut fi procesată. Încercați din nou mai târziu.',
-      );
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : 'Cererea nu a putut fi procesată. Încercați din nou mai târziu.';
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }

@@ -77,10 +77,10 @@ describe('AuthStore', () => {
   beforeEach(() => {
     // Setup localStorage mock
     Object.defineProperty(window, 'localStorage', { value: localStorageMock });
-    
+
     // Clear localStorage and reset store
     localStorageMock.clear();
-    
+
     // Reset store
     act(() => {
       useAuthStore.setState({
@@ -104,11 +104,11 @@ describe('AuthStore', () => {
 
   it('should login successfully with valid credentials', async () => {
     const { login } = useAuthStore.getState();
-    
+
     await act(async () => {
       await login('test@example.com', 'password');
     });
-    
+
     const state = useAuthStore.getState();
     expect(state.isAuthenticated).toBe(true);
     expect(state.user).not.toBeNull();
@@ -119,11 +119,11 @@ describe('AuthStore', () => {
 
   it('should handle login failure with invalid credentials', async () => {
     const { login } = useAuthStore.getState();
-    
+
     await act(async () => {
       await login('wrong@example.com', 'wrong');
     });
-    
+
     const state = useAuthStore.getState();
     expect(state.isAuthenticated).toBe(false);
     expect(state.user).toBeNull();
@@ -135,16 +135,16 @@ describe('AuthStore', () => {
   it('should logout successfully', async () => {
     // Login first
     const { login, logout } = useAuthStore.getState();
-    
+
     await act(async () => {
       await login('test@example.com', 'password');
     });
-    
+
     // Then logout
     act(() => {
       logout();
     });
-    
+
     const state = useAuthStore.getState();
     expect(state.isAuthenticated).toBe(false);
     expect(state.user).toBeNull();
@@ -156,13 +156,13 @@ describe('AuthStore', () => {
     act(() => {
       useAuthStore.setState({ error: 'Test error' });
     });
-    
+
     // Clear error
     const { clearError } = useAuthStore.getState();
     act(() => {
       clearError();
     });
-    
+
     const state = useAuthStore.getState();
     expect(state.error).toBeNull();
   });

@@ -62,7 +62,9 @@ describe('Formatter Utilities', () => {
     });
 
     it('should use custom suffix when provided', () => {
-      expect(truncateText('Acesta este un text lung', 10, ' (mai mult)')).toBe('Acesta est (mai mult)');
+      expect(truncateText('Acesta este un text lung', 10, ' (mai mult)')).toBe(
+        'Acesta est (mai mult)',
+      );
       expect(truncateText('Acesta este un text lung', 5, '...')).toBe('Acest...');
     });
   });

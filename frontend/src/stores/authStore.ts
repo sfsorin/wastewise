@@ -1,7 +1,10 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
-import authService from '../services/authService';
-import type { User, LoginCredentials, RegisterData } from '../services/authService';
+import authService, {
+  type User,
+  type LoginCredentials,
+  type RegisterData,
+} from '../services/authService';
 
 /**
  * Interfață pentru starea de autentificare
@@ -46,10 +49,11 @@ const useAuthStore = create<AuthState>()(
               token: response.access_token,
               isLoading: false,
             });
-          } catch (error: any) {
+          } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Eroare la autentificare';
             set({
               isLoading: false,
-              error: error.response?.data?.message || 'Eroare la autentificare',
+              error: errorMessage,
               isAuthenticated: false,
               user: null,
               token: null,
@@ -71,10 +75,11 @@ const useAuthStore = create<AuthState>()(
               token: response.access_token,
               isLoading: false,
             });
-          } catch (error: any) {
+          } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Eroare la înregistrare';
             set({
               isLoading: false,
-              error: error.response?.data?.message || 'Eroare la înregistrare',
+              error: errorMessage,
               isAuthenticated: false,
               user: null,
               token: null,
@@ -115,7 +120,7 @@ const useAuthStore = create<AuthState>()(
               isAuthenticated: true,
               isLoading: false,
             });
-          } catch (error) {
+          } catch {
             authService.logout();
             set({
               isAuthenticated: false,

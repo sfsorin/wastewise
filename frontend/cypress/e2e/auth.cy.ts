@@ -8,7 +8,7 @@ describe('Authentication Flow', () => {
   it('should register a new user', () => {
     // Generate a unique username and email
     const uniqueId = Date.now().toString();
-    const username = `testuser${uniqueId}`;
+    const _username = `testuser${uniqueId}`; // Folosit în formularul de înregistrare
     const email = `test${uniqueId}@example.com`;
 
     // Visit the register page
@@ -44,7 +44,9 @@ describe('Authentication Flow', () => {
     cy.get('button[type="submit"]').click();
 
     // Should show error message
-    cy.contains('Există deja un utilizator cu același nume sau adresă de email').should('be.visible');
+    cy.contains('Există deja un utilizator cu același nume sau adresă de email').should(
+      'be.visible',
+    );
   });
 
   it('should login with valid credentials', () => {
@@ -125,10 +127,13 @@ describe('Authentication Flow', () => {
     cy.url().should('include', '/auth/login');
 
     // Check if user is not authenticated
-    cy.window().its('localStorage.auth-storage').then((storage) => {
-      const parsedStorage = JSON.parse(storage);
-      expect(parsedStorage.state.isAuthenticated).to.be.false;
-    });
+    cy.window()
+      .its('localStorage.auth-storage')
+      .then(storage => {
+        const parsedStorage = JSON.parse(storage);
+        // Verifică dacă utilizatorul nu mai este autentificat
+        cy.wrap(parsedStorage.state.isAuthenticated).should('be.false');
+      });
   });
 
   it('should protect routes that require authentication', () => {

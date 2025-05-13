@@ -13,10 +13,10 @@ const ProfilePage = () => {
     role: 'Administrator',
     bio: 'Manager cu experiență în domeniul managementului deșeurilor, specializat în optimizarea proceselor de colectare și reciclare.',
   });
-  
+
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -24,52 +24,58 @@ const ProfilePage = () => {
       [name]: value,
     }));
   };
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     setIsSaving(true);
-    
+
     // Simulăm un apel către API
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     setIsSaving(false);
     setIsEditing(false);
   };
-  
+
   return (
     <div>
       <div className="mb-6">
         <h1 className="text-2xl font-bold">Profil utilizator</h1>
-        <p className="text-gray-600 dark:text-gray-400">Vizualizați și actualizați informațiile profilului dumneavoastră</p>
+        <p className="text-gray-600 dark:text-gray-400">
+          Vizualizați și actualizați informațiile profilului dumneavoastră
+        </p>
       </div>
-      
+
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
         <div className="p-6 bg-primary-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600 flex items-center justify-between">
           <div className="flex items-center">
             <div className="h-16 w-16 rounded-full bg-primary-600 flex items-center justify-center text-white text-2xl font-bold">
-              {formData.name.split(' ').map(n => n[0]).join('')}
+              {formData.name
+                .split(' ')
+                .map(n => n[0])
+                .join('')}
             </div>
             <div className="ml-4">
               <h2 className="text-xl font-bold">{formData.name}</h2>
-              <p className="text-gray-600 dark:text-gray-400">{formData.role} la {formData.company}</p>
+              <p className="text-gray-600 dark:text-gray-400">
+                {formData.role} la {formData.company}
+              </p>
             </div>
           </div>
-          
+
           {!isEditing && (
-            <Button
-              label="Editare profil"
-              variant="primary"
-              onClick={() => setIsEditing(true)}
-            />
+            <Button label="Editare profil" variant="primary" onClick={() => setIsEditing(true)} />
           )}
         </div>
-        
+
         <div className="p-6">
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >
                   Nume complet
                 </label>
                 {isEditing ? (
@@ -86,9 +92,12 @@ const ProfilePage = () => {
                   <p className="text-gray-900 dark:text-gray-100">{formData.name}</p>
                 )}
               </div>
-              
+
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >
                   Email
                 </label>
                 {isEditing ? (
@@ -105,9 +114,12 @@ const ProfilePage = () => {
                   <p className="text-gray-900 dark:text-gray-100">{formData.email}</p>
                 )}
               </div>
-              
+
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label
+                  htmlFor="phone"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >
                   Telefon
                 </label>
                 {isEditing ? (
@@ -123,9 +135,12 @@ const ProfilePage = () => {
                   <p className="text-gray-900 dark:text-gray-100">{formData.phone}</p>
                 )}
               </div>
-              
+
               <div>
-                <label htmlFor="company" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label
+                  htmlFor="company"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >
                   Companie
                 </label>
                 {isEditing ? (
@@ -141,9 +156,12 @@ const ProfilePage = () => {
                   <p className="text-gray-900 dark:text-gray-100">{formData.company}</p>
                 )}
               </div>
-              
+
               <div>
-                <label htmlFor="role" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label
+                  htmlFor="role"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >
                   Rol
                 </label>
                 {isEditing ? (
@@ -159,9 +177,12 @@ const ProfilePage = () => {
                   <p className="text-gray-900 dark:text-gray-100">{formData.role}</p>
                 )}
               </div>
-              
+
               <div className="md:col-span-2">
-                <label htmlFor="bio" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label
+                  htmlFor="bio"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >
                   Biografie
                 </label>
                 {isEditing ? (
@@ -178,7 +199,7 @@ const ProfilePage = () => {
                 )}
               </div>
             </div>
-            
+
             {isEditing && (
               <div className="mt-6 flex justify-end space-x-4">
                 <Button

@@ -25,15 +25,15 @@ interface UserState {
  */
 export const useUserStore = create<UserState>()(
   persist(
-    (set) => ({
+    set => ({
       preferences: {
         language: 'ro',
         notifications: true,
         theme: 'system',
       },
 
-      setLanguage: (language) => {
-        set((state) => ({
+      setLanguage: language => {
+        set(state => ({
           preferences: {
             ...state.preferences,
             language,
@@ -41,8 +41,8 @@ export const useUserStore = create<UserState>()(
         }));
       },
 
-      setNotifications: (enabled) => {
-        set((state) => ({
+      setNotifications: enabled => {
+        set(state => ({
           preferences: {
             ...state.preferences,
             notifications: enabled,
@@ -50,8 +50,8 @@ export const useUserStore = create<UserState>()(
         }));
       },
 
-      setTheme: (theme) => {
-        set((state) => ({
+      setTheme: theme => {
+        set(state => ({
           preferences: {
             ...state.preferences,
             theme,
@@ -61,6 +61,6 @@ export const useUserStore = create<UserState>()(
     }),
     {
       name: 'user-preferences', // Numele pentru localStorage
-    }
-  )
+    },
+  ),
 );

@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import type { FormEvent } from 'react';
+import { useState, useEffect, type FormEvent } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Button from '../../components/common/Button/Button';
 import useAuthStore from '../../stores/authStore';
@@ -66,7 +65,7 @@ const RegisterPage = () => {
 
       // Dacă înregistrarea a reușit, utilizatorul va fi redirecționat automat
       // datorită efectului care verifică isAuthenticated
-    } catch (error) {
+    } catch {
       // Eroarea este gestionată în store
     }
   };

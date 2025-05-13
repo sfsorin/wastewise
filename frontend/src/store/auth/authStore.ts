@@ -128,7 +128,7 @@ export const useAuthStore = create<AuthState>()(
         try {
           const { user, token } = await AuthService.checkAuth();
           set({ user, token, isAuthenticated: true, isLoading: false });
-        } catch (error) {
+        } catch {
           set({ user: null, token: null, isAuthenticated: false, isLoading: false });
         }
       },

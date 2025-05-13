@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import type { FormEvent } from 'react';
+import { useState, useEffect, type FormEvent } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Button from '../../components/common/Button/Button';
 import useAuthStore from '../../stores/authStore';
@@ -9,7 +8,7 @@ import useAuthStore from '../../stores/authStore';
  * Folosește Zustand pentru gestionarea stării de autentificare
  */
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
+  const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
@@ -28,25 +27,25 @@ const LoginPage = () => {
     }
   }, [isAuthenticated, navigate, from]);
 
-  // Resetăm eroarea când se schimbă email sau parola
+  // Resetăm eroarea când se schimbă username/email sau parola
   useEffect(() => {
     if (error) {
       clearError();
     }
-  }, [email, password, clearError, error]);
+  }, [usernameOrEmail, password, clearError, error]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     // Validare simplă
-    if (!email || !password) {
+    if (!usernameOrEmail || !password) {
       // Folosim store-ul pentru a seta eroarea
       useAuthStore.setState({ error: 'Toate câmpurile sunt obligatorii' });
       return;
     }
 
     // Folosim acțiunea login din store
-    await login(email, password);
+    await login({ username: usernameOrEmail, password });
   };
 
   return (
@@ -58,18 +57,18 @@ const LoginPage = () => {
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label
-            htmlFor="email"
+            htmlFor="usernameOrEmail"
             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
           >
-            Email
+            Nume utilizator sau Email
           </label>
           <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
+            id="usernameOrEmail"
+            type="text"
+            value={usernameOrEmail}
+            onChange={e => setUsernameOrEmail(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white"
-            placeholder="nume@exemplu.com"
+            placeholder="nume utilizator sau email"
             required
           />
         </div>

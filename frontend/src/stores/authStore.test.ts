@@ -166,7 +166,13 @@ describe('authStore', () => {
       // Set initial state to authenticated
       act(() => {
         useAuthStore.setState({
-          user: { id: '123', username: 'testuser' } as any,
+          user: {
+            id: '123',
+            username: 'testuser',
+            email: 'test@example.com',
+            fullName: 'Test User',
+            role: 'user',
+          },
           token: 'jwt-token',
           isAuthenticated: true,
           isLoading: false,

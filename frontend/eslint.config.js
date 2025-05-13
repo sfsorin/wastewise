@@ -38,6 +38,7 @@ export default tseslint.config(
           printWidth: 100,
           tabWidth: 2,
           semi: true,
+          endOfLine: 'crlf',
         },
       ],
 

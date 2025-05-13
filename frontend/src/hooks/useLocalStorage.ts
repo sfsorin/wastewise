@@ -6,7 +6,10 @@ import { useState, useEffect } from 'react';
  * @param initialValue Valoarea inițială dacă nu există nimic în localStorage
  * @returns [storedValue, setValue] - Valoarea stocată și o funcție pentru a o actualiza
  */
-export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T | ((val: T) => T)) => void] {
+export function useLocalStorage<T>(
+  key: string,
+  initialValue: T,
+): [T, (value: T | ((val: T) => T)) => void] {
   // Funcție pentru a obține valoarea inițială
   const readValue = (): T => {
     // Verificăm dacă suntem în browser
@@ -33,10 +36,10 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T 
     try {
       // Permitem ca value să fie o funcție pentru a fi compatibil cu useState
       const valueToStore = value instanceof Function ? value(storedValue) : value;
-      
+
       // Salvăm în state
       setStoredValue(valueToStore);
-      
+
       // Salvăm în localStorage
       if (typeof window !== 'undefined') {
         window.localStorage.setItem(key, JSON.stringify(valueToStore));

@@ -4,39 +4,32 @@ import '@testing-library/jest-dom';
 import ThemeToggle from './ThemeToggle';
 
 // Mock pentru Zustand store
+let mockIsDarkMode = false;
+const mockToggleTheme = vi.fn(() => {
+  mockIsDarkMode = !mockIsDarkMode;
+  // Actualizăm clasa pe document pentru a simula comportamentul real
+  if (mockIsDarkMode) {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
+});
+
+const mockSetDarkMode = vi.fn(isDark => {
+  mockIsDarkMode = isDark;
+  // Actualizăm clasa pe document pentru a simula comportamentul real
+  if (mockIsDarkMode) {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
+});
+
 vi.mock('../../../store', () => ({
   useThemeStore: () => ({
-    isDarkMode: false,
-    toggleTheme: vi.fn(() => {
-      // Simulăm comportamentul toggleTheme
-      const isDarkMode = !vi.mocked(useThemeStore().isDarkMode);
-      vi.mocked(useThemeStore).mockImplementation(() => ({
-        isDarkMode,
-        toggleTheme: vi.mocked(useThemeStore().toggleTheme),
-        setDarkMode: vi.mocked(useThemeStore().setDarkMode),
-      }));
-
-      // Actualizăm clasa pe document pentru a simula comportamentul real
-      if (isDarkMode) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    }),
-    setDarkMode: vi.fn(isDark => {
-      vi.mocked(useThemeStore).mockImplementation(() => ({
-        isDarkMode: isDark,
-        toggleTheme: vi.mocked(useThemeStore().toggleTheme),
-        setDarkMode: vi.mocked(useThemeStore().setDarkMode),
-      }));
-
-      // Actualizăm clasa pe document pentru a simula comportamentul real
-      if (isDark) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    }),
+    isDarkMode: mockIsDarkMode,
+    toggleTheme: mockToggleTheme,
+    setDarkMode: mockSetDarkMode,
   }),
 }));
 
@@ -60,25 +53,10 @@ describe('ThemeToggle Component', () => {
     // Reset document classes
     document.documentElement.classList.remove('dark');
 
-    // Reset mock implementation
-    vi.mocked(useThemeStore).mockImplementation(() => ({
-      isDarkMode: false,
-      toggleTheme: vi.fn(() => {
-        const isDarkMode = !vi.mocked(useThemeStore().isDarkMode);
-        vi.mocked(useThemeStore).mockImplementation(() => ({
-          isDarkMode,
-          toggleTheme: vi.mocked(useThemeStore().toggleTheme),
-          setDarkMode: vi.mocked(useThemeStore().setDarkMode),
-        }));
-
-        if (isDarkMode) {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-        }
-      }),
-      setDarkMode: vi.mocked(useThemeStore().setDarkMode),
-    }));
+    // Reset mock state
+    mockIsDarkMode = false;
+    mockToggleTheme.mockClear();
+    mockSetDarkMode.mockClear();
   });
 
   it('renders correctly', () => {

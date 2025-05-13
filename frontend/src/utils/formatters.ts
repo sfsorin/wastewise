@@ -5,10 +5,10 @@
  * @returns String formatat (ex: "1.234,56 RON")
  */
 export const formatCurrency = (amount: number, currency = 'RON'): string => {
-  return new Intl.NumberFormat('ro-RO', {
+  return `${new Intl.NumberFormat('ro-RO', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(amount) + ` ${currency}`;
+  }).format(amount)} ${currency}`;
 };
 
 /**
@@ -19,18 +19,18 @@ export const formatCurrency = (amount: number, currency = 'RON'): string => {
  */
 export const formatDate = (date: Date | string, includeTime = false): string => {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
-  
+
   const options: Intl.DateTimeFormatOptions = {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
   };
-  
+
   if (includeTime) {
     options.hour = '2-digit';
     options.minute = '2-digit';
   }
-  
+
   return new Intl.DateTimeFormat('ro-RO', options).format(dateObj);
 };
 
@@ -42,12 +42,12 @@ export const formatDate = (date: Date | string, includeTime = false): string => 
 export const formatPhoneNumber = (phone: string): string => {
   // Eliminăm toate caracterele non-numerice
   const cleaned = phone.replace(/\D/g, '');
-  
+
   // Verificăm dacă numărul are lungimea corectă
   if (cleaned.length !== 10) {
     return phone; // Returnăm numărul original dacă nu are 10 cifre
   }
-  
+
   // Formatăm numărul: 0722 123 456
   return `${cleaned.slice(0, 4)} ${cleaned.slice(4, 7)} ${cleaned.slice(7)}`;
 };
@@ -63,6 +63,6 @@ export const truncateText = (text: string, maxLength: number, suffix = '...'): s
   if (text.length <= maxLength) {
     return text;
   }
-  
+
   return text.slice(0, maxLength) + suffix;
 };
