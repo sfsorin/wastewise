@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Judet } from './judet.entity';
+import { UAT } from './uat.entity';
 import { PunctColectare } from '../../operational/entities/punct-colectare.entity';
 import { Client } from '../../clients/entities/client.entity';
 
@@ -28,6 +29,13 @@ export class Localitate {
   })
   @Column({ nullable: true })
   judetId: string;
+
+  @ApiProperty({
+    description: 'ID-ul UAT-ului',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @Column({ nullable: true })
+  uatId: string;
 
   @ApiProperty({
     description: 'Numele localității',
@@ -72,6 +80,14 @@ export class Localitate {
   })
   @JoinColumn({ name: 'judet_id' })
   judet: Judet;
+
+  @ManyToOne(() => UAT, uat => uat.localitati, {
+    nullable: true,
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn({ name: 'uat_id' })
+  uat: UAT;
 
   @OneToMany(() => PunctColectare, punctColectare => punctColectare.localitate, {
     cascade: true,

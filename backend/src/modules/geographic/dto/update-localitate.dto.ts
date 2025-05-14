@@ -42,4 +42,13 @@ export class UpdateLocalitateDto extends PartialType(CreateLocalitateDto) {
   @IsString({ message: 'Tipul localității trebuie să fie un șir de caractere' })
   @Length(2, 50, { message: 'Tipul localității trebuie să aibă între 2 și 50 de caractere' })
   tip?: string;
+
+  @ApiProperty({
+    description: 'ID-ul UAT-ului',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    required: false,
+  })
+  @IsOptional()
+  @IsUUID('4', { message: 'ID-ul UAT-ului trebuie să fie un UUID valid' })
+  uatId?: string;
 }

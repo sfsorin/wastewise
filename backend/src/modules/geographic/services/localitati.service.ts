@@ -36,7 +36,7 @@ export class LocalitatiService {
 
   async findAll(): Promise<Localitate[]> {
     return this.localitatiRepository.find({
-      relations: ['judet'],
+      relations: ['judet', 'uat'],
       order: {
         nume: 'ASC',
       },
@@ -46,7 +46,17 @@ export class LocalitatiService {
   async findByJudet(judetId: string): Promise<Localitate[]> {
     return this.localitatiRepository.find({
       where: { judetId },
-      relations: ['judet'],
+      relations: ['judet', 'uat'],
+      order: {
+        nume: 'ASC',
+      },
+    });
+  }
+
+  async findByUAT(uatId: string): Promise<Localitate[]> {
+    return this.localitatiRepository.find({
+      where: { uatId },
+      relations: ['judet', 'uat'],
       order: {
         nume: 'ASC',
       },
@@ -56,7 +66,7 @@ export class LocalitatiService {
   async findOne(id: string): Promise<Localitate> {
     const localitate = await this.localitatiRepository.findOne({
       where: { id },
-      relations: ['judet', 'puncteColectare', 'clienti'],
+      relations: ['judet', 'uat', 'puncteColectare', 'clienti'],
     });
 
     if (!localitate) {

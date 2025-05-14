@@ -24,14 +24,7 @@ export class UpdateUATDto extends PartialType(CreateUATDto) {
   @IsUUID('4', { message: 'ID-ul județului trebuie să fie un UUID valid' })
   judetId?: string;
 
-  @ApiProperty({
-    description: 'ID-ul localității',
-    example: '123e4567-e89b-12d3-a456-426614174000',
-    required: false,
-  })
-  @IsOptional()
-  @IsUUID('4', { message: 'ID-ul localității trebuie să fie un UUID valid' })
-  localitateId?: string;
+  // Eliminăm localitateId deoarece acum UAT are mai multe localități
 
   @ApiProperty({
     description: 'ID-ul zonei ADI',

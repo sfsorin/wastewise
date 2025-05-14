@@ -5,7 +5,6 @@ import { UAT } from '../entities/uat.entity';
 import { CreateUATDto } from '../dto/create-uat.dto';
 import { UpdateUATDto } from '../dto/update-uat.dto';
 import { JudeteService } from './judete.service';
-import { LocalitatiService } from './localitati.service';
 import { ZoneADIService } from './zone-adi.service';
 import { ZoneIridexService } from './zone-iridex.service';
 
@@ -15,7 +14,6 @@ export class UATService {
     @InjectRepository(UAT)
     private uatRepository: Repository<UAT>,
     private judeteService: JudeteService,
-    private localitatiService: LocalitatiService,
     private zoneADIService: ZoneADIService,
     private zoneIridexService: ZoneIridexService,
   ) {}
@@ -24,10 +22,7 @@ export class UATService {
     // Verificare dacă județul există
     await this.judeteService.findOne(createUATDto.judetId);
 
-    // Verificare dacă localitatea există (dacă a fost specificată)
-    if (createUATDto.localitateId) {
-      await this.localitatiService.findOne(createUATDto.localitateId);
-    }
+    // Nu mai verificăm localitatea deoarece acum UAT are mai multe localități
 
     // Verificare dacă zona ADI există (dacă a fost specificată)
     if (createUATDto.zonaADIId) {
@@ -55,7 +50,7 @@ export class UATService {
 
   async findAll(): Promise<UAT[]> {
     return this.uatRepository.find({
-      relations: ['judet', 'localitate', 'zonaADI', 'zonaIridex'],
+      relations: ['judet', 'localitati', 'zonaADI', 'zonaIridex'],
       order: {
         nume: 'ASC',
       },
@@ -65,17 +60,17 @@ export class UATService {
   async findByJudet(judetId: string): Promise<UAT[]> {
     return this.uatRepository.find({
       where: { judetId },
-      relations: ['judet', 'localitate', 'zonaADI', 'zonaIridex'],
+      relations: ['judet', 'localitati', 'zonaADI', 'zonaIridex'],
       order: {
         nume: 'ASC',
       },
     });
   }
 
-  async findByLocalitate(localitateId: string): Promise<UAT[]> {
+  // Metoda nu mai este necesară deoarece localitățile aparțin UAT-urilor, nu invers
+  async findByLocalitati(): Promise<UAT[]> {
     return this.uatRepository.find({
-      where: { localitateId },
-      relations: ['judet', 'localitate', 'zonaADI', 'zonaIridex'],
+      relations: ['judet', 'localitati', 'zonaADI', 'zonaIridex'],
       order: {
         nume: 'ASC',
       },
@@ -85,7 +80,7 @@ export class UATService {
   async findByZonaADI(zonaADIId: string): Promise<UAT[]> {
     return this.uatRepository.find({
       where: { zonaADIId },
-      relations: ['judet', 'localitate', 'zonaADI', 'zonaIridex'],
+      relations: ['judet', 'localitati', 'zonaADI', 'zonaIridex'],
       order: {
         nume: 'ASC',
       },
@@ -95,7 +90,7 @@ export class UATService {
   async findByZonaIridex(zonaIridexId: string): Promise<UAT[]> {
     return this.uatRepository.find({
       where: { zonaIridexId },
-      relations: ['judet', 'localitate', 'zonaADI', 'zonaIridex'],
+      relations: ['judet', 'localitati', 'zonaADI', 'zonaIridex'],
       order: {
         nume: 'ASC',
       },
@@ -107,7 +102,7 @@ export class UATService {
       where: { id },
       relations: [
         'judet',
-        'localitate',
+        'localitati',
         'zonaADI',
         'zonaIridex',
         'dateIstorice',
@@ -130,10 +125,7 @@ export class UATService {
       await this.judeteService.findOne(updateUATDto.judetId);
     }
 
-    // Verificare dacă localitatea există
-    if (updateUATDto.localitateId) {
-      await this.localitatiService.findOne(updateUATDto.localitateId);
-    }
+    // Nu mai verificăm localitatea deoarece acum UAT are mai multe localități
 
     // Verificare dacă zona ADI există
     if (updateUATDto.zonaADIId) {

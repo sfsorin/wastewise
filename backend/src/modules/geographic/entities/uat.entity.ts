@@ -32,12 +32,7 @@ export class UAT {
   @Column({ nullable: true })
   judetId: string;
 
-  @ApiProperty({
-    description: 'ID-ul localității',
-    example: '123e4567-e89b-12d3-a456-426614174000',
-  })
-  @Column({ nullable: true })
-  localitateId: string;
+  // Eliminăm coloana localitateId deoarece acum UAT are mai multe localități
 
   @ApiProperty({
     description: 'ID-ul zonei ADI',
@@ -160,13 +155,13 @@ export class UAT {
   @JoinColumn({ name: 'judet_id' })
   judet: Judet;
 
-  @ManyToOne(() => Localitate, {
-    nullable: true,
-    onDelete: 'SET NULL',
+  @OneToMany(() => Localitate, localitate => localitate.uat, {
+    cascade: true,
+    eager: false,
+    onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  @JoinColumn({ name: 'localitate_id' })
-  localitate: Localitate;
+  localitati: Localitate[];
 
   @ManyToOne(() => ZonaADI, zonaADI => zonaADI.uaturi, {
     nullable: true,
