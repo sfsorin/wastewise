@@ -109,13 +109,20 @@
 - [x] Testare migrare up/down
 - [x] Documentare proces de migrare
 
-### 2.1.9 Testare și validare schema 🟡 (1 zi) 🟨
+### 2.1.9 Testare și validare schema 🟡 (1 zi) ✅
 
-- [ ] Creare teste pentru entități
-- [ ] Creare teste pentru relații
-- [ ] Creare teste pentru repository-uri
-- [ ] Testare performanță query-uri
-- [ ] Optimizare indexuri și relații
+- [x] Creare teste pentru entități
+- [x] Creare teste pentru relații
+- [x] Creare teste pentru repository-uri
+- [x] Testare performanță query-uri
+- [x] Optimizare indexuri și relații
+
+### 2.1.10 Actualizare relație UAT-Localitate 🟡 (1 zi) ✅
+
+- [x] Modificare entități pentru a permite unui UAT să aibă mai multe localități
+- [x] Creare migrare pentru actualizarea relației
+- [x] Actualizare servicii și controllere
+- [x] Testare funcționalitate
 
 ## 2.2 Implementare Autentificare și Autorizare (7 zile)
 
