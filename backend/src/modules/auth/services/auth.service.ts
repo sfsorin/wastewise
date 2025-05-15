@@ -129,25 +129,52 @@ export class AuthService {
       email: string;
       fullName?: string;
       role: string;
+      permissions?: string[];
     };
   }> {
-    const user = await this.usersService.create(registerDto);
+    // Verificăm dacă parolele coincid
+    if (registerDto.password !== registerDto.passwordConfirmation) {
+      throw new BadRequestException('Parolele nu coincid');
+    }
+
+    // Eliminăm câmpul passwordConfirmation înainte de a crea utilizatorul
+    const { passwordConfirmation, ...userData } = registerDto;
+
+    const user = await this.usersService.create(userData);
+
+    // Obținem utilizatorul cu relațiile pentru roluri și permisiuni
+    const userWithRoles = await this.usersService.findOneWithRoles(user.id);
+
+    // Extragem permisiunile din roluri
+    const permissions = userWithRoles.roles
+      ? userWithRoles.roles
+          .flatMap(role => role.permissions || [])
+          .map(permission => permission.name)
+          .filter((value: string, index: number, self: string[]) => self.indexOf(value) === index) // Eliminăm duplicatele
+      : [];
 
     const payload = {
       sub: user.id,
       username: user.username,
       email: user.email,
       role: user.role,
+      permissions,
     };
 
+    // Generăm token-ul JWT cu o durată de viață mai scurtă (24 ore)
+    const accessToken = this.jwtService.sign(payload, {
+      expiresIn: this.configService.get<string>('JWT_EXPIRES_IN') || '24h',
+    });
+
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: accessToken,
       user: {
         id: user.id,
         username: user.username,
         email: user.email,
         fullName: user.fullName,
         role: user.role,
+        permissions,
       },
     };
   }

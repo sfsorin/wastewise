@@ -119,15 +119,15 @@
 
 ## 2.2 Implementare Autentificare și Autorizare (7 zile)
 
-### 2.2.1 Implementare înregistrare utilizatori 🟡 (1 zi)
+### 2.2.1 Implementare înregistrare utilizatori 🟡 (1 zi) ✅
 
-- [ ] Creare DTO pentru înregistrare
-- [ ] Implementare validare date înregistrare
-- [ ] Implementare service pentru înregistrare
-- [ ] Implementare controller pentru înregistrare
-- [ ] Implementare hash parole
+- [x] Creare DTO pentru înregistrare
+- [x] Implementare validare date înregistrare
+- [x] Implementare service pentru înregistrare
+- [x] Implementare controller pentru înregistrare
+- [x] Implementare hash parole
 - [ ] Implementare confirmare email (opțional)
-- [ ] Testare funcționalitate
+- [x] Testare funcționalitate
 
 ### 2.2.2 Implementare autentificare cu JWT 🟡 (1 zi)
 

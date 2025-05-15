@@ -8,7 +8,9 @@ import useAuthStore from '../../stores/authStore';
  */
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -40,8 +42,8 @@ const RegisterPage = () => {
     clearError();
 
     // Validare simplă
-    if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
-      useAuthStore.setState({ error: 'Toate câmpurile sunt obligatorii' });
+    if (!formData.username || !formData.email || !formData.password || !formData.confirmPassword) {
+      useAuthStore.setState({ error: 'Câmpurile obligatorii trebuie completate' });
       return;
     }
 
@@ -55,12 +57,31 @@ const RegisterPage = () => {
       return;
     }
 
+    // Validare complexă pentru parolă
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
+    if (!passwordRegex.test(formData.password)) {
+      useAuthStore.setState({
+        error:
+          'Parola trebuie să conțină cel puțin o literă mică, o literă mare, o cifră și un caracter special',
+      });
+      return;
+    }
+
+    // Generăm numele complet din prenume și nume dacă sunt furnizate
+    let fullName = undefined;
+    if (formData.firstName && formData.lastName) {
+      fullName = `${formData.firstName} ${formData.lastName}`;
+    }
+
     try {
       await register({
-        username: formData.name,
+        username: formData.username,
         email: formData.email,
         password: formData.password,
-        fullName: formData.name, // Folosim name ca fullName
+        passwordConfirmation: formData.confirmPassword,
+        firstName: formData.firstName || undefined,
+        lastName: formData.lastName || undefined,
+        fullName: fullName,
       });
 
       // Dacă înregistrarea a reușit, utilizatorul va fi redirecționat automat
@@ -79,21 +100,61 @@ const RegisterPage = () => {
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label
-            htmlFor="name"
+            htmlFor="username"
             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
           >
-            Nume complet
+            Nume utilizator
           </label>
           <input
-            id="name"
-            name="name"
+            id="username"
+            name="username"
             type="text"
-            value={formData.name}
+            value={formData.username}
             onChange={handleChange}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white"
-            placeholder="Nume Prenume"
+            placeholder="john.doe"
             required
           />
+          <p className="text-xs text-gray-500 mt-1">
+            Numele de utilizator poate conține doar litere, cifre, puncte, underscore și liniuțe.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label
+              htmlFor="firstName"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
+              Prenume
+            </label>
+            <input
+              id="firstName"
+              name="firstName"
+              type="text"
+              value={formData.firstName}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white"
+              placeholder="John"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="lastName"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
+              Nume
+            </label>
+            <input
+              id="lastName"
+              name="lastName"
+              type="text"
+              value={formData.lastName}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white"
+              placeholder="Doe"
+            />
+          </div>
         </div>
 
         <div className="mb-4">

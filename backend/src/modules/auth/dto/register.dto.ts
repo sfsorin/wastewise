@@ -7,6 +7,7 @@ import {
   MaxLength,
   Matches,
   IsOptional,
+  ValidateIf,
 } from 'class-validator';
 
 export class RegisterDto {
@@ -75,4 +76,14 @@ export class RegisterDto {
   @IsString({ message: 'Numele complet trebuie să fie un șir de caractere' })
   @MaxLength(100, { message: 'Numele complet trebuie să aibă cel mult 100 de caractere' })
   fullName?: string;
+
+  @ApiProperty({
+    description: 'Confirmarea parolei',
+    example: 'Password123!',
+  })
+  @IsNotEmpty({ message: 'Confirmarea parolei este obligatorie' })
+  @IsString({ message: 'Confirmarea parolei trebuie să fie un șir de caractere' })
+  @ValidateIf(o => o.password !== undefined)
+  @Matches(o => o.password, { message: 'Parolele nu coincid' })
+  passwordConfirmation: string;
 }

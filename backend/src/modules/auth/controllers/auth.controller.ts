@@ -89,6 +89,12 @@ export class AuthController {
             email: { type: 'string' },
             fullName: { type: 'string' },
             role: { type: 'string' },
+            permissions: {
+              type: 'array',
+              items: {
+                type: 'string',
+              },
+            },
           },
         },
       },
@@ -110,6 +116,7 @@ export class AuthController {
       email: string;
       fullName?: string;
       role: string;
+      permissions?: string[];
     };
   }> {
     return this.authService.register(registerDto);
