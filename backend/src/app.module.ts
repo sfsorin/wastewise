@@ -7,7 +7,7 @@ import configs from '@config/index';
 import { UsersModule } from '@modules/users/users.module';
 import { ProfilesModule } from '@modules/profiles/profiles.module';
 import { GeographicModule } from '@modules/geographic/geographic.module';
-import { ClientsModule } from '@modules/clients/clients.module';
+import { EntitiesModule } from '@modules/entities/entities.module';
 import { OperationalModule } from '@modules/operational/operational.module';
 import { ContractsModule } from '@modules/contracts/contracts.module';
 import { MLModule } from '@modules/ml/ml.module';
@@ -32,7 +32,7 @@ import { HealthModule } from './health/health.module';
     UsersModule,
     ProfilesModule,
     GeographicModule,
-    ClientsModule,
+    EntitiesModule,
     OperationalModule,
     ContractsModule,
     MLModule,

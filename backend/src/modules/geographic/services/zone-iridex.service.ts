@@ -18,7 +18,9 @@ export class ZoneIridexService {
       where: { nume: createZonaIridexDto.nume },
     });
     if (existingByName) {
-      throw new ConflictException(`Există deja o zonă Iridex cu numele ${createZonaIridexDto.nume}`);
+      throw new ConflictException(
+        `Există deja o zonă Iridex cu numele ${createZonaIridexDto.nume}`,
+      );
     }
 
     // Verificare dacă există deja o zonă Iridex cu același cod
@@ -27,7 +29,9 @@ export class ZoneIridexService {
         where: { cod: createZonaIridexDto.cod },
       });
       if (existingByCode) {
-        throw new ConflictException(`Există deja o zonă Iridex cu codul ${createZonaIridexDto.cod}`);
+        throw new ConflictException(
+          `Există deja o zonă Iridex cu codul ${createZonaIridexDto.cod}`,
+        );
       }
     }
 
@@ -77,7 +81,9 @@ export class ZoneIridexService {
         where: { nume: updateZonaIridexDto.nume },
       });
       if (existingByName && existingByName.id !== id) {
-        throw new ConflictException(`Există deja o zonă Iridex cu numele ${updateZonaIridexDto.nume}`);
+        throw new ConflictException(
+          `Există deja o zonă Iridex cu numele ${updateZonaIridexDto.nume}`,
+        );
       }
     }
 
@@ -87,7 +93,9 @@ export class ZoneIridexService {
         where: { cod: updateZonaIridexDto.cod },
       });
       if (existingByCode && existingByCode.id !== id) {
-        throw new ConflictException(`Există deja o zonă Iridex cu codul ${updateZonaIridexDto.cod}`);
+        throw new ConflictException(
+          `Există deja o zonă Iridex cu codul ${updateZonaIridexDto.cod}`,
+        );
       }
     }
 

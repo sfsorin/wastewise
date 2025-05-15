@@ -266,7 +266,7 @@ if not exist "%BACKEND_DIR%" (
     exit /b 1
 )
 
-:: Rulăm migrările
+:: Rulăm migrările (actualizat pentru noua structură cu directorul migration)
 pushd "%BACKEND_DIR%"
 call npm run migration:run
 if %errorlevel% equ 0 (

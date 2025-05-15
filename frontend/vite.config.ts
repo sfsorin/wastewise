@@ -5,7 +5,7 @@ import path from 'path';
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   // Încărcăm variabilele de mediu în funcție de modul de construire
-  const env = loadEnv(mode, process.cwd(), '');
+  loadEnv(mode, process.cwd(), '');
 
   // Verificăm dacă trebuie să sărim peste verificarea tipurilor
   const skipTypeCheck = process.argv.includes('--skipTypeCheck');

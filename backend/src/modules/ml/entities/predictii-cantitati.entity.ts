@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { UAT } from '../../geographic/entities/uat.entity';
-import { Client } from '../../clients/entities/client.entity';
+import { Client } from '../../entities/entities/client.entity';
 import { PunctColectare } from '../../operational/entities/punct-colectare.entity';
 import { CategorieDeseuri } from '../../operational/entities/categorie-deseuri.entity';
 

@@ -123,10 +123,7 @@ export class ZoneADIController {
     status: HttpStatus.CONFLICT,
     description: 'Există deja o zonă ADI cu același nume sau cod.',
   })
-  update(
-    @Param('id') id: string,
-    @Body() updateZonaADIDto: UpdateZonaADIDto,
-  ): Promise<ZonaADI> {
+  update(@Param('id') id: string, @Body() updateZonaADIDto: UpdateZonaADIDto): Promise<ZonaADI> {
     return this.zoneADIService.update(id, updateZonaADIDto);
   }
 

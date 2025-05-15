@@ -7,12 +7,11 @@
  */
 export interface User {
   id: string;
+  username: string;
   email: string;
-  firstName: string;
-  lastName: string;
+  fullName?: string;
   role: string;
-  createdAt: string;
-  updatedAt: string;
+  permissions?: string[];
 }
 
 /**
@@ -26,6 +25,15 @@ export interface RegisterData {
 }
 
 /**
+ * Tipul pentru răspunsul de autentificare
+ */
+export interface AuthResponse {
+  access_token: string;
+  refresh_token?: string;
+  user: User;
+}
+
+/**
  * Tipul pentru starea de autentificare
  */
 export interface AuthState {
@@ -36,7 +44,7 @@ export interface AuthState {
   error: string | null;
 
   // Acțiuni
-  login: (email: string, password: string) => Promise<void>;
+  login: (username: string, password: string) => Promise<void>;
   register: (userData: RegisterData) => Promise<void>;
   logout: () => void;
   checkAuth: () => Promise<void>;

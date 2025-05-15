@@ -1,7 +1,7 @@
 import { useState, useEffect, type FormEvent } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Button from '../../components/common/Button/Button';
-import useAuthStore from '../../stores/authStore';
+import { useAuthStore } from '../../stores';
 
 /**
  * Pagina de autentificare
@@ -40,12 +40,22 @@ const LoginPage = () => {
     // Validare simplă
     if (!usernameOrEmail || !password) {
       // Folosim store-ul pentru a seta eroarea
-      useAuthStore.setState({ error: 'Toate câmpurile sunt obligatorii' });
+      clearError();
+      setTimeout(() => {
+        useAuthStore.getState().clearError();
+        useAuthStore.setState({ error: 'Toate câmpurile sunt obligatorii' });
+      }, 0);
       return;
     }
 
     // Folosim acțiunea login din store
-    await login({ username: usernameOrEmail, password });
+    try {
+      await login(usernameOrEmail, password);
+      // Redirecționarea se face în efectul useEffect care monitorizează isAuthenticated
+      console.log('Autentificare reușită, redirecționare către:', from);
+    } catch (error) {
+      console.error('Eroare la autentificare:', error);
+    }
   };
 
   return (

@@ -6,7 +6,7 @@ import { CreatePunctColectareDto } from '../dto/create-punct-colectare.dto';
 import { UpdatePunctColectareDto } from '../dto/update-punct-colectare.dto';
 import { JudeteService } from '../../geographic/services/judete.service';
 import { LocalitatiService } from '../../geographic/services/localitati.service';
-import { ClientService } from '../../clients/services/client.service';
+import { ClientService } from '../../entities/services/client.service';
 
 @Injectable()
 export class PunctColectareService {

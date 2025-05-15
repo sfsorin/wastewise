@@ -8,15 +8,18 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 vi.mock('../../services/authService');
 
 // Mock useSearchParams
-vi.mock('react-router-dom', () => ({
-  ...vi.importActual('react-router-dom'),
-  useSearchParams: () => [
-    {
-      get: (param: string) => (param === 'token' ? 'valid-token' : null),
-    },
-  ],
-  useNavigate: () => vi.fn(),
-}));
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useSearchParams: () => [
+      {
+        get: (param: string) => (param === 'token' ? 'valid-token' : null),
+      },
+    ],
+    useNavigate: () => vi.fn(),
+  };
+});
 
 describe('ResetPasswordPage', () => {
   beforeEach(() => {

@@ -7,14 +7,14 @@ import { PredictiiCantitatiService } from './services/predictii-cantitati.servic
 import { DateIstoriceController } from './controllers/date-istorice.controller';
 import { PredictiiCantitatiController } from './controllers/predictii-cantitati.controller';
 import { GeographicModule } from '../geographic/geographic.module';
-import { ClientsModule } from '../clients/clients.module';
+import { EntitiesModule } from '../entities/entities.module';
 import { OperationalModule } from '../operational/operational.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([DateIstorice, PredictiiCantitati]),
     GeographicModule,
-    ClientsModule,
+    EntitiesModule,
     OperationalModule,
   ],
   controllers: [DateIstoriceController, PredictiiCantitatiController],

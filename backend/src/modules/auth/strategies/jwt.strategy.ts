@@ -1,23 +1,33 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User, UserStatus } from '../../users/entities/user.entity';
 
 /**
  * Interfață pentru payload-ul JWT
  */
-interface JwtPayload {
+export interface JwtPayload {
   sub: string;
   username: string;
   email: string;
   role: string;
+  permissions?: string[];
   iat?: number;
   exp?: number;
 }
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(configService: ConfigService) {
+  private readonly logger = new Logger(JwtStrategy.name);
+
+  constructor(
+    configService: ConfigService,
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -30,15 +40,46 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     username: string;
     email: string;
     role: string;
+    permissions?: string[];
   }> {
-    // Simulăm o operație asincronă pentru a justifica async
-    await Promise.resolve();
+    try {
+      // Verificăm dacă utilizatorul există în baza de date
+      const user = await this.usersRepository.findOne({
+        where: { id: payload.sub },
+        relations: ['roles', 'roles.permissions'],
+      });
 
-    return {
-      id: payload.sub,
-      username: payload.username,
-      email: payload.email,
-      role: payload.role,
-    };
+      if (!user) {
+        this.logger.warn(`Utilizatorul cu ID ${payload.sub} nu a fost găsit în baza de date`);
+        throw new UnauthorizedException('Utilizatorul nu există');
+      }
+
+      if (user.status !== UserStatus.ACTIVE) {
+        this.logger.warn(
+          `Utilizatorul cu ID ${payload.sub} nu este activ (status: ${user.status})`,
+        );
+        throw new UnauthorizedException('Contul este inactiv');
+      }
+
+      // Extragem permisiunile din roluri
+      const permissions = user.roles
+        ? user.roles
+            .flatMap(role => role.permissions || [])
+            .map(permission => permission.name)
+            .filter((value, index, self) => self.indexOf(value) === index) // Eliminăm duplicatele
+        : [];
+
+      return {
+        id: payload.sub,
+        username: payload.username,
+        email: payload.email,
+        role: payload.role,
+        permissions,
+      };
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Eroare necunoscută';
+      this.logger.error(`Eroare la validarea token-ului JWT: ${errorMessage}`);
+      throw new UnauthorizedException('Token invalid');
+    }
   }
 }

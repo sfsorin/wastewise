@@ -9,13 +9,13 @@ import { ServiciuContractatService } from './services/serviciu-contractat.servic
 import { ServiciuController } from './controllers/serviciu.controller';
 import { ContractController } from './controllers/contract.controller';
 import { ServiciuContractatController } from './controllers/serviciu-contractat.controller';
-import { ClientsModule } from '../clients/clients.module';
+import { EntitiesModule } from '../entities/entities.module';
 import { OperationalModule } from '../operational/operational.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Contract, Serviciu, ServiciuContractat]),
-    ClientsModule,
+    EntitiesModule,
     OperationalModule,
   ],
   controllers: [ServiciuController, ContractController, ServiciuContractatController],

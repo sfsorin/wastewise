@@ -26,6 +26,11 @@ export default tseslint.config(
       'react-refresh': reactRefresh,
       prettier: eslintPluginPrettier,
     },
+    settings: {
+      react: {
+        version: 'detect',
+      },
+    },
     rules: {
       ...reactHooks.configs.recommended.rules,
       ...reactPlugin.configs.recommended.rules,

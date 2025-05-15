@@ -85,9 +85,7 @@ describe('ZoneIridexService', () => {
 
       repository.findOne.mockResolvedValueOnce(existingZonaIridex);
 
-      await expect(service.create(createZonaIridexDto)).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(service.create(createZonaIridexDto)).rejects.toThrow(ConflictException);
     });
 
     it('should throw ConflictException if zona Iridex with same cod exists', async () => {
@@ -108,9 +106,7 @@ describe('ZoneIridexService', () => {
         uaturi: [],
       });
 
-      await expect(service.create(createZonaIridexDto)).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(service.create(createZonaIridexDto)).rejects.toThrow(ConflictException);
     });
   });
 
@@ -165,9 +161,9 @@ describe('ZoneIridexService', () => {
     it('should throw NotFoundException if zona Iridex not found', async () => {
       repository.findOne.mockResolvedValue(null);
 
-      await expect(
-        service.findOne('123e4567-e89b-12d3-a456-426614174000'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.findOne('123e4567-e89b-12d3-a456-426614174000')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -197,7 +193,10 @@ describe('ZoneIridexService', () => {
       repository.findOne.mockResolvedValueOnce(null);
       repository.save.mockResolvedValue(updatedZonaIridex);
 
-      const result = await service.update('123e4567-e89b-12d3-a456-426614174000', updateZonaIridexDto);
+      const result = await service.update(
+        '123e4567-e89b-12d3-a456-426614174000',
+        updateZonaIridexDto,
+      );
       expect(result).toEqual(updatedZonaIridex);
       expect(repository.save).toHaveBeenCalledWith(updatedZonaIridex);
     });

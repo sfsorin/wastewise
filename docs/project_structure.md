@@ -10,9 +10,16 @@ wastewise/
 ├── frontend/              # Codul frontend (React)
 ├── ml-service/            # Serviciul de Machine Learning (Python)
 ├── docs/                  # Documentație
+├── grafana/               # Configurații Grafana pentru monitorizare
+├── nginx/                 # Configurații Nginx pentru server web
+├── prometheus/            # Configurații Prometheus pentru monitorizare
+├── promtail/              # Configurații Promtail pentru logging
+├── scripts/               # Script-uri utilitare pentru proiect
 ├── docker-compose.yml     # Configurație Docker Compose
 └── README.md              # Documentație principală
 ```
+
+Pentru detalii despre componentele adiționale (grafana, nginx, prometheus, promtail, scripts), consultați [Componente Adiționale](./additional_components.md).
 
 ## Backend (NestJS)
 
@@ -32,13 +39,15 @@ backend/
 │   │   │   ├── services/
 │   │   │   └── auth.module.ts
 │   │   ├── users/         # Gestionare utilizatori
+│   │   ├── profiles/      # Gestionare profiluri utilizatori
 │   │   ├── geographic/    # Module geografice (județe, localități, UAT-uri)
 │   │   ├── entities/      # Module entități (clienți, puncte colectare)
 │   │   ├── operational/   # Module operaționale (categorii deșeuri, servicii)
 │   │   ├── vehicles/      # Module autospeciale și șoferi
-│   │   ├── contracts/     # Module contracte și prețuri
+│   │   ├── contracts/     # Module contracte și servicii contractate
 │   │   ├── invoicing/     # Module facturare
 │   │   ├── reports/       # Module rapoarte
+│   │   ├── ml/            # Module pentru Machine Learning și predicții
 │   │   └── documents/     # Module gestionare documente
 │   ├── shared/            # Cod partajat între module
 │   │   ├── decorators/    # Decoratori custom
@@ -54,6 +63,7 @@ backend/
 │   ├── e2e/               # Teste end-to-end
 │   └── unit/              # Teste unitare
 ├── migration/             # Migrări bază de date
+├── scripts/               # Script-uri utilitare pentru backend
 ├── .env                   # Variabile de mediu
 ├── .env.example           # Exemplu variabile de mediu
 ├── nest-cli.json          # Configurație NestJS CLI
@@ -109,6 +119,12 @@ frontend/
 │   ├── types/             # Tipuri TypeScript
 │   ├── constants/         # Constante
 │   ├── styles/            # Stiluri globale
+│   ├── __mocks__/         # Mock-uri pentru teste
+│   ├── providers/         # Provideri pentru context React
+│   ├── routes/            # Configurație rutare
+│   │   ├── guards/        # Guards pentru rutare
+│   │   └── layouts/       # Layout-uri pentru rutare
+│   ├── test/              # Configurație teste
 │   ├── App.tsx            # Componenta principală
 │   ├── main.tsx           # Punct de intrare
 │   └── vite-env.d.ts      # Declarații tipuri Vite
@@ -204,7 +220,9 @@ docs/
 │   ├── development.md
 │   └── deployment.md
 ├── CONTRIBUTING.md        # Ghid de contribuție
-└── project_structure.md   # Structura proiectului (acest document)
+├── project_structure.md   # Structura proiectului (acest document)
+├── backend_modules.md     # Descriere detaliată a modulelor backend
+├── additional_components.md # Descriere componente adiționale
 ```
 
 ## Docker și Configurație

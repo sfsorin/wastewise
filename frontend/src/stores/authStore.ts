@@ -1,146 +1,109 @@
 import { create } from 'zustand';
-import { devtools, persist } from 'zustand/middleware';
-import authService, {
-  type User,
-  type LoginCredentials,
-  type RegisterData,
-} from '../services/authService';
+import { persist } from 'zustand/middleware';
+import type { RegisterData, AuthState } from '../../types/auth.types';
+
+// Importăm serviciul real de autentificare
+import authService from '../services/authService';
 
 /**
- * Interfață pentru starea de autentificare
+ * Store pentru autentificare
  */
-interface AuthState {
-  user: User | null;
-  token: string | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  error: string | null;
-  login: (credentials: LoginCredentials) => Promise<void>;
-  register: (data: RegisterData) => Promise<void>;
-  logout: () => void;
-  clearError: () => void;
-  loadUser: () => Promise<void>;
-}
+export const useAuthStore = create<AuthState>()(
+  persist(
+    set => ({
+      user: null,
+      token: null,
+      isAuthenticated: false,
+      isLoading: false,
+      error: null,
 
-/**
- * Store pentru gestionarea stării de autentificare
- */
-const useAuthStore = create<AuthState>()(
-  devtools(
-    persist(
-      (set, get) => ({
-        user: authService.getCurrentUser(),
-        token: authService.getToken(),
-        isAuthenticated: authService.isAuthenticated(),
-        isLoading: false,
-        error: null,
+      login: async (username, password) => {
+        set({ isLoading: true, error: null });
+        try {
+          const response = await authService.login({ username, password });
+          // Stocăm token-ul și utilizatorul în localStorage
+          // Notă: authService.login face deja acest lucru, dar îl facem și aici pentru consistență
+          localStorage.setItem('auth_token', response.access_token);
+          localStorage.setItem('user', JSON.stringify(response.user));
 
-        /**
-         * Autentificare utilizator
-         * @param credentials Credențialele de autentificare
-         */
-        login: async (credentials: LoginCredentials) => {
-          set({ isLoading: true, error: null });
-          try {
-            const response = await authService.login(credentials);
-            set({
-              isAuthenticated: true,
-              user: response.user,
-              token: response.access_token,
-              isLoading: false,
-            });
-          } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Eroare la autentificare';
-            set({
-              isLoading: false,
-              error: errorMessage,
-              isAuthenticated: false,
-              user: null,
-              token: null,
-            });
-          }
-        },
-
-        /**
-         * Înregistrare utilizator
-         * @param data Datele de înregistrare
-         */
-        register: async (data: RegisterData) => {
-          set({ isLoading: true, error: null });
-          try {
-            const response = await authService.register(data);
-            set({
-              isAuthenticated: true,
-              user: response.user,
-              token: response.access_token,
-              isLoading: false,
-            });
-          } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Eroare la înregistrare';
-            set({
-              isLoading: false,
-              error: errorMessage,
-              isAuthenticated: false,
-              user: null,
-              token: null,
-            });
-          }
-        },
-
-        /**
-         * Deconectare utilizator
-         */
-        logout: () => {
-          authService.logout();
           set({
-            isAuthenticated: false,
-            user: null,
-            token: null,
+            user: response.user,
+            token: response.access_token,
+            isAuthenticated: true,
+            isLoading: false,
           });
-        },
-
-        /**
-         * Ștergere eroare
-         */
-        clearError: () => {
-          set({ error: null });
-        },
-
-        /**
-         * Încărcare utilizator curent
-         */
-        loadUser: async () => {
-          if (!get().token) return;
-
-          set({ isLoading: true });
-          try {
-            const user = await authService.getProfile();
-            set({
-              user,
-              isAuthenticated: true,
-              isLoading: false,
-            });
-          } catch {
-            authService.logout();
-            set({
-              isAuthenticated: false,
-              user: null,
-              token: null,
-              isLoading: false,
-            });
-          }
-        },
-      }),
-      {
-        name: 'auth-storage',
-        partialize: state => ({
-          user: state.user,
-          token: state.token,
-          isAuthenticated: state.isAuthenticated,
-        }),
+        } catch (error) {
+          set({
+            error: error instanceof Error ? error.message : 'Eroare de autentificare',
+            isLoading: false,
+          });
+        }
       },
-    ),
+
+      register: async userData => {
+        set({ isLoading: true, error: null });
+        try {
+          const response = await authService.register(userData);
+          // Stocăm token-ul și utilizatorul în localStorage
+          localStorage.setItem('auth_token', response.access_token);
+          localStorage.setItem('user', JSON.stringify(response.user));
+
+          set({
+            user: response.user,
+            token: response.access_token,
+            isAuthenticated: true,
+            isLoading: false,
+          });
+        } catch (error) {
+          set({
+            error: error instanceof Error ? error.message : 'Eroare la înregistrare',
+            isLoading: false,
+          });
+        }
+      },
+
+      logout: () => {
+        authService.logout();
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('user');
+        set({ user: null, token: null, isAuthenticated: false });
+      },
+
+      checkAuth: async () => {
+        set({ isLoading: true });
+        try {
+          // Verificăm dacă există token în localStorage
+          const token = localStorage.getItem('auth_token') || localStorage.getItem('token');
+          const userStr = localStorage.getItem('user');
+
+          if (!token || !userStr) {
+            throw new Error('Nu sunteți autentificat');
+          }
+
+          const user = JSON.parse(userStr);
+
+          // Verificăm dacă token-ul este valid prin obținerea profilului
+          await authService.getProfile();
+
+          set({ user, token, isAuthenticated: true, isLoading: false });
+        } catch {
+          // Dacă apare o eroare, ștergem datele de autentificare
+          localStorage.removeItem('auth_token');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          set({ user: null, token: null, isAuthenticated: false, isLoading: false });
+        }
+      },
+
+      clearError: () => set({ error: null }),
+    }),
+    {
+      name: 'auth-storage', // Numele pentru localStorage
+      partialize: state => ({
+        user: state.user,
+        token: state.token,
+        isAuthenticated: state.isAuthenticated,
+      }),
+    },
   ),
 );
-
-export default useAuthStore;

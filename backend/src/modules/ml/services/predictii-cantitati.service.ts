@@ -5,7 +5,7 @@ import { PredictiiCantitati } from '../entities/predictii-cantitati.entity';
 import { CreatePredictiiCantitatiDto } from '../dto/create-predictii-cantitati.dto';
 import { UpdatePredictiiCantitatiDto } from '../dto/update-predictii-cantitati.dto';
 import { UATService } from '../../geographic/services/uat.service';
-import { ClientService } from '../../clients/services/client.service';
+import { ClientService } from '../../entities/services/client.service';
 import { PunctColectareService } from '../../operational/services/punct-colectare.service';
 import { CategorieDeseuriService } from '../../operational/services/categorie-deseuri.service';
 

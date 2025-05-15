@@ -7,8 +7,8 @@ import { CreatePermissionDto } from '../dto/create-permission.dto';
 import { UpdatePermissionDto } from '../dto/update-permission.dto';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 
-type MockRepository<T = any> = Partial<Record<keyof Repository<any>, jest.Mock>>;
-const createMockRepository = <T = any>(): MockRepository<T> => ({
+type MockRepository = Partial<Record<keyof Repository<unknown>, jest.Mock>>;
+const createMockRepository = (): MockRepository => ({
   find: jest.fn(),
   findOne: jest.fn(),
   create: jest.fn(),
@@ -18,7 +18,7 @@ const createMockRepository = <T = any>(): MockRepository<T> => ({
 
 describe('PermissionsService', () => {
   let service: PermissionsService;
-  let repository: MockRepository<Permission>;
+  let repository: MockRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -32,7 +32,7 @@ describe('PermissionsService', () => {
     }).compile();
 
     service = module.get<PermissionsService>(PermissionsService);
-    repository = module.get<MockRepository<Permission>>(getRepositoryToken(Permission));
+    repository = module.get<MockRepository>(getRepositoryToken(Permission));
   });
 
   it('should be defined', () => {

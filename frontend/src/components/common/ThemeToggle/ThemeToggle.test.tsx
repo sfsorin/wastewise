@@ -25,7 +25,7 @@ const mockSetDarkMode = vi.fn(isDark => {
   }
 });
 
-vi.mock('../../../store', () => ({
+vi.mock('../../../stores', () => ({
   useThemeStore: () => ({
     isDarkMode: mockIsDarkMode,
     toggleTheme: mockToggleTheme,

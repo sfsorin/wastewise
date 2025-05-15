@@ -85,9 +85,7 @@ describe('ZoneADIService', () => {
 
       repository.findOne.mockResolvedValueOnce(existingZonaADI);
 
-      await expect(service.create(createZonaADIDto)).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(service.create(createZonaADIDto)).rejects.toThrow(ConflictException);
     });
 
     it('should throw ConflictException if zona ADI with same cod exists', async () => {
@@ -108,9 +106,7 @@ describe('ZoneADIService', () => {
         uaturi: [],
       });
 
-      await expect(service.create(createZonaADIDto)).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(service.create(createZonaADIDto)).rejects.toThrow(ConflictException);
     });
   });
 
@@ -165,9 +161,9 @@ describe('ZoneADIService', () => {
     it('should throw NotFoundException if zona ADI not found', async () => {
       repository.findOne.mockResolvedValue(null);
 
-      await expect(
-        service.findOne('123e4567-e89b-12d3-a456-426614174000'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.findOne('123e4567-e89b-12d3-a456-426614174000')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 

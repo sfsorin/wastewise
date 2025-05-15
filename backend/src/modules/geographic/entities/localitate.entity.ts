@@ -12,7 +12,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Judet } from './judet.entity';
 import { UAT } from './uat.entity';
 import { PunctColectare } from '../../operational/entities/punct-colectare.entity';
-import { Client } from '../../clients/entities/client.entity';
+import { Client } from '../../entities/entities/client.entity';
 
 @Entity('localitati')
 export class Localitate {

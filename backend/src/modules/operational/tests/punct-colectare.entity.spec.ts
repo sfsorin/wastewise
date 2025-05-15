@@ -7,7 +7,8 @@ import { JudeteService } from '../../geographic/services/judete.service';
 import { LocalitatiService } from '../../geographic/services/localitati.service';
 import { ClientService } from '../../clients/services/client.service';
 import { CreatePunctColectareDto } from '../dto/create-punct-colectare.dto';
-import { UpdatePunctColectareDto } from '../dto/update-punct-colectare.dto';
+// UpdatePunctColectareDto nu este utilizat în acest fișier
+// import { UpdatePunctColectareDto } from '../dto/update-punct-colectare.dto';
 import { NotFoundException } from '@nestjs/common';
 
 type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
@@ -164,7 +165,9 @@ describe('PunctColectareService', () => {
       const result = await service.create(createPunctColectareDto);
       expect(result).toEqual(punctColectare);
       expect(judeteService.findOne).toHaveBeenCalledWith('123e4567-e89b-12d3-a456-426614174000');
-      expect(localitatiService.findOne).toHaveBeenCalledWith('123e4567-e89b-12d3-a456-426614174001');
+      expect(localitatiService.findOne).toHaveBeenCalledWith(
+        '123e4567-e89b-12d3-a456-426614174001',
+      );
       expect(clientService.findOne).toHaveBeenCalledWith('123e4567-e89b-12d3-a456-426614174002');
       expect(repository.create).toHaveBeenCalledWith({
         ...createPunctColectareDto,
@@ -356,9 +359,9 @@ describe('PunctColectareService', () => {
     it('should throw NotFoundException if punct colectare not found', async () => {
       repository.findOne.mockResolvedValue(null);
 
-      await expect(
-        service.findOne('123e4567-e89b-12d3-a456-426614174003'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.findOne('123e4567-e89b-12d3-a456-426614174003')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });

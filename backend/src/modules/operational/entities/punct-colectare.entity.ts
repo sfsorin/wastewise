@@ -9,7 +9,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { Client } from '../../clients/entities/client.entity';
+import { Client } from '../../entities/entities/client.entity';
 import { Judet } from '../../geographic/entities/judet.entity';
 import { Localitate } from '../../geographic/entities/localitate.entity';
 import { PredictiiCantitati } from '../../ml/entities/predictii-cantitati.entity';

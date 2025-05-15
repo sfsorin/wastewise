@@ -87,9 +87,7 @@ describe('JudeteService', () => {
 
       repository.findOne.mockResolvedValueOnce(existingJudet);
 
-      await expect(service.create(createJudetDto)).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(service.create(createJudetDto)).rejects.toThrow(ConflictException);
     });
 
     it('should throw ConflictException if judet with same codAuto exists', async () => {
@@ -111,9 +109,7 @@ describe('JudeteService', () => {
         uaturi: [],
       });
 
-      await expect(service.create(createJudetDto)).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(service.create(createJudetDto)).rejects.toThrow(ConflictException);
     });
   });
 
@@ -170,9 +166,9 @@ describe('JudeteService', () => {
     it('should throw NotFoundException if judet not found', async () => {
       repository.findOne.mockResolvedValue(null);
 
-      await expect(
-        service.findOne('123e4567-e89b-12d3-a456-426614174000'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.findOne('123e4567-e89b-12d3-a456-426614174000')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 

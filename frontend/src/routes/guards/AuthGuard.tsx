@@ -1,6 +1,6 @@
 import { useEffect, type ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import useAuthStore from '../../stores/authStore';
+import { useAuthStore } from '../../stores';
 import LoadingSpinner from '../../components/common/LoadingSpinner/LoadingSpinner';
 
 interface AuthGuardProps {
@@ -13,15 +13,15 @@ interface AuthGuardProps {
  * Folosește Zustand pentru gestionarea stării de autentificare
  */
 const AuthGuard = ({ children }: AuthGuardProps) => {
-  const { isAuthenticated, isLoading, loadUser } = useAuthStore();
+  const { isAuthenticated, isLoading, checkAuth } = useAuthStore();
   const location = useLocation();
 
   // Verificăm autentificarea la încărcarea componentei
   useEffect(() => {
     if (isAuthenticated) {
-      loadUser();
+      checkAuth();
     }
-  }, [isAuthenticated, loadUser]);
+  }, [isAuthenticated, checkAuth]);
 
   // Afișăm un indicator de încărcare în timp ce verificăm autentificarea
   if (isLoading) {

@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Judet } from '../entities/judet.entity';
 import { Localitate } from '../entities/localitate.entity';
@@ -25,7 +24,7 @@ describe('Entity Relations (e2e)', () => {
   let uatService: UATService;
   let zoneADIService: ZoneADIService;
   let zoneIridexService: ZoneIridexService;
-  
+
   let judetRepository: Repository<Judet>;
   let localitateRepository: Repository<Localitate>;
   let uatRepository: Repository<UAT>;
@@ -61,13 +60,7 @@ describe('Entity Relations (e2e)', () => {
         }),
         TypeOrmModule.forFeature([Judet, Localitate, UAT, ZonaADI, ZonaIridex]),
       ],
-      providers: [
-        JudeteService,
-        LocalitatiService,
-        UATService,
-        ZoneADIService,
-        ZoneIridexService,
-      ],
+      providers: [JudeteService, LocalitatiService, UATService, ZoneADIService, ZoneIridexService],
     }).compile();
 
     judeteService = module.get<JudeteService>(JudeteService);
@@ -214,8 +207,9 @@ describe('Entity Relations (e2e)', () => {
     try {
       await uatService.findOne(uatId);
       fail('UAT should have been deleted');
-    } catch (error) {
-      expect(error.message).toContain('nu a fost găsit');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Eroare necunoscută';
+      expect(errorMessage).toContain('nu a fost găsit');
     }
   });
 });

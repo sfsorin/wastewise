@@ -1,47 +1,65 @@
 /**
  * Utilitar pentru logging
  */
-export class Logger {
-  private context: string;
+import { LoggerService } from '@nestjs/common';
 
-  constructor(context: string) {
+export class Logger implements LoggerService {
+  private context?: string;
+
+  constructor(context?: string) {
     this.context = context;
   }
 
-  /**
-   * Logare informații
-   * @param message Mesajul de logat
-   * @param data Date adiționale
-   */
-  info(message: string, data?: unknown): void {
-    console.log(`[INFO] [${this.context}] ${message}`, data ? data : '');
+  error(message: string | Error | Record<string, unknown>, trace?: string, context?: string): void {
+    const formattedMessage = this.formatMessage(message);
+    console.error(`[ERROR] ${this.getContext(context)} - ${formattedMessage}`, trace);
   }
 
-  /**
-   * Logare avertismente
-   * @param message Mesajul de logat
-   * @param data Date adiționale
-   */
-  warn(message: string, data?: unknown): void {
-    console.warn(`[WARN] [${this.context}] ${message}`, data ? data : '');
+  warn(message: string | Error | Record<string, unknown>, context?: string): void {
+    const formattedMessage = this.formatMessage(message);
+    console.warn(`[WARN] ${this.getContext(context)} - ${formattedMessage}`);
   }
 
-  /**
-   * Logare erori
-   * @param message Mesajul de logat
-   * @param trace Stack trace
-   * @param data Date adiționale
-   */
-  error(message: string, trace?: string, data?: unknown): void {
-    console.error(`[ERROR] [${this.context}] ${message}`, trace ? trace : '', data ? data : '');
+  log(message: string | Error | Record<string, unknown>, context?: string): void {
+    const formattedMessage = this.formatMessage(message);
+    // eslint-disable-next-line no-console
+    console.info(`[LOG] ${this.getContext(context)} - ${formattedMessage}`);
   }
 
-  /**
-   * Logare debug
-   * @param message Mesajul de logat
-   * @param data Date adiționale
-   */
-  debug(message: string, data?: unknown): void {
-    console.debug(`[DEBUG] [${this.context}] ${message}`, data ? data : '');
+  debug(message: string | Error | Record<string, unknown>, context?: string): void {
+    const formattedMessage = this.formatMessage(message);
+    console.debug(`[DEBUG] ${this.getContext(context)} - ${formattedMessage}`);
+  }
+
+  info(message: string | Error | Record<string, unknown>, context?: string): void {
+    const formattedMessage = this.formatMessage(message);
+    console.info(`[INFO] ${this.getContext(context)} - ${formattedMessage}`);
+  }
+
+  private getContext(context?: string): string {
+    return context || this.context || '';
+  }
+
+  private formatMessage(
+    message: string | Error | Record<string, unknown> | null | undefined,
+  ): string {
+    if (typeof message === 'string') {
+      return message;
+    } else if (message instanceof Error) {
+      return message.stack || message.message;
+    } else if (message === null) {
+      return 'null';
+    } else if (message === undefined) {
+      return 'undefined';
+    } else if (typeof message === 'object') {
+      try {
+        return JSON.stringify(message);
+      } catch {
+        // Folosim o conversie sigură pentru obiecte
+        return `[Object ${Object.prototype.toString.call(message)}]`;
+      }
+    }
+    // Acest caz nu ar trebui să apară niciodată datorită tipurilor de mai sus
+    return '[Unknown]';
   }
 }

@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { Contract } from '../entities/contract.entity';
 import { CreateContractDto } from '../dto/create-contract.dto';
 import { UpdateContractDto } from '../dto/update-contract.dto';
-import { ClientService } from '../../clients/services/client.service';
+import { ClientService } from '../../entities/services/client.service';
 
 // Interfață pentru datele de actualizare
 interface UpdateData {

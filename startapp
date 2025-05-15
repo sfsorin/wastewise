@@ -278,7 +278,7 @@ run_migrations() {
         return 1
     fi
 
-    # Rulăm migrările
+    # Rulăm migrările (actualizat pentru noua structură cu directorul migration)
     (cd "$BACKEND_DIR" && npm run migration:run || true)
 
     if [ $? -eq 0 ]; then

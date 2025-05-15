@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useThemeStore, useUserStore } from '../store';
+import { useThemeStore, useUserStore } from '../stores';
 
 /**
  * Hook personalizat pentru gestionarea temei

@@ -1,7 +1,7 @@
 import { useState, useEffect, type FormEvent } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Button from '../../components/common/Button/Button';
-import useAuthStore from '../../stores/authStore';
+import { useAuthStore } from '../../stores';
 
 /**
  * Pagina de înregistrare
@@ -41,17 +41,26 @@ const RegisterPage = () => {
 
     // Validare simplă
     if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
-      useAuthStore.setState({ error: 'Toate câmpurile sunt obligatorii' });
+      setTimeout(() => {
+        useAuthStore.getState().clearError();
+        useAuthStore.setState({ error: 'Toate câmpurile sunt obligatorii' });
+      }, 0);
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      useAuthStore.setState({ error: 'Parolele nu coincid' });
+      setTimeout(() => {
+        useAuthStore.getState().clearError();
+        useAuthStore.setState({ error: 'Parolele nu coincid' });
+      }, 0);
       return;
     }
 
     if (formData.password.length < 8) {
-      useAuthStore.setState({ error: 'Parola trebuie să aibă cel puțin 8 caractere' });
+      setTimeout(() => {
+        useAuthStore.getState().clearError();
+        useAuthStore.setState({ error: 'Parola trebuie să aibă cel puțin 8 caractere' });
+      }, 0);
       return;
     }
 

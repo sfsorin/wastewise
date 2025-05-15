@@ -9,7 +9,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { Client } from '../../clients/entities/client.entity';
+import { Client } from '../../entities/entities/client.entity';
 import { ServiciuContractat } from './serviciu-contractat.entity';
 
 @Entity('contracte')

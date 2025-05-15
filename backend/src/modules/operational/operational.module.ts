@@ -7,13 +7,13 @@ import { PunctColectareService } from './services/punct-colectare.service';
 import { CategorieDeseuriController } from './controllers/categorie-deseuri.controller';
 import { PunctColectareController } from './controllers/punct-colectare.controller';
 import { GeographicModule } from '../geographic/geographic.module';
-import { ClientsModule } from '../clients/clients.module';
+import { EntitiesModule } from '../entities/entities.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([CategorieDeseuri, PunctColectare]),
     GeographicModule,
-    ClientsModule,
+    EntitiesModule,
   ],
   controllers: [CategorieDeseuriController, PunctColectareController],
   providers: [CategorieDeseuriService, PunctColectareService],

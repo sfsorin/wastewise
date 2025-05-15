@@ -220,4 +220,22 @@ export class UsersService {
 
     return true;
   }
+
+  /**
+   * Găsește un utilizator după ID și încarcă relațiile pentru roluri și permisiuni
+   * @param id ID-ul utilizatorului
+   * @returns Utilizatorul cu rolurile și permisiunile încărcate
+   */
+  async findOneWithRoles(id: string): Promise<User> {
+    const user = await this.usersRepository.findOne({
+      where: { id },
+      relations: ['roles', 'roles.permissions'],
+    });
+
+    if (!user) {
+      throw new NotFoundException(`Utilizatorul cu ID-ul ${id} nu a fost găsit`);
+    }
+
+    return user;
+  }
 }

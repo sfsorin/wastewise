@@ -91,7 +91,9 @@ describe('ServiciuService', () => {
 
       const result = await service.create(createServiciuDto);
       expect(result).toEqual(serviciu);
-      expect(categorieDeseuriService.findOne).toHaveBeenCalledWith('123e4567-e89b-12d3-a456-426614174000');
+      expect(categorieDeseuriService.findOne).toHaveBeenCalledWith(
+        '123e4567-e89b-12d3-a456-426614174000',
+      );
       expect(repository.create).toHaveBeenCalledWith(createServiciuDto);
       expect(repository.save).toHaveBeenCalledWith(serviciu);
     });
@@ -114,9 +116,7 @@ describe('ServiciuService', () => {
         updatedAt: new Date(),
       });
 
-      await expect(service.create(createServiciuDto)).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(service.create(createServiciuDto)).rejects.toThrow(ConflictException);
     });
   });
 
@@ -230,9 +230,9 @@ describe('ServiciuService', () => {
     it('should throw NotFoundException if serviciu not found', async () => {
       repository.findOne.mockResolvedValue(null);
 
-      await expect(
-        service.findOne('123e4567-e89b-12d3-a456-426614174001'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.findOne('123e4567-e89b-12d3-a456-426614174001')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -283,9 +283,14 @@ describe('ServiciuService', () => {
       });
       repository.save.mockResolvedValue(updatedServiciu);
 
-      const result = await service.update('123e4567-e89b-12d3-a456-426614174001', updateServiciuDto);
+      const result = await service.update(
+        '123e4567-e89b-12d3-a456-426614174001',
+        updateServiciuDto,
+      );
       expect(result).toEqual(updatedServiciu);
-      expect(categorieDeseuriService.findOne).toHaveBeenCalledWith('123e4567-e89b-12d3-a456-426614174002');
+      expect(categorieDeseuriService.findOne).toHaveBeenCalledWith(
+        '123e4567-e89b-12d3-a456-426614174002',
+      );
       expect(repository.save).toHaveBeenCalledWith(updatedServiciu);
     });
   });
