@@ -8,6 +8,7 @@ import {
   HttpCode,
   HttpStatus,
   Query,
+  Req,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -23,6 +24,7 @@ import { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from '../dto/register.dto';
 import { ForgotPasswordDto } from '../dto/forgot-password.dto';
 import { ResetPasswordDto } from '../dto/reset-password.dto';
+import { RefreshTokenDto } from '../dto/refresh-token.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { User } from '../../users/entities/user.entity';
 
@@ -42,6 +44,7 @@ export class AuthController {
     schema: {
       properties: {
         access_token: { type: 'string' },
+        refresh_token: { type: 'string' },
         user: {
           type: 'object',
           properties: {
@@ -59,8 +62,12 @@ export class AuthController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Credențiale invalide.',
   })
-  async login(@Body() loginDto: LoginDto): Promise<{
+  async login(
+    @Body() loginDto: LoginDto,
+    @Req() request: Request,
+  ): Promise<{
     access_token: string;
+    refresh_token: string;
     user: {
       id: string;
       username: string;
@@ -69,7 +76,7 @@ export class AuthController {
       role: string;
     };
   }> {
-    return this.authService.login(loginDto);
+    return this.authService.login(loginDto, request);
   }
 
   @Post('register')
@@ -81,6 +88,7 @@ export class AuthController {
     schema: {
       properties: {
         access_token: { type: 'string' },
+        refresh_token: { type: 'string' },
         user: {
           type: 'object',
           properties: {
@@ -102,8 +110,12 @@ export class AuthController {
     status: HttpStatus.CONFLICT,
     description: 'Există deja un utilizator cu același nume sau adresă de email.',
   })
-  async register(@Body() registerDto: RegisterDto): Promise<{
+  async register(
+    @Body() registerDto: RegisterDto,
+    @Req() request: Request,
+  ): Promise<{
     access_token: string;
+    refresh_token: string;
     user: {
       id: string;
       username: string;
@@ -112,7 +124,7 @@ export class AuthController {
       role: string;
     };
   }> {
-    return this.authService.register(registerDto);
+    return this.authService.register(registerDto, request);
   }
 
   @Get('profile')
@@ -191,5 +203,63 @@ export class AuthController {
   async validateResetToken(@Query('token') token: string): Promise<{ valid: boolean }> {
     const isValid = await this.authService.validateResetToken(token);
     return { valid: isValid };
+  }
+
+  @Post('refresh-token')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Reîmprospătare token de acces' })
+  @ApiBody({ type: RefreshTokenDto })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Token-ul a fost reîmprospătat cu succes.',
+    schema: {
+      properties: {
+        access_token: { type: 'string' },
+        refresh_token: { type: 'string' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Token de refresh invalid sau expirat.',
+  })
+  async refreshToken(
+    @Body() refreshTokenDto: RefreshTokenDto,
+    @Req() request: Request,
+  ): Promise<{
+    access_token: string;
+    refresh_token: string;
+  }> {
+    return this.authService.refreshToken(refreshTokenDto, request);
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Deconectare utilizator' })
+  @ApiBody({
+    schema: {
+      properties: {
+        refreshToken: { type: 'string' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Utilizatorul a fost deconectat cu succes.',
+  })
+  async logout(
+    @Body('refreshToken') refreshToken: string,
+    @Request() req: { user: { id: string } },
+  ): Promise<{ message: string }> {
+    if (refreshToken) {
+      // Revocăm token-ul de refresh specific
+      await this.authService.revokeRefreshToken(refreshToken);
+    } else {
+      // Revocăm toate token-urile de refresh ale utilizatorului
+      await this.authService.revokeAllRefreshTokens(req.user.id);
+    }
+    return { message: 'Deconectare reușită' };
   }
 }

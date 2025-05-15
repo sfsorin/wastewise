@@ -109,44 +109,44 @@
 - [x] Testare migrare up/down
 - [x] Documentare proces de migrare
 
-### 2.1.9 Testare și validare schema 🟡 (1 zi) 🟨
+### 2.1.9 Testare și validare schema 🟡 (1 zi) ✅
 
-- [ ] Creare teste pentru entități
-- [ ] Creare teste pentru relații
-- [ ] Creare teste pentru repository-uri
-- [ ] Testare performanță query-uri
-- [ ] Optimizare indexuri și relații
+- [x] Creare teste pentru entități
+- [x] Creare teste pentru relații
+- [x] Creare teste pentru repository-uri
+- [x] Testare performanță query-uri
+- [x] Optimizare indexuri și relații
 
 ## 2.2 Implementare Autentificare și Autorizare (7 zile)
 
-### 2.2.1 Implementare înregistrare utilizatori 🟡 (1 zi)
+### 2.2.1 Implementare înregistrare utilizatori 🟡 (1 zi) ✅
 
-- [ ] Creare DTO pentru înregistrare
-- [ ] Implementare validare date înregistrare
-- [ ] Implementare service pentru înregistrare
-- [ ] Implementare controller pentru înregistrare
-- [ ] Implementare hash parole
-- [ ] Implementare confirmare email (opțional)
-- [ ] Testare funcționalitate
+- [x] Creare DTO pentru înregistrare
+- [x] Implementare validare date înregistrare
+- [x] Implementare service pentru înregistrare
+- [x] Implementare controller pentru înregistrare
+- [x] Implementare hash parole
+- [x] Implementare confirmare email (opțional)
+- [x] Testare funcționalitate
 
-### 2.2.2 Implementare autentificare cu JWT 🟡 (1 zi)
+### 2.2.2 Implementare autentificare cu JWT 🟡 (1 zi) ✅
 
-- [ ] Configurare JWT module
-- [ ] Creare DTO pentru autentificare
-- [ ] Implementare service pentru autentificare
-- [ ] Implementare controller pentru autentificare
-- [ ] Implementare verificare parole
-- [ ] Implementare generare token JWT
-- [ ] Testare funcționalitate
+- [x] Configurare JWT module
+- [x] Creare DTO pentru autentificare
+- [x] Implementare service pentru autentificare
+- [x] Implementare controller pentru autentificare
+- [x] Implementare verificare parole
+- [x] Implementare generare token JWT
+- [x] Testare funcționalitate
 
-### 2.2.3 Implementare refresh token 🟡 (1 zi)
+### 2.2.3 Implementare refresh token 🟡 (1 zi) ✅
 
-- [ ] Creare entitate RefreshToken
-- [ ] Implementare generare refresh token
-- [ ] Implementare validare refresh token
-- [ ] Implementare regenerare access token
-- [ ] Implementare invalidare token
-- [ ] Testare funcționalitate
+- [x] Creare entitate RefreshToken
+- [x] Implementare generare refresh token
+- [x] Implementare validare refresh token
+- [x] Implementare regenerare access token
+- [x] Implementare invalidare token
+- [x] Testare funcționalitate
 
 ### 2.2.4 Implementare recuperare parolă 🟡 (1 zi)
 
