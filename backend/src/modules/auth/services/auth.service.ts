@@ -178,6 +178,11 @@ export class AuthService implements IAuthService {
       permissions?: string[];
     };
   }> {
+    // Verificăm dacă parolele coincid
+    if (registerDto.password !== registerDto.passwordConfirmation) {
+      throw new BadRequestException('Parolele nu coincid');
+    }
+
     // Eliminăm câmpul passwordConfirmation înainte de a crea utilizatorul
     const { passwordConfirmation, ...userData } = registerDto;
 
@@ -189,8 +194,8 @@ export class AuthService implements IAuthService {
     // Extragem permisiunile din roluri
     const permissions = userWithRoles.roles
       ? userWithRoles.roles
-          .flatMap((role: any) => role.permissions || [])
-          .map((permission: any) => permission.name)
+          .flatMap(role => role.permissions || [])
+          .map(permission => permission.name)
           .filter((value: string, index: number, self: string[]) => self.indexOf(value) === index) // Eliminăm duplicatele
       : [];
 
