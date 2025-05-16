@@ -125,18 +125,7 @@ export class UsersService {
     return user;
   }
 
-  async findOneWithRoles(id: string): Promise<User> {
-    const user = await this.usersRepository.findOne({
-      where: { id },
-      relations: ['roles', 'roles.permissions'],
-    });
-
-    if (!user) {
-      throw new NotFoundException(`Utilizatorul cu ID-ul ${id} nu a fost găsit`);
-    }
-
-    return user;
-  }
+  // Această funcție a fost mutată la sfârșitul clasei
 
   async findByEmail(email: string): Promise<User | null> {
     return this.usersRepository.findOne({
