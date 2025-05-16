@@ -45,7 +45,10 @@ export function useLocalStorage<T>(
         window.localStorage.setItem(key, JSON.stringify(valueToStore));
       }
     } catch (error) {
-      console.warn(`Eroare la scrierea în localStorage pentru cheia "${key}":`, error);
+      // Asigurăm-ne că console.warn este apelat întotdeauna
+      if (typeof console !== 'undefined' && console.warn) {
+        console.warn(`Eroare la scrierea în localStorage pentru cheia "${key}":`, error);
+      }
     }
   };
 

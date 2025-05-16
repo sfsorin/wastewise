@@ -39,13 +39,22 @@ describe('RbacController', () => {
         JwtAuthGuard,
         RolesGuard,
         PermissionsGuard,
+        {
+          provide: Logger,
+          useValue: mockLogger,
+        },
       ],
-    })
-      .overrideProvider(Logger)
-      .useValue(mockLogger)
-      .compile();
+    }).compile();
 
     controller = module.get<RbacController>(RbacController);
+
+    // Înlocuim logger-ul intern al controller-ului cu mock-ul nostru
+    const privateLogger = Reflect.get(controller, 'logger');
+    privateLogger.log = mockLogger.log;
+    privateLogger.error = mockLogger.error;
+    privateLogger.warn = mockLogger.warn;
+    privateLogger.debug = mockLogger.debug;
+    privateLogger.verbose = mockLogger.verbose;
   });
 
   afterEach(() => {

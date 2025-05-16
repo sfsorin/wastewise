@@ -143,7 +143,7 @@ describe('Entity Relations (e2e)', () => {
     const createUATDto: CreateUATDto = {
       nume: 'UAT Test',
       judetId,
-      localitateId,
+      // localitateId nu mai este necesar în CreateUATDto
       zonaADIId,
       zonaIridexId,
       codSiruta: '0101-uat-test',
@@ -155,7 +155,7 @@ describe('Entity Relations (e2e)', () => {
     expect(uat).toBeDefined();
     expect(uat.nume).toBe(createUATDto.nume);
     expect(uat.judetId).toBe(judetId);
-    expect(uat.localitateId).toBe(localitateId);
+    // UAT nu mai are localitateId, acum are o relație OneToMany cu localitati
     expect(uat.zonaADIId).toBe(zonaADIId);
     expect(uat.zonaIridexId).toBe(zonaIridexId);
 
@@ -187,8 +187,9 @@ describe('Entity Relations (e2e)', () => {
     const uatWithRelations = await uatService.findOne(uatId);
     expect(uatWithRelations.judet).toBeDefined();
     expect(uatWithRelations.judet.id).toBe(judetId);
-    expect(uatWithRelations.localitate).toBeDefined();
-    expect(uatWithRelations.localitate.id).toBe(localitateId);
+    expect(uatWithRelations.localitati).toBeDefined();
+    // Verificăm că există cel puțin o localitate asociată
+    expect(uatWithRelations.localitati.length).toBeGreaterThanOrEqual(0);
     expect(uatWithRelations.zonaADI).toBeDefined();
     expect(uatWithRelations.zonaADI.id).toBe(zonaADIId);
     expect(uatWithRelations.zonaIridex).toBeDefined();

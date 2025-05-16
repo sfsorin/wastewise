@@ -7,7 +7,10 @@ import { CreateJudetDto } from '../dto/create-judet.dto';
 import { UpdateJudetDto } from '../dto/update-judet.dto';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 
-type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
+import { ObjectLiteral } from 'typeorm';
+type MockRepository<T extends ObjectLiteral = any> = Partial<
+  Record<keyof Repository<T>, jest.Mock>
+>;
 const createMockRepository = <T = any>(): MockRepository<T> => ({
   find: jest.fn(),
   findOne: jest.fn(),

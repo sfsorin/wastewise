@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { useAuthStore } from './authStore';
+import type { RegisterData } from '../../types/auth.types';
 import { act } from '@testing-library/react';
 
 // Mock pentru localStorage
@@ -19,22 +20,19 @@ const localStorageMock = (() => {
   };
 })();
 
-// Mock pentru AuthService
-vi.mock('./authService', () => ({
-  AuthService: {
-    login: vi.fn(async (email: string, password: string) => {
-      if (email === 'test@example.com' && password === 'password') {
+// Mock pentru authService
+vi.mock('../services/authService', () => ({
+  default: {
+    login: vi.fn(async (credentials: { username: string; password: string }) => {
+      if (credentials.username === 'test@example.com' && credentials.password === 'password') {
         return {
           user: {
             id: '1',
+            username: 'test',
             email: 'test@example.com',
-            firstName: 'Test',
-            lastName: 'User',
             role: 'user',
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
           },
-          token: 'dummy_token',
+          access_token: 'dummy_token',
         };
       }
       throw new Error('Credențiale invalide');
@@ -42,34 +40,27 @@ vi.mock('./authService', () => ({
     register: vi.fn(async () => ({
       user: {
         id: '2',
+        username: 'new',
         email: 'new@example.com',
-        firstName: 'New',
-        lastName: 'User',
         role: 'user',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
       },
-      token: 'dummy_token',
+      access_token: 'dummy_token',
     })),
     logout: vi.fn(),
-    checkAuth: vi.fn(async () => {
-      const token = localStorageMock.getItem('auth_token');
-      if (!token) {
-        throw new Error('Nu sunteți autentificat');
-      }
-      return {
-        user: {
-          id: '1',
-          email: 'test@example.com',
-          firstName: 'Test',
-          lastName: 'User',
-          role: 'user',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        },
-        token,
-      };
-    }),
+    getProfile: vi.fn(async () => ({
+      id: '1',
+      username: 'test',
+      email: 'test@example.com',
+      role: 'user',
+    })),
+    isAuthenticated: vi.fn(() => true),
+    getCurrentUser: vi.fn(() => ({
+      id: '1',
+      username: 'test',
+      email: 'test@example.com',
+      role: 'user',
+    })),
+    getToken: vi.fn(() => 'dummy_token'),
   },
 }));
 
@@ -112,7 +103,7 @@ describe('AuthStore', () => {
     const state = useAuthStore.getState();
     expect(state.isAuthenticated).toBe(true);
     expect(state.user).not.toBeNull();
-    expect(state.token).toBe('dummy_token');
+    expect(state.token).toBe('dummy_token'); // Acum token-ul este access_token
     expect(state.error).toBeNull();
     expect(state.isLoading).toBe(false);
   });

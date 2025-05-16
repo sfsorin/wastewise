@@ -8,8 +8,11 @@ import { CreateServiciuDto } from '../dto/create-serviciu.dto';
 import { UpdateServiciuDto } from '../dto/update-serviciu.dto';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 
-type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
-const createMockRepository = <T = any>(): MockRepository<T> => ({
+import { ObjectLiteral } from 'typeorm';
+type MockRepository<T extends ObjectLiteral = any> = Partial<
+  Record<keyof Repository<T>, jest.Mock>
+>;
+const createMockRepository = <T extends ObjectLiteral = any>(): MockRepository<T> => ({
   find: jest.fn(),
   findOne: jest.fn(),
   create: jest.fn(),
@@ -78,7 +81,7 @@ describe('ServiciuService', () => {
         id: '123e4567-e89b-12d3-a456-426614174000',
         nume: 'Deșeuri menajere',
         descriere: 'Deșeuri generate de activitățile casnice',
-        codDeseu: '20 03 01',
+        cod: '20 03 01',
         createdAt: new Date(),
         updatedAt: new Date(),
         dateIstorice: [],
@@ -275,7 +278,7 @@ describe('ServiciuService', () => {
         id: '123e4567-e89b-12d3-a456-426614174002',
         nume: 'Deșeuri reciclabile',
         descriere: 'Deșeuri care pot fi reciclate',
-        codDeseu: '20 01 01',
+        cod: '20 01 01',
         createdAt: new Date(),
         updatedAt: new Date(),
         dateIstorice: [],

@@ -9,8 +9,11 @@ import { CreateClientDto } from '../dto/create-client.dto';
 // import { UpdateClientDto } from '../dto/update-client.dto';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 
-type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
-const createMockRepository = <T = any>(): MockRepository<T> => ({
+import { ObjectLiteral } from 'typeorm';
+type MockRepository<T extends ObjectLiteral = any> = Partial<
+  Record<keyof Repository<T>, jest.Mock>
+>;
+const createMockRepository = <T extends ObjectLiteral = any>(): MockRepository<T> => ({
   find: jest.fn(),
   findOne: jest.fn(),
   create: jest.fn(),
