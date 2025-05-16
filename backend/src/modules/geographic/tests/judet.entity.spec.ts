@@ -1,17 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { Judet } from '../entities/judet.entity';
 import { JudeteService } from '../services/judete.service';
 import { CreateJudetDto } from '../dto/create-judet.dto';
 import { UpdateJudetDto } from '../dto/update-judet.dto';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 
-import { ObjectLiteral } from 'typeorm';
-type MockRepository<T extends ObjectLiteral = any> = Partial<
-  Record<keyof Repository<T>, jest.Mock>
->;
-const createMockRepository = <T = any>(): MockRepository<T> => ({
+// Definim tipul MockRepository
+type MockRepository = {
+  find: jest.Mock;
+  findOne: jest.Mock;
+  create: jest.Mock;
+  save: jest.Mock;
+  remove: jest.Mock;
+};
+const createMockRepository = (): MockRepository => ({
   find: jest.fn(),
   findOne: jest.fn(),
   create: jest.fn(),
@@ -21,7 +24,7 @@ const createMockRepository = <T = any>(): MockRepository<T> => ({
 
 describe('JudeteService', () => {
   let service: JudeteService;
-  let repository: MockRepository<Judet>;
+  let repository: MockRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -35,7 +38,7 @@ describe('JudeteService', () => {
     }).compile();
 
     service = module.get<JudeteService>(JudeteService);
-    repository = module.get<MockRepository<Judet>>(getRepositoryToken(Judet));
+    repository = module.get(getRepositoryToken(Judet));
   });
 
   it('should be defined', () => {
