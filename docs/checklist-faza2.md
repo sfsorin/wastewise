@@ -148,14 +148,14 @@
 - [x] Implementare invalidare token
 - [x] Testare funcționalitate
 
-### 2.2.4 Implementare recuperare parolă 🟡 (1 zi)
+### 2.2.4 Implementare recuperare parolă 🟡 (1 zi) ✅
 
-- [ ] Creare DTO pentru recuperare parolă
-- [ ] Implementare generare token unic
-- [ ] Implementare trimitere email cu link recuperare
-- [ ] Implementare validare token recuperare
-- [ ] Implementare resetare parolă
-- [ ] Testare funcționalitate
+- [x] Creare DTO pentru recuperare parolă
+- [x] Implementare generare token unic
+- [x] Implementare trimitere email cu link recuperare
+- [x] Implementare validare token recuperare
+- [x] Implementare resetare parolă
+- [x] Testare funcționalitate
 
 ### 2.2.5 Implementare RBAC (Role-Based Access Control) 🔴 (2 zile)
 
