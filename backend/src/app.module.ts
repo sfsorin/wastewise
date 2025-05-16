@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import configs from '@config/index';
@@ -29,6 +31,16 @@ import { HealthModule } from './health/health.module';
         return dbConfig ? { ...dbConfig } : {};
       },
     }),
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        return {
+          ttl: configService.get<number>('security.rateLimiting.ttl') || 60,
+          limit: configService.get<number>('security.rateLimiting.limit') || 10,
+        };
+      },
+    }),
     UsersModule,
     ProfilesModule,
     GeographicModule,
@@ -40,6 +52,12 @@ import { HealthModule } from './health/health.module';
     HealthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}

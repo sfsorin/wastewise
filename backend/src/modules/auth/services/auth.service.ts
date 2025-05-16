@@ -14,6 +14,7 @@ import { Request } from 'express';
 import * as crypto from 'crypto';
 import { UsersService } from '../../users/users.service';
 import { MailService } from './mail.service';
+import { TokenBlacklistService } from './token-blacklist.service';
 import { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from '../dto/register.dto';
 import { ForgotPasswordDto } from '../dto/forgot-password.dto';
@@ -34,6 +35,7 @@ export class AuthService implements IAuthService {
     private jwtService: JwtService,
     private configService: ConfigService,
     private mailService: MailService,
+    private tokenBlacklistService: TokenBlacklistService,
     @InjectRepository(RefreshToken)
     private refreshTokenRepository: Repository<RefreshToken>,
   ) {}
@@ -424,6 +426,44 @@ export class AuthService implements IAuthService {
         isRevoked: true,
       },
     );
+  }
+
+  /**
+   * Invalidează un token JWT adăugându-l în lista neagră
+   * @param token Token-ul JWT de invalidat
+   */
+  async invalidateToken(token: string): Promise<void> {
+    await this.tokenBlacklistService.blacklistToken(token);
+  }
+
+  /**
+   * Verifică dacă un token JWT este în lista neagră
+   * @param token Token-ul JWT de verificat
+   * @returns true dacă token-ul este în lista neagră, false în caz contrar
+   */
+  async isTokenBlacklisted(token: string): Promise<boolean> {
+    return this.tokenBlacklistService.isBlacklisted(token);
+  }
+
+  /**
+   * Deconectează un utilizator invalidând token-ul JWT și revocând token-ul de refresh
+   * @param token Token-ul JWT de invalidat
+   * @param refreshToken Token-ul de refresh de revocat
+   */
+  async logout(token: string, refreshToken: string): Promise<void> {
+    try {
+      // Invalidăm token-ul JWT
+      await this.invalidateToken(token);
+
+      // Revocăm token-ul de refresh
+      if (refreshToken) {
+        await this.revokeRefreshToken(refreshToken);
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.logger.error(`Eroare la deconectare: ${errorMessage}`);
+      throw new InternalServerErrorException('Nu s-a putut efectua deconectarea');
+    }
   }
 
   /**

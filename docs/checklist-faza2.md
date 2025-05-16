@@ -194,6 +194,10 @@
 - [x] Implementarea curățării automate a token-urilor expirate
 - [x] Adăugarea unui mecanism de caching pentru autentificare
 - [x] Implementare logging pentru autentificare
+- [x] Implementare mecanism de invalidare a token-urilor JWT
+- [x] Implementare validare complexă a parolelor
+- [x] Implementare teste de securitate specifice
+- [x] Documentare măsuri de securitate
 - [ ] Implementare detecție activitate suspectă
 - [x] Testare securitate
 - [ ] Audit vulnerabilități

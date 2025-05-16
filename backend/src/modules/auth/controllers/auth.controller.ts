@@ -199,4 +199,35 @@ export class AuthController {
     const isValid = await this.authService.validateResetToken(token);
     return { valid: isValid };
   }
+
+  @Post('logout')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Deconectare utilizator' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Utilizatorul a fost deconectat cu succes.',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Utilizatorul nu este autentificat.',
+  })
+  async logout(
+    @Request() req: { user: { id: string }; headers: { authorization: string } },
+  ): Promise<{ message: string }> {
+    // Extragem token-ul JWT din header-ul de autorizare
+    const authHeader = req.headers.authorization;
+    const token = authHeader?.split(' ')[1];
+
+    // Extragem token-ul de refresh din cookie sau din body
+    // În acest exemplu, presupunem că token-ul de refresh este trimis în body
+    // În implementarea reală, ar trebui să fie extras din cookie securizat
+    const refreshToken = req.body?.refreshToken;
+
+    // Deconectăm utilizatorul
+    await this.authService.logout(token, refreshToken);
+
+    return { message: 'Deconectare realizată cu succes' };
+  }
 }

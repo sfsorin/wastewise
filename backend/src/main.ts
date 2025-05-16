@@ -5,6 +5,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from '@app/app.module';
 import { Logger } from '@utils/logger.util';
 import { Request, Response, NextFunction } from 'express';
+import * as cookieParser from 'cookie-parser';
+import { CsrfMiddleware } from './shared/middleware/csrf.middleware';
 
 async function bootstrap(): Promise<void> {
   const logger = new Logger('Bootstrap');
@@ -35,7 +37,17 @@ async function bootstrap(): Promise<void> {
   );
 
   // Configurare CORS
-  app.enableCors();
+  app.enableCors({
+    origin: configService.get<string>('FRONTEND_URL') || 'http://localhost:5173',
+    credentials: true,
+  });
+
+  // Adăugare middleware pentru cookie-parser
+  app.use(cookieParser());
+
+  // Adăugare middleware pentru CSRF
+  const csrfMiddleware = new CsrfMiddleware(configService);
+  app.use(csrfMiddleware.use.bind(csrfMiddleware));
 
   // Adăugare middleware pentru redirecționare de la ruta principală
   const httpAdapter = app.getHttpAdapter();
