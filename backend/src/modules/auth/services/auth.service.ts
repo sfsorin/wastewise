@@ -22,9 +22,11 @@ import { RefreshTokenDto } from '../dto/refresh-token.dto';
 import { UserStatus, UserRole } from '../../users/entities/user.entity';
 import { Role } from '../../users/entities/role.entity';
 import { RefreshToken } from '../entities/refresh-token.entity';
+import { IAuthService } from '../../../shared/interfaces/auth-service.interface';
+import { JwtPayload } from '../interfaces/jwt-payload.interface';
 
 @Injectable()
-export class AuthService {
+export class AuthService implements IAuthService {
   private readonly logger = new Logger(AuthService.name);
 
   constructor(

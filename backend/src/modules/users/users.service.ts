@@ -14,9 +14,11 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { PasswordResetToken } from '../auth/entities/password-reset-token.entity';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
+import { IUsersService } from '../../shared/interfaces/users-service.interface';
+import { IPasswordResetService } from '../../shared/interfaces/password-reset-service.interface';
 
 @Injectable()
-export class UsersService {
+export class UsersService implements IUsersService, IPasswordResetService {
   private readonly logger = new Logger(UsersService.name);
 
   constructor(

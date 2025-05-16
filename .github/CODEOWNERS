@@ -1,0 +1,30 @@
+# Acest fișier definește responsabilii pentru diferite părți ale codului
+# Formatul este: pattern responsabil1 responsabil2 ...
+
+# Responsabili pentru tot codul implicit
+*       @sfsorin
+
+# Responsabili pentru backend
+/backend/  @sfsorin
+
+# Responsabili pentru frontend
+/frontend/ @sfsorin
+
+# Responsabili pentru documentație
+/docs/     @sfsorin
+
+# Responsabili pentru configurația CI/CD
+/.github/  @sfsorin
+
+# Responsabili pentru module specifice
+/backend/src/modules/auth/     @sfsorin
+/backend/src/modules/users/    @sfsorin
+/backend/src/modules/entities/ @sfsorin
+
+# Responsabili pentru teste
+/backend/test/                 @sfsorin
+/frontend/test/                @sfsorin
+
+# Responsabili pentru configurație
+/backend/config/               @sfsorin
+/frontend/config/              @sfsorin

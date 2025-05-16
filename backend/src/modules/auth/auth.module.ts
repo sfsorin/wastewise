@@ -7,6 +7,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { PasswordResetToken } from './entities/password-reset-token.entity';
 import { RefreshToken } from './entities/refresh-token.entity';
 import { AuthService } from './services/auth.service';
+import { PasswordResetService } from './services/password-reset.service';
 import { MailService } from './services/mail.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
@@ -17,6 +18,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RolesGuard } from './guards/roles.guard';
 import { PermissionsGuard } from './guards/permissions.guard';
+import { IAuthService } from '../../shared/interfaces/auth-service.interface';
+import { IPasswordResetService } from '../../shared/interfaces/password-reset-service.interface';
 
 @Module({
   imports: [
@@ -48,9 +51,19 @@ import { PermissionsGuard } from './guards/permissions.guard';
   controllers: [AuthController, RbacController],
   providers: [
     AuthService,
+    PasswordResetService,
     MailService,
     LocalStrategy,
     JwtStrategy,
+    // Înregistrăm serviciile cu interfețele lor
+    {
+      provide: IAuthService,
+      useExisting: AuthService,
+    },
+    {
+      provide: IPasswordResetService,
+      useExisting: PasswordResetService,
+    },
     // Înregistrăm JwtAuthGuard ca guard global, cu excepția rutelor marcate ca publice
     {
       provide: APP_GUARD,
@@ -67,6 +80,6 @@ import { PermissionsGuard } from './guards/permissions.guard';
       useClass: PermissionsGuard,
     },
   ],
-  exports: [AuthService],
+  exports: [AuthService, PasswordResetService, IAuthService, IPasswordResetService],
 })
 export class AuthModule {}

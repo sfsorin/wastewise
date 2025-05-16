@@ -9,6 +9,8 @@ import {
   HttpStatus,
   Query,
   Req,
+  Inject,
+  BadRequestException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -20,7 +22,8 @@ import {
   ApiExtraModels,
 } from '@nestjs/swagger';
 import { Request as ExpressRequest } from 'express';
-import { AuthService } from '../services/auth.service';
+import { IAuthService } from '../../../shared/interfaces/auth-service.interface';
+import { IPasswordResetService } from '../../../shared/interfaces/password-reset-service.interface';
 import { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from '../dto/register.dto';
 import { ForgotPasswordDto } from '../dto/forgot-password.dto';
@@ -33,7 +36,10 @@ import { User } from '../../users/entities/user.entity';
 @ApiExtraModels(User)
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    @Inject(IAuthService) private readonly authService: IAuthService,
+    @Inject(IPasswordResetService) private readonly passwordResetService: IPasswordResetService,
+  ) {}
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
@@ -172,7 +178,7 @@ export class AuthController {
     description: 'Utilizatorul nu a fost găsit.',
   })
   async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto): Promise<{ message: string }> {
-    await this.authService.forgotPassword(forgotPasswordDto);
+    await this.passwordResetService.createPasswordResetToken(forgotPasswordDto.email);
     return { message: 'Email-ul de resetare a parolei a fost trimis cu succes.' };
   }
 
@@ -189,7 +195,14 @@ export class AuthController {
     description: 'Token-ul de resetare a parolei este invalid sau a expirat.',
   })
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto): Promise<{ message: string }> {
-    await this.authService.resetPassword(resetPasswordDto);
+    if (resetPasswordDto.password !== resetPasswordDto.passwordConfirmation) {
+      throw new BadRequestException('Parola și confirmarea parolei nu coincid');
+    }
+
+    await this.passwordResetService.resetPassword(
+      resetPasswordDto.token,
+      resetPasswordDto.password,
+    );
     return { message: 'Parola a fost resetată cu succes.' };
   }
 
@@ -202,7 +215,7 @@ export class AuthController {
     description: 'Token-ul de resetare a parolei este valid.',
   })
   async validateResetToken(@Query('token') token: string): Promise<{ valid: boolean }> {
-    const isValid = await this.authService.validateResetToken(token);
+    const isValid = await this.passwordResetService.validatePasswordResetToken(token);
     return { valid: isValid };
   }
 
