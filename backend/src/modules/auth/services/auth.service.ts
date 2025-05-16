@@ -125,8 +125,8 @@ export class AuthService {
     const userWithRoles = await this.usersService.findOneWithRoles(user.id);
     const permissions = userWithRoles.roles
       ? userWithRoles.roles
-          .flatMap(role => role.permissions || [])
-          .map(permission => permission.name)
+          .flatMap((role: any) => role.permissions || [])
+          .map((permission: any) => permission.name)
           .filter((value: string, index: number, self: string[]) => self.indexOf(value) === index)
       : [];
 
@@ -184,8 +184,8 @@ export class AuthService {
     // Extragem permisiunile din roluri
     const permissions = userWithRoles.roles
       ? userWithRoles.roles
-          .flatMap(role => role.permissions || [])
-          .map(permission => permission.name)
+          .flatMap((role: any) => role.permissions || [])
+          .map((permission: any) => permission.name)
           .filter((value: string, index: number, self: string[]) => self.indexOf(value) === index) // Eliminăm duplicatele
       : [];
 
@@ -285,21 +285,21 @@ export class AuthService {
       const ipAddress = request?.ip || request?.connection?.remoteAddress || null;
 
       // Creăm entitatea pentru token-ul de refresh
-      const refreshToken = this.refreshTokenRepository.create({
-        userId,
-        token,
-        userAgent,
-        ipAddress,
-        expiresAt,
-        isRevoked: false,
-      });
+      const refreshToken = new RefreshToken();
+      refreshToken.userId = userId;
+      refreshToken.token = token;
+      refreshToken.userAgent = userAgent as string;
+      refreshToken.ipAddress = ipAddress as string;
+      refreshToken.expiresAt = expiresAt;
+      refreshToken.isRevoked = false;
 
       // Salvăm token-ul în baza de date
       await this.refreshTokenRepository.save(refreshToken);
 
       return token;
     } catch (error) {
-      this.logger.error(`Eroare la generarea token-ului de refresh: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.logger.error(`Eroare la generarea token-ului de refresh: ${errorMessage}`);
       throw new InternalServerErrorException('Nu s-a putut genera token-ul de refresh');
     }
   }
@@ -348,8 +348,8 @@ export class AuthService {
       // Extragem permisiunile din roluri
       const permissions = user.roles
         ? user.roles
-            .flatMap(role => role.permissions || [])
-            .map(permission => permission.name)
+            .flatMap((role: any) => role.permissions || [])
+            .map((permission: any) => permission.name)
             .filter((value: string, index: number, self: string[]) => self.indexOf(value) === index)
         : [];
 
@@ -385,7 +385,8 @@ export class AuthService {
       ) {
         throw error;
       }
-      this.logger.error(`Eroare la reînnoirea token-ului: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.logger.error(`Eroare la reînnoirea token-ului: ${errorMessage}`);
       throw new InternalServerErrorException('Nu s-a putut reînnoi token-ul');
     }
   }

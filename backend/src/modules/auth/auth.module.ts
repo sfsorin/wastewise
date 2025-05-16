@@ -24,7 +24,7 @@ import { UsersModule } from '../users/users.module';
         secret: configService.get<string>('jwt.secret'),
         signOptions: {
           expiresIn: configService.get<string>('jwt.expiresIn'),
-          algorithm: configService.get<string>('jwt.algorithm'),
+          algorithm: configService.get<string>('jwt.algorithm') as any,
         },
       }),
     }),

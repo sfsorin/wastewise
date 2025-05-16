@@ -107,6 +107,18 @@ export class UsersService {
         'createdAt',
         'updatedAt',
       ],
+    });
+
+    if (!user) {
+      throw new NotFoundException(`Utilizatorul cu ID-ul ${id} nu a fost găsit`);
+    }
+
+    return user;
+  }
+
+  async findOneWithRoles(id: string): Promise<User> {
+    const user = await this.usersRepository.findOne({
+      where: { id },
       relations: ['roles', 'roles.permissions'],
     });
 

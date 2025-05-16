@@ -17,12 +17,12 @@ interface JwtPayload {
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private configService: ConfigService) {
+  constructor(configService: ConfigService) {
+    const secret = configService.get<string>('jwt.secret') || 'wastewise_secret_key';
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('jwt.secret'),
-      algorithms: [configService.get<string>('jwt.algorithm')],
+      secretOrKey: secret,
     });
   }
 

@@ -19,6 +19,7 @@ import {
   ApiQuery,
   ApiExtraModels,
 } from '@nestjs/swagger';
+import { Request as ExpressRequest } from 'express';
 import { AuthService } from '../services/auth.service';
 import { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from '../dto/register.dto';
@@ -64,7 +65,7 @@ export class AuthController {
   })
   async login(
     @Body() loginDto: LoginDto,
-    @Req() request: Request,
+    @Req() request: ExpressRequest,
   ): Promise<{
     access_token: string;
     refresh_token: string;
@@ -112,7 +113,7 @@ export class AuthController {
   })
   async register(
     @Body() registerDto: RegisterDto,
-    @Req() request: Request,
+    @Req() request: ExpressRequest,
   ): Promise<{
     access_token: string;
     refresh_token: string;
@@ -225,7 +226,7 @@ export class AuthController {
   })
   async refreshToken(
     @Body() refreshTokenDto: RefreshTokenDto,
-    @Req() request: Request,
+    @Req() request: ExpressRequest,
   ): Promise<{
     access_token: string;
     refresh_token: string;
