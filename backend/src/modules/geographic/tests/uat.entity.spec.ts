@@ -1,17 +1,24 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { UAT } from '../entities/uat.entity';
 import { UATService } from '../services/uat.service';
 import { JudeteService } from '../services/judete.service';
-import { LocalitatiService } from '../services/localitati.service';
+import { ZoneADIService } from '../services/zone-adi.service';
+import { ZoneIridexService } from '../services/zone-iridex.service';
 import { CreateUATDto } from '../dto/create-uat.dto';
 // UpdateUATDto nu este utilizat în acest fișier
 // import { UpdateUATDto } from '../dto/update-uat.dto';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 
-type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
-const createMockRepository = <T = any>(): MockRepository<T> => ({
+// Definim tipul MockRepository
+type MockRepository = {
+  find: jest.Mock;
+  findOne: jest.Mock;
+  create: jest.Mock;
+  save: jest.Mock;
+  remove: jest.Mock;
+};
+const createMockRepository = (): MockRepository => ({
   find: jest.fn(),
   findOne: jest.fn(),
   create: jest.fn(),
@@ -21,9 +28,10 @@ const createMockRepository = <T = any>(): MockRepository<T> => ({
 
 describe('UATService', () => {
   let service: UATService;
-  let repository: MockRepository<UAT>;
+  let repository: MockRepository;
   let judeteService: JudeteService;
-  let localitatiService: LocalitatiService;
+  let zoneADIService: ZoneADIService;
+  let zoneIridexService: ZoneIridexService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -36,7 +44,13 @@ describe('UATService', () => {
           },
         },
         {
-          provide: LocalitatiService,
+          provide: ZoneADIService,
+          useValue: {
+            findOne: jest.fn(),
+          },
+        },
+        {
+          provide: ZoneIridexService,
           useValue: {
             findOne: jest.fn(),
           },
@@ -49,9 +63,10 @@ describe('UATService', () => {
     }).compile();
 
     service = module.get<UATService>(UATService);
-    repository = module.get<MockRepository<UAT>>(getRepositoryToken(UAT));
+    repository = module.get(getRepositoryToken(UAT));
     judeteService = module.get<JudeteService>(JudeteService);
-    localitatiService = module.get<LocalitatiService>(LocalitatiService);
+    zoneADIService = module.get<ZoneADIService>(ZoneADIService);
+    zoneIridexService = module.get<ZoneIridexService>(ZoneIridexService);
   });
 
   it('should be defined', () => {
@@ -63,6 +78,8 @@ describe('UATService', () => {
       const createUATDto: CreateUATDto = {
         nume: 'Alba Iulia',
         judetId: '123e4567-e89b-12d3-a456-426614174000',
+        zonaADIId: '123e4567-e89b-12d3-a456-426614174003',
+        zonaIridexId: '123e4567-e89b-12d3-a456-426614174004',
         codSiruta: '1001',
         populatie: 74000,
         suprafata: 103.65,
@@ -89,7 +106,23 @@ describe('UATService', () => {
           createdAt: new Date(),
           updatedAt: new Date(),
         },
-        localitate: null,
+        localitati: [],
+        zonaADI: {
+          id: '123e4567-e89b-12d3-a456-426614174003',
+          nume: 'Zona ADI Alba',
+          cod: 'ADI-AB',
+          descriere: 'Zona ADI pentru județul Alba',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        zonaIridex: {
+          id: '123e4567-e89b-12d3-a456-426614174004',
+          nume: 'Zona Iridex 1',
+          cod: 'IR-01',
+          descriere: 'Zona Iridex pentru colectare deșeuri menajere',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
         dateIstorice: [],
         predictiiCantitati: [],
       };
@@ -105,6 +138,26 @@ describe('UATService', () => {
         uaturi: [],
       });
 
+      jest.spyOn(zoneADIService, 'findOne').mockResolvedValue({
+        id: '123e4567-e89b-12d3-a456-426614174003',
+        nume: 'Zona ADI Alba',
+        cod: 'ADI-AB',
+        descriere: 'Zona ADI pentru județul Alba',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        uaturi: [],
+      });
+
+      jest.spyOn(zoneIridexService, 'findOne').mockResolvedValue({
+        id: '123e4567-e89b-12d3-a456-426614174004',
+        nume: 'Zona Iridex 1',
+        cod: 'IR-01',
+        descriere: 'Zona Iridex pentru colectare deșeuri menajere',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        uaturi: [],
+      });
+
       repository.findOne.mockResolvedValue(null);
       repository.create.mockReturnValue(uat);
       repository.save.mockResolvedValue(uat);
@@ -112,15 +165,18 @@ describe('UATService', () => {
       const result = await service.create(createUATDto);
       expect(result).toEqual(uat);
       expect(judeteService.findOne).toHaveBeenCalledWith('123e4567-e89b-12d3-a456-426614174000');
+      expect(zoneADIService.findOne).toHaveBeenCalledWith('123e4567-e89b-12d3-a456-426614174003');
+      expect(zoneIridexService.findOne).toHaveBeenCalledWith(
+        '123e4567-e89b-12d3-a456-426614174004',
+      );
       expect(repository.create).toHaveBeenCalledWith(createUATDto);
       expect(repository.save).toHaveBeenCalledWith(uat);
     });
 
-    it('should create a new UAT with localitate', async () => {
+    it('should create a new UAT with localitati', async () => {
       const createUATDto: CreateUATDto = {
         nume: 'Alba Iulia',
         judetId: '123e4567-e89b-12d3-a456-426614174000',
-        localitateId: '123e4567-e89b-12d3-a456-426614174002',
         codSiruta: '1001',
       };
 
@@ -137,15 +193,28 @@ describe('UATService', () => {
           createdAt: new Date(),
           updatedAt: new Date(),
         },
-        localitate: {
-          id: '123e4567-e89b-12d3-a456-426614174002',
-          nume: 'Alba Iulia',
-          judetId: '123e4567-e89b-12d3-a456-426614174000',
-          codSiruta: '1001',
-          tip: 'municipiu',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
+        localitati: [
+          {
+            id: '123e4567-e89b-12d3-a456-426614174002',
+            nume: 'Alba Iulia',
+            judetId: '123e4567-e89b-12d3-a456-426614174000',
+            uatId: '123e4567-e89b-12d3-a456-426614174001',
+            codSiruta: '1001',
+            tip: 'municipiu',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            id: '123e4567-e89b-12d3-a456-426614174005',
+            nume: 'Micești',
+            judetId: '123e4567-e89b-12d3-a456-426614174000',
+            uatId: '123e4567-e89b-12d3-a456-426614174001',
+            codSiruta: '1002',
+            tip: 'sat',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        ],
         dateIstorice: [],
         predictiiCantitati: [],
       };
@@ -161,19 +230,6 @@ describe('UATService', () => {
         uaturi: [],
       });
 
-      jest.spyOn(localitatiService, 'findOne').mockResolvedValue({
-        id: '123e4567-e89b-12d3-a456-426614174002',
-        nume: 'Alba Iulia',
-        judetId: '123e4567-e89b-12d3-a456-426614174000',
-        codSiruta: '1001',
-        tip: 'municipiu',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        judet: null,
-        puncteColectare: [],
-        clienti: [],
-      });
-
       repository.findOne.mockResolvedValue(null);
       repository.create.mockReturnValue(uat);
       repository.save.mockResolvedValue(uat);
@@ -181,11 +237,13 @@ describe('UATService', () => {
       const result = await service.create(createUATDto);
       expect(result).toEqual(uat);
       expect(judeteService.findOne).toHaveBeenCalledWith('123e4567-e89b-12d3-a456-426614174000');
-      expect(localitatiService.findOne).toHaveBeenCalledWith(
-        '123e4567-e89b-12d3-a456-426614174002',
-      );
       expect(repository.create).toHaveBeenCalledWith(createUATDto);
       expect(repository.save).toHaveBeenCalledWith(uat);
+      // Verificăm că UAT-ul are localități asociate
+      expect(result.localitati).toBeDefined();
+      expect(result.localitati.length).toBe(2);
+      expect(result.localitati[0].uatId).toBe(result.id);
+      expect(result.localitati[1].uatId).toBe(result.id);
     });
 
     it('should throw ConflictException if UAT with same codSiruta exists', async () => {
@@ -226,6 +284,8 @@ describe('UATService', () => {
           id: '123e4567-e89b-12d3-a456-426614174001',
           nume: 'Alba Iulia',
           judetId: '123e4567-e89b-12d3-a456-426614174000',
+          zonaADIId: '123e4567-e89b-12d3-a456-426614174003',
+          zonaIridexId: '123e4567-e89b-12d3-a456-426614174004',
           codSiruta: '1001',
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -237,7 +297,32 @@ describe('UATService', () => {
             createdAt: new Date(),
             updatedAt: new Date(),
           },
-          localitate: null,
+          localitati: [
+            {
+              id: '123e4567-e89b-12d3-a456-426614174002',
+              nume: 'Alba Iulia',
+              judetId: '123e4567-e89b-12d3-a456-426614174000',
+              uatId: '123e4567-e89b-12d3-a456-426614174001',
+              codSiruta: '1001',
+              tip: 'municipiu',
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            },
+          ],
+          zonaADI: {
+            id: '123e4567-e89b-12d3-a456-426614174003',
+            nume: 'Zona ADI Alba',
+            cod: 'ADI-AB',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          zonaIridex: {
+            id: '123e4567-e89b-12d3-a456-426614174004',
+            nume: 'Zona Iridex 1',
+            cod: 'IR-01',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
           dateIstorice: [],
           predictiiCantitati: [],
         },
@@ -248,7 +333,7 @@ describe('UATService', () => {
       const result = await service.findAll();
       expect(result).toEqual(uats);
       expect(repository.find).toHaveBeenCalledWith({
-        relations: ['judet', 'localitate'],
+        relations: ['judet', 'localitati', 'zonaADI', 'zonaIridex'],
         order: {
           nume: 'ASC',
         },
@@ -262,6 +347,8 @@ describe('UATService', () => {
         id: '123e4567-e89b-12d3-a456-426614174001',
         nume: 'Alba Iulia',
         judetId: '123e4567-e89b-12d3-a456-426614174000',
+        zonaADIId: '123e4567-e89b-12d3-a456-426614174003',
+        zonaIridexId: '123e4567-e89b-12d3-a456-426614174004',
         codSiruta: '1001',
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -273,7 +360,34 @@ describe('UATService', () => {
           createdAt: new Date(),
           updatedAt: new Date(),
         },
-        localitate: null,
+        localitati: [
+          {
+            id: '123e4567-e89b-12d3-a456-426614174002',
+            nume: 'Alba Iulia',
+            judetId: '123e4567-e89b-12d3-a456-426614174000',
+            uatId: '123e4567-e89b-12d3-a456-426614174001',
+            codSiruta: '1001',
+            tip: 'municipiu',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        ],
+        zonaADI: {
+          id: '123e4567-e89b-12d3-a456-426614174003',
+          nume: 'Zona ADI Alba',
+          cod: 'ADI-AB',
+          descriere: 'Zona ADI pentru județul Alba',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        zonaIridex: {
+          id: '123e4567-e89b-12d3-a456-426614174004',
+          nume: 'Zona Iridex 1',
+          cod: 'IR-01',
+          descriere: 'Zona Iridex pentru colectare deșeuri menajere',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
         dateIstorice: [],
         predictiiCantitati: [],
       };
@@ -284,7 +398,14 @@ describe('UATService', () => {
       expect(result).toEqual(uat);
       expect(repository.findOne).toHaveBeenCalledWith({
         where: { id: '123e4567-e89b-12d3-a456-426614174001' },
-        relations: ['judet', 'localitate', 'dateIstorice', 'predictiiCantitati'],
+        relations: [
+          'judet',
+          'localitati',
+          'zonaADI',
+          'zonaIridex',
+          'dateIstorice',
+          'predictiiCantitati',
+        ],
       });
     });
 
