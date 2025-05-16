@@ -1,10 +1,17 @@
-import { Injectable, NotFoundException, ConflictException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+  Logger,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User, UserStatus } from './entities/user.entity';
 import { Role } from './entities/role.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PasswordResetToken } from '../auth/entities/password-reset-token.entity';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 
@@ -17,6 +24,8 @@ export class UsersService {
     private usersRepository: Repository<User>,
     @InjectRepository(Role)
     private roleRepository: Repository<Role>,
+    @InjectRepository(PasswordResetToken)
+    private passwordResetTokenRepository: Repository<PasswordResetToken>,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -107,6 +116,18 @@ export class UsersService {
         'createdAt',
         'updatedAt',
       ],
+    });
+
+    if (!user) {
+      throw new NotFoundException(`Utilizatorul cu ID-ul ${id} nu a fost găsit`);
+    }
+
+    return user;
+  }
+
+  async findOneWithRoles(id: string): Promise<User> {
+    const user = await this.usersRepository.findOne({
+      where: { id },
       relations: ['roles', 'roles.permissions'],
     });
 
@@ -247,31 +268,73 @@ export class UsersService {
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + 1);
 
+    // Invalidare token-uri anterioare pentru acest utilizator
+    await this.passwordResetTokenRepository.update(
+      { userId: user.id, used: false },
+      { used: true },
+    );
+
+    // Creare token nou
+    const passwordResetToken = this.passwordResetTokenRepository.create({
+      userId: user.id,
+      token,
+      expiresAt,
+      used: false,
+    });
+
+    await this.passwordResetTokenRepository.save(passwordResetToken);
+
     return { token, user };
   }
 
   async resetPassword(token: string, newPassword: string): Promise<void> {
     this.logger.debug(`Resetare parolă pentru token: ${token}`);
 
+    const passwordResetToken = await this.passwordResetTokenRepository.findOne({
+      where: { token, used: false },
+      relations: ['user'],
+    });
+
+    if (!passwordResetToken) {
+      throw new BadRequestException(
+        'Token-ul de resetare a parolei este invalid sau a fost deja utilizat',
+      );
+    }
+
+    const now = new Date();
+    if (passwordResetToken.expiresAt < now) {
+      throw new BadRequestException('Token-ul de resetare a parolei a expirat');
+    }
+
     // Hash-uire parolă nouă
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
     // Actualizare parolă utilizator
-    // În implementarea reală, aici ar trebui să găsim utilizatorul după token
-    // și să-i actualizăm parola
-    await this.usersRepository.update(
-      { id: 'dummy' }, // Acest ID ar trebui să fie al utilizatorului real
-      {
-        password: hashedPassword,
-      },
-    );
+    await this.usersRepository.update(passwordResetToken.userId, {
+      password: hashedPassword,
+    });
+
+    // Marcare token ca utilizat
+    await this.passwordResetTokenRepository.update(passwordResetToken.id, {
+      used: true,
+    });
   }
 
-  async validatePasswordResetToken(_token: string): Promise<boolean> {
-    // În implementarea reală, aici ar trebui să verificăm token-ul în baza de date
-    // Pentru moment, simulăm o verificare asincronă
-    await Promise.resolve();
+  async validatePasswordResetToken(token: string): Promise<boolean> {
+    const passwordResetToken = await this.passwordResetTokenRepository.findOne({
+      where: { token, used: false },
+    });
+
+    if (!passwordResetToken) {
+      return false;
+    }
+
+    const now = new Date();
+    if (passwordResetToken.expiresAt < now) {
+      return false;
+    }
+
     return true;
   }
 

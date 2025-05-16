@@ -11,6 +11,13 @@ import {
 
 export class RegisterDto {
   @ApiProperty({
+    description: 'Confirmarea parolei',
+    example: 'Password123!',
+  })
+  @IsNotEmpty({ message: 'Confirmarea parolei este obligatorie' })
+  @IsString({ message: 'Confirmarea parolei trebuie să fie un șir de caractere' })
+  passwordConfirmation?: string;
+  @ApiProperty({
     description: 'Numele de utilizator',
     example: 'john.doe',
   })

@@ -28,10 +28,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
   ) {
+    const secret = configService.get<string>('jwt.secret') || 'wastewise_secret_key';
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('JWT_SECRET') || 'wastewise_secret_key',
+      secretOrKey: secret,
     });
   }
 

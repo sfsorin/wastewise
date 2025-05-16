@@ -116,78 +116,85 @@
 - [x] Creare teste pentru repository-uri
 - [x] Testare performanță query-uri
 - [x] Optimizare indexuri și relații
+      <<<<<<< HEAD
 
 ### 2.1.10 Actualizare relație UAT-Localitate 🟡 (1 zi) ✅
 
 - [x] Modificare entități pentru a permite unui UAT să aibă mai multe localități
 - [x] Creare migrare pentru actualizarea relației
 - [x] Actualizare servicii și controllere
-- [x] Testare funcționalitate
+- [x] # Testare funcționalitate
+  > > > > > > > develop
 
 ## 2.2 Implementare Autentificare și Autorizare (7 zile)
 
-### 2.2.1 Implementare înregistrare utilizatori 🟡 (1 zi)
+### 2.2.1 Implementare înregistrare utilizatori 🟡 (1 zi) ✅
 
-- [ ] Creare DTO pentru înregistrare
-- [ ] Implementare validare date înregistrare
-- [ ] Implementare service pentru înregistrare
-- [ ] Implementare controller pentru înregistrare
-- [ ] Implementare hash parole
-- [ ] Implementare confirmare email (opțional)
-- [ ] Testare funcționalitate
+- [x] Creare DTO pentru înregistrare
+- [x] Implementare validare date înregistrare
+- [x] Implementare service pentru înregistrare
+- [x] Implementare controller pentru înregistrare
+- [x] Implementare hash parole
+- [x] Implementare confirmare email (opțional)
+- [x] Testare funcționalitate
 
-### 2.2.2 Implementare autentificare cu JWT 🟡 (1 zi)
+### 2.2.2 Implementare autentificare cu JWT 🟡 (1 zi) ✅
 
-- [ ] Configurare JWT module
-- [ ] Creare DTO pentru autentificare
-- [ ] Implementare service pentru autentificare
-- [ ] Implementare controller pentru autentificare
-- [ ] Implementare verificare parole
-- [ ] Implementare generare token JWT
-- [ ] Testare funcționalitate
+- [x] Configurare JWT module
+- [x] Creare DTO pentru autentificare
+- [x] Implementare service pentru autentificare
+- [x] Implementare controller pentru autentificare
+- [x] Implementare verificare parole
+- [x] Implementare generare token JWT
+- [x] Testare funcționalitate
 
-### 2.2.3 Implementare refresh token 🟡 (1 zi)
+### 2.2.3 Implementare refresh token 🟡 (1 zi) ✅
 
-- [ ] Creare entitate RefreshToken
-- [ ] Implementare generare refresh token
-- [ ] Implementare validare refresh token
-- [ ] Implementare regenerare access token
-- [ ] Implementare invalidare token
-- [ ] Testare funcționalitate
+- [x] Creare entitate RefreshToken
+- [x] Implementare generare refresh token
+- [x] Implementare validare refresh token
+- [x] Implementare regenerare access token
+- [x] Implementare invalidare token
+- [x] Testare funcționalitate
 
-### 2.2.4 Implementare recuperare parolă 🟡 (1 zi)
+### 2.2.4 Implementare recuperare parolă 🟡 (1 zi) ✅
 
-- [ ] Creare DTO pentru recuperare parolă
-- [ ] Implementare generare token unic
-- [ ] Implementare trimitere email cu link recuperare
-- [ ] Implementare validare token recuperare
-- [ ] Implementare resetare parolă
-- [ ] Testare funcționalitate
+- [x] Creare DTO pentru recuperare parolă
+- [x] Implementare generare token unic
+- [x] Implementare trimitere email cu link recuperare
+- [x] Implementare validare token recuperare
+- [x] Implementare resetare parolă
+- [x] Testare funcționalitate
 
-### 2.2.5 Implementare RBAC (Role-Based Access Control) 🔴 (2 zile)
+### 2.2.5 Implementare RBAC (Role-Based Access Control) 🔴 (2 zile) ✅
 
-- [ ] Implementare decorator pentru roluri
-- [ ] Implementare guard pentru verificare roluri
-- [ ] Implementare service pentru gestionare permisiuni
-- [ ] Implementare verificare permisiuni dinamice
-- [ ] Implementare cache pentru permisiuni
-- [ ] Testare funcționalitate cu diferite roluri
+- [x] Implementare decorator pentru roluri
+- [x] Implementare guard pentru verificare roluri
+- [x] Implementare service pentru gestionare permisiuni
+- [x] Implementare verificare permisiuni dinamice
+- [x] Implementare cache pentru permisiuni
+- [x] Testare funcționalitate cu diferite roluri
 
-### 2.2.6 Implementare guards și decoratori pentru autorizare 🟡 (1 zi)
+### 2.2.6 Implementare guards și decoratori pentru autorizare 🟡 (1 zi) ✅
 
-- [ ] Implementare JwtAuthGuard
-- [ ] Implementare RolesGuard
-- [ ] Implementare PermissionsGuard
-- [ ] Implementare decorator Roles
-- [ ] Implementare decorator Permissions
-- [ ] Implementare decorator Public
-- [ ] Testare guards și decoratori
+- [x] Implementare JwtAuthGuard
+- [x] Implementare RolesGuard
+- [x] Implementare PermissionsGuard
+- [x] Implementare decorator Roles
+- [x] Implementare decorator Permissions
+- [x] Implementare decorator Public
+- [x] Testare guards și decoratori
 
-### 2.2.7 Testare și securizare autentificare 🔴 (2 zile)
+### 2.2.7 Testare și securizare autentificare 🔴 (3 zile)
 
+- [ ] Eliminarea secretului JWT hardcodat
+- [ ] Corectarea tipului pentru algoritm JWT
+- [ ] Implementarea verificării explicite a semnăturii JWT
+- [ ] Adăugarea protecției împotriva atacurilor CSRF
 - [ ] Implementare rate limiting
-- [ ] Implementare protecție CSRF
-- [ ] Implementare validare token JWT
+- [ ] Optimizarea încărcării relațiilor în autentificare
+- [ ] Implementarea curățării automate a token-urilor expirate
+- [ ] Adăugarea unui mecanism de caching pentru autentificare
 - [ ] Implementare logging pentru autentificare
 - [ ] Implementare detecție activitate suspectă
 - [ ] Testare securitate
