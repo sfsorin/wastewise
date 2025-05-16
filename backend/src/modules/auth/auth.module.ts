@@ -9,6 +9,7 @@ import { RefreshToken } from './entities/refresh-token.entity';
 import { AuthService } from './services/auth.service';
 import { PasswordResetService } from './services/password-reset.service';
 import { MailService } from './services/mail.service';
+import { TokenBlacklistService } from './services/token-blacklist.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { AuthController } from './controllers/auth.controller';
@@ -53,6 +54,7 @@ import { IPasswordResetService } from '../../shared/interfaces/password-reset-se
     AuthService,
     PasswordResetService,
     MailService,
+    TokenBlacklistService,
     LocalStrategy,
     JwtStrategy,
     // Înregistrăm serviciile cu interfețele lor
@@ -80,6 +82,12 @@ import { IPasswordResetService } from '../../shared/interfaces/password-reset-se
       useClass: PermissionsGuard,
     },
   ],
-  exports: [AuthService, PasswordResetService, IAuthService, IPasswordResetService],
+  exports: [
+    AuthService,
+    PasswordResetService,
+    TokenBlacklistService,
+    IAuthService,
+    IPasswordResetService,
+  ],
 })
 export class AuthModule {}

@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User, UserStatus } from '../../users/entities/user.entity';
+import { TokenBlacklistService } from '../services/token-blacklist.service';
 
 /**
  * Interfață pentru payload-ul JWT
@@ -27,16 +28,21 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     configService: ConfigService,
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private tokenBlacklistService: TokenBlacklistService,
   ) {
     const secret = configService.get<string>('jwt.secret') || 'wastewise_secret_key';
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKey: secret,
+      passReqToCallback: true, // Pasăm request-ul pentru a putea accesa token-ul original
     });
   }
 
-  async validate(payload: JwtPayload): Promise<{
+  async validate(
+    request: any,
+    payload: JwtPayload,
+  ): Promise<{
     id: string;
     username: string;
     email: string;
@@ -44,6 +50,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     permissions?: string[];
   }> {
     try {
+      // Extragem token-ul din request
+      const token = ExtractJwt.fromAuthHeaderAsBearerToken()(request);
+
+      // Verificăm dacă token-ul este în lista neagră
+      const isBlacklisted = await this.tokenBlacklistService.isBlacklisted(token);
+      if (isBlacklisted) {
+        this.logger.warn(`Token-ul pentru utilizatorul ${payload.username} este în lista neagră`);
+        throw new UnauthorizedException('Token revocat');
+      }
+
       // Verificăm dacă utilizatorul există în baza de date
       const user = await this.usersRepository.findOne({
         where: { id: payload.sub },
