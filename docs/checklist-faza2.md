@@ -183,26 +183,15 @@
 - [x] Implementare decorator Public
 - [x] Testare guards și decoratori
 
-<<<<<<< HEAD
 ### 2.2.7 Testare și securizare autentificare 🔴 (3 zile) ✅
-=======
-### 2.2.7 Testare și securizare autentificare 🔴 (3 zile) 🟨
->>>>>>> faza/2.2.6-implementare-guards-decoratori-autorizare
 
 - [x] Eliminarea secretului JWT hardcodat
 - [x] Corectarea tipului pentru algoritm JWT
 - [x] Implementarea verificării explicite a semnăturii JWT
-<<<<<<< HEAD
-- [ ] Adăugarea protecției împotriva atacurilor CSRF
-- [ ] Implementare rate limiting
-- [x] Optimizarea încărcării relațiilor în autentificare
-- [ ] Implementarea curățării automate a token-urilor expirate
-=======
 - [x] Adăugarea protecției împotriva atacurilor CSRF
 - [x] Implementare rate limiting
 - [x] Optimizarea încărcării relațiilor în autentificare
 - [x] Implementarea curățării automate a token-urilor expirate
->>>>>>> faza/2.2.6-implementare-guards-decoratori-autorizare
 - [x] Adăugarea unui mecanism de caching pentru autentificare
 - [x] Implementare logging pentru autentificare
 - [ ] Implementare detecție activitate suspectă
