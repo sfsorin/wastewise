@@ -58,21 +58,6 @@ describe('JwtAuthGuard', () => {
       } as unknown as ExecutionContext;
 
       jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(false);
-<<<<<<< HEAD
-      
-      // Mock the AuthGuard's canActivate method that would be called by super
-      const superCanActivate = jest.fn().mockReturnValue(true);
-      
-      // Save original prototype
-      const originalPrototype = Object.getPrototypeOf(JwtAuthGuard.prototype);
-      
-      // Mock the prototype to replace the AuthGuard's canActivate
-      Object.setPrototypeOf(JwtAuthGuard.prototype, {
-        canActivate: superCanActivate
-      });
-      
-=======
-
       // Mock the AuthGuard's canActivate method that would be called by super
       const superCanActivate = jest.fn().mockReturnValue(true);
 
@@ -83,8 +68,6 @@ describe('JwtAuthGuard', () => {
       Object.setPrototypeOf(JwtAuthGuard.prototype, {
         canActivate: superCanActivate,
       });
-
->>>>>>> faza/2.2.6-implementare-guards-decoratori-autorizare
       expect(guard.canActivate(context)).toBe(true);
       expect(reflector.getAllAndOverride).toHaveBeenCalledWith(IS_PUBLIC_KEY, [
         context.getHandler(),
@@ -92,7 +75,7 @@ describe('JwtAuthGuard', () => {
       ]);
       expect(superCanActivate).toHaveBeenCalledWith(context);
 <<<<<<< HEAD
-      
+
 =======
 
 >>>>>>> faza/2.2.6-implementare-guards-decoratori-autorizare
@@ -104,25 +87,13 @@ describe('JwtAuthGuard', () => {
   describe('handleRequest', () => {
     it('should return the user when authentication is successful', () => {
       const user = { id: '1', username: 'test' };
-<<<<<<< HEAD
-      
       const result = guard.handleRequest(null, user, null);
-      
-=======
-
-      const result = guard.handleRequest(null, user, null);
-
->>>>>>> faza/2.2.6-implementare-guards-decoratori-autorizare
       expect(result).toBe(user);
     });
 
     it('should throw UnauthorizedException when there is an error', () => {
       const error = new Error('Authentication error');
-<<<<<<< HEAD
-      
-=======
 
->>>>>>> faza/2.2.6-implementare-guards-decoratori-autorizare
       expect(() => guard.handleRequest(error, null, null)).toThrow(UnauthorizedException);
     });
 
@@ -132,11 +103,7 @@ describe('JwtAuthGuard', () => {
 
     it('should throw UnauthorizedException with info message when available', () => {
       const info = { message: 'Token expired' };
-<<<<<<< HEAD
-      
-=======
 
->>>>>>> faza/2.2.6-implementare-guards-decoratori-autorizare
       expect(() => guard.handleRequest(null, null, info)).toThrow(UnauthorizedException);
       expect(() => guard.handleRequest(null, null, info)).toThrow(info.message);
     });

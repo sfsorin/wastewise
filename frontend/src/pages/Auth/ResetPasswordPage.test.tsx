@@ -81,8 +81,8 @@ describe('ResetPasswordPage', () => {
     });
 
     // Check if form elements are displayed
-    expect(screen.getByLabelText(/Parolă nouă/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Confirmare parolă nouă/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^Parolă nouă$/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^Confirmare parolă nouă$/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Resetează parola/i })).toBeInTheDocument();
   });
 
@@ -104,36 +104,42 @@ describe('ResetPasswordPage', () => {
     // Submit form without filling in fields
     fireEvent.click(screen.getByRole('button', { name: /Resetează parola/i }));
 
-    // Check if validation error is displayed
-    expect(screen.getByText(/Toate câmpurile sunt obligatorii/i)).toBeInTheDocument();
+    // Așteptăm să apară mesajul de eroare
+    await waitFor(() => {
+      expect(screen.getByText(/Toate câmpurile sunt obligatorii/i)).toBeInTheDocument();
+    });
 
     // Fill in password fields with different values
-    fireEvent.change(screen.getByLabelText(/Parolă nouă/i), {
+    fireEvent.change(screen.getByLabelText(/^Parolă nouă$/i), {
       target: { value: 'Password123!' },
     });
-    fireEvent.change(screen.getByLabelText(/Confirmare parolă nouă/i), {
+    fireEvent.change(screen.getByLabelText(/^Confirmare parolă nouă$/i), {
       target: { value: 'DifferentPassword123!' },
     });
 
     // Submit form
     fireEvent.click(screen.getByRole('button', { name: /Resetează parola/i }));
 
-    // Check if validation error is displayed
-    expect(screen.getByText(/Parolele nu coincid/i)).toBeInTheDocument();
+    // Așteptăm să apară mesajul de eroare
+    await waitFor(() => {
+      expect(screen.getByText(/Parolele nu coincid/i)).toBeInTheDocument();
+    });
 
     // Fill in password fields with short password
-    fireEvent.change(screen.getByLabelText(/Parolă nouă/i), {
+    fireEvent.change(screen.getByLabelText(/^Parolă nouă$/i), {
       target: { value: 'short' },
     });
-    fireEvent.change(screen.getByLabelText(/Confirmare parolă nouă/i), {
+    fireEvent.change(screen.getByLabelText(/^Confirmare parolă nouă$/i), {
       target: { value: 'short' },
     });
 
     // Submit form
     fireEvent.click(screen.getByRole('button', { name: /Resetează parola/i }));
 
-    // Check if validation error is displayed
-    expect(screen.getByText(/Parola trebuie să aibă cel puțin 8 caractere/i)).toBeInTheDocument();
+    // Așteptăm să apară mesajul de eroare
+    await waitFor(() => {
+      expect(screen.getByText(/Parola trebuie să aibă cel puțin 8 caractere/i)).toBeInTheDocument();
+    });
   });
 
   it('resets password successfully', async () => {
@@ -156,10 +162,10 @@ describe('ResetPasswordPage', () => {
     });
 
     // Fill in password fields
-    fireEvent.change(screen.getByLabelText(/Parolă nouă/i), {
+    fireEvent.change(screen.getByLabelText(/^Parolă nouă$/i), {
       target: { value: 'NewPassword123!' },
     });
-    fireEvent.change(screen.getByLabelText(/Confirmare parolă nouă/i), {
+    fireEvent.change(screen.getByLabelText(/^Confirmare parolă nouă$/i), {
       target: { value: 'NewPassword123!' },
     });
 
@@ -204,10 +210,10 @@ describe('ResetPasswordPage', () => {
     });
 
     // Fill in password fields
-    fireEvent.change(screen.getByLabelText(/Parolă nouă/i), {
+    fireEvent.change(screen.getByLabelText(/^Parolă nouă$/i), {
       target: { value: 'NewPassword123!' },
     });
-    fireEvent.change(screen.getByLabelText(/Confirmare parolă nouă/i), {
+    fireEvent.change(screen.getByLabelText(/^Confirmare parolă nouă$/i), {
       target: { value: 'NewPassword123!' },
     });
 
