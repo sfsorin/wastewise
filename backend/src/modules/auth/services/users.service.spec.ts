@@ -162,7 +162,17 @@ describe('UsersService', () => {
 
       expect(mockUserRepository.findOne).toHaveBeenCalledWith({
         where: { id: '123' },
-        select: ['id', 'username', 'email', 'fullName', 'role', 'status'],
+        select: [
+          'id',
+          'username',
+          'email',
+          'fullName',
+          'role',
+          'status',
+          'lastLogin',
+          'createdAt',
+          'updatedAt',
+        ],
       });
       expect(result).toEqual(user);
     });
@@ -173,7 +183,17 @@ describe('UsersService', () => {
       await expect(service.findOne('nonexistent')).rejects.toThrow(NotFoundException);
       expect(mockUserRepository.findOne).toHaveBeenCalledWith({
         where: { id: 'nonexistent' },
-        select: ['id', 'username', 'email', 'fullName', 'role', 'status'],
+        select: [
+          'id',
+          'username',
+          'email',
+          'fullName',
+          'role',
+          'status',
+          'lastLogin',
+          'createdAt',
+          'updatedAt',
+        ],
       });
     });
   });
