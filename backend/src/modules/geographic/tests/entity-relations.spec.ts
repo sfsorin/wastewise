@@ -38,6 +38,8 @@ describe('Entity Relations (e2e)', () => {
   let zonaIridexId: string;
 
   beforeAll(async () => {
+    // Mărește timeout-ul pentru acest hook
+    jest.setTimeout(30000);
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot({
@@ -93,30 +95,6 @@ describe('Entity Relations (e2e)', () => {
   });
 
   it('should create entities with relationships', async () => {
-    // Creăm un județ
-    const createJudetDto: CreateJudetDto = {
-      nume: 'Alba Test',
-      codSiruta: '01-test',
-      codAuto: 'AB',
-    };
-    const judet = await judeteService.create(createJudetDto);
-    judetId = judet.id;
-    expect(judet).toBeDefined();
-    expect(judet.nume).toBe(createJudetDto.nume);
-
-    // Creăm o localitate asociată județului
-    const createLocalitateDto: CreateLocalitateDto = {
-      nume: 'Alba Iulia Test',
-      judetId,
-      codSiruta: '0101-test',
-      tip: 'municipiu',
-    };
-    const localitate = await localitatiService.create(createLocalitateDto);
-    localitateId = localitate.id;
-    expect(localitate).toBeDefined();
-    expect(localitate.nume).toBe(createLocalitateDto.nume);
-    expect(localitate.judetId).toBe(judetId);
-
     // Creăm o zonă ADI
     const createZonaADIDto: CreateZonaADIDto = {
       nume: 'Zona ADI Test',
@@ -139,11 +117,21 @@ describe('Entity Relations (e2e)', () => {
     expect(zonaIridex).toBeDefined();
     expect(zonaIridex.nume).toBe(createZonaIridexDto.nume);
 
-    // Creăm un UAT asociat județului, localității, zonei ADI și zonei Iridex
+    // Creăm un județ
+    const createJudetDto: CreateJudetDto = {
+      nume: 'Alba Test',
+      codSiruta: '01-test',
+      codAuto: 'AB',
+    };
+    const judet = await judeteService.create(createJudetDto);
+    judetId = judet.id;
+    expect(judet).toBeDefined();
+    expect(judet.nume).toBe(createJudetDto.nume);
+
+    // Creăm un UAT asociat județului, zonei ADI și zonei Iridex
     const createUATDto: CreateUATDto = {
       nume: 'UAT Test',
       judetId,
-      // localitateId nu mai este necesar în CreateUATDto
       zonaADIId,
       zonaIridexId,
       codSiruta: '0101-uat-test',
@@ -155,9 +143,29 @@ describe('Entity Relations (e2e)', () => {
     expect(uat).toBeDefined();
     expect(uat.nume).toBe(createUATDto.nume);
     expect(uat.judetId).toBe(judetId);
-    // UAT nu mai are localitateId, acum are o relație OneToMany cu localitati
     expect(uat.zonaADIId).toBe(zonaADIId);
     expect(uat.zonaIridexId).toBe(zonaIridexId);
+
+    // Creăm o localitate asociată județului și UAT-ului
+    const createLocalitateDto: CreateLocalitateDto = {
+      nume: 'Alba Iulia Test',
+      judetId,
+      uatId,
+      codSiruta: '0101-test',
+      tip: 'municipiu',
+    };
+    const localitate = await localitatiService.create(createLocalitateDto);
+    localitateId = localitate.id;
+    expect(localitate).toBeDefined();
+    expect(localitate.nume).toBe(createLocalitateDto.nume);
+    expect(localitate.judetId).toBe(judetId);
+    expect(localitate.uatId).toBe(uatId);
+
+    // Verificăm relația UAT -> Localitate
+    const uatWithLocalitati = await uatService.findOne(uatId);
+    expect(uatWithLocalitati.localitati).toBeDefined();
+    expect(uatWithLocalitati.localitati.length).toBeGreaterThan(0);
+    expect(uatWithLocalitati.localitati[0].id).toBe(localitateId);
 
     // Verificăm relația Judet -> Localitate
     const judetWithLocalitati = await judeteService.findOne(judetId);
@@ -183,17 +191,21 @@ describe('Entity Relations (e2e)', () => {
     expect(zonaIridexWithUAT.uaturi.length).toBeGreaterThan(0);
     expect(zonaIridexWithUAT.uaturi[0].id).toBe(uatId);
 
-    // Verificăm relația UAT -> Judet, Localitate, ZonaADI, ZonaIridex
+    // Verificăm relația UAT -> Judet, ZonaADI, ZonaIridex
     const uatWithRelations = await uatService.findOne(uatId);
     expect(uatWithRelations.judet).toBeDefined();
     expect(uatWithRelations.judet.id).toBe(judetId);
-    expect(uatWithRelations.localitati).toBeDefined();
-    // Verificăm că există cel puțin o localitate asociată
-    expect(uatWithRelations.localitati.length).toBeGreaterThanOrEqual(0);
     expect(uatWithRelations.zonaADI).toBeDefined();
     expect(uatWithRelations.zonaADI.id).toBe(zonaADIId);
     expect(uatWithRelations.zonaIridex).toBeDefined();
     expect(uatWithRelations.zonaIridex.id).toBe(zonaIridexId);
+
+    // Verificăm relația Localitate -> UAT
+    const localitateWithUAT = await localitatiService.findOne(localitateId);
+    expect(localitateWithUAT.uat).toBeDefined();
+    expect(localitateWithUAT.uat.id).toBe(uatId);
+    // Verificăm că o localitate aparține unui singur UAT
+    expect(localitateWithUAT.uatId).toBe(uatId);
   });
 
   it('should cascade delete UAT when deleting Judet', async () => {

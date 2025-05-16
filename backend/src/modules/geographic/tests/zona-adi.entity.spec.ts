@@ -1,14 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { ZonaADI } from '../entities/zona-adi.entity';
 import { ZoneADIService } from '../services/zone-adi.service';
 import { CreateZonaADIDto } from '../dto/create-zona-adi.dto';
 import { UpdateZonaADIDto } from '../dto/update-zona-adi.dto';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 
-type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
-const createMockRepository = <T = any>(): MockRepository<T> => ({
+// Definim tipul MockRepository
+type MockRepository = {
+  find: jest.Mock;
+  findOne: jest.Mock;
+  create: jest.Mock;
+  save: jest.Mock;
+  remove: jest.Mock;
+};
+const createMockRepository = (): MockRepository => ({
   find: jest.fn(),
   findOne: jest.fn(),
   create: jest.fn(),
@@ -18,7 +24,7 @@ const createMockRepository = <T = any>(): MockRepository<T> => ({
 
 describe('ZoneADIService', () => {
   let service: ZoneADIService;
-  let repository: MockRepository<ZonaADI>;
+  let repository: MockRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -32,7 +38,7 @@ describe('ZoneADIService', () => {
     }).compile();
 
     service = module.get<ZoneADIService>(ZoneADIService);
-    repository = module.get<MockRepository<ZonaADI>>(getRepositoryToken(ZonaADI));
+    repository = module.get(getRepositoryToken(ZonaADI));
   });
 
   it('should be defined', () => {
