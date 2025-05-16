@@ -22,7 +22,6 @@ describe('RbacController', () => {
     debug: jest.fn(),
     verbose: jest.fn(),
   };
-
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [RbacController],
@@ -52,7 +51,6 @@ describe('RbacController', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
-
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
@@ -101,11 +99,10 @@ describe('RbacController', () => {
     it('should check if a user has a permission', async () => {
       const userId = '123';
       const permissionName = 'create:users';
-      
+
       mockPermissionsService.hasPermission.mockResolvedValue(true);
-      
+
       const result = await controller.checkPermission(userId, permissionName);
-      
       expect(mockPermissionsService.hasPermission).toHaveBeenCalledWith(userId, permissionName);
       expect(result).toEqual({
         userId,
@@ -113,7 +110,7 @@ describe('RbacController', () => {
         hasPermission: true,
       });
       expect(mockLogger.log).toHaveBeenCalledWith(
-        `Verificare permisiune: ${userId} - ${permissionName} - true`
+        `Verificare permisiune: ${userId} - ${permissionName} - true`,
       );
     });
   });
@@ -122,18 +119,17 @@ describe('RbacController', () => {
     it('should get all permissions for a user', async () => {
       const userId = '123';
       const permissions = ['create:users', 'read:users'];
-      
+
       mockPermissionsService.getUserPermissions.mockResolvedValue(permissions);
-      
+
       const result = await controller.getUserPermissions(userId);
-      
       expect(mockPermissionsService.getUserPermissions).toHaveBeenCalledWith(userId);
       expect(result).toEqual({
         userId,
         permissions,
       });
       expect(mockLogger.log).toHaveBeenCalledWith(
-        `Permisiuni utilizator ${userId}: ${permissions.length}`
+        `Permisiuni utilizator ${userId}: ${permissions.length}`,
       );
     });
   });

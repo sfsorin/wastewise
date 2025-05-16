@@ -3,7 +3,10 @@ import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { RolesGuard } from './roles.guard';
 import { ROLES_KEY } from '../decorators/roles.decorator';
+<<<<<<< HEAD
 import { UserRole } from '../../users/entities/user.entity';
+=======
+>>>>>>> faza/2.2.6-implementare-guards-decoratori-autorizare
 
 describe('RolesGuard', () => {
   let guard: RolesGuard;
@@ -58,7 +61,11 @@ describe('RolesGuard', () => {
         }),
       } as unknown as ExecutionContext;
 
+<<<<<<< HEAD
       jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue([UserRole.ADMIN]);
+=======
+      jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(['admin']);
+>>>>>>> faza/2.2.6-implementare-guards-decoratori-autorizare
 
       expect(guard.canActivate(context)).toBe(false);
     });
@@ -68,7 +75,11 @@ describe('RolesGuard', () => {
         id: '1',
         username: 'admin',
         email: 'admin@example.com',
+<<<<<<< HEAD
         role: UserRole.ADMIN,
+=======
+        role: 'admin',
+>>>>>>> faza/2.2.6-implementare-guards-decoratori-autorizare
       };
 
       const context = {
@@ -79,7 +90,11 @@ describe('RolesGuard', () => {
         }),
       } as unknown as ExecutionContext;
 
+<<<<<<< HEAD
       jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue([UserRole.ADMIN]);
+=======
+      jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(['admin']);
+>>>>>>> faza/2.2.6-implementare-guards-decoratori-autorizare
 
       expect(guard.canActivate(context)).toBe(true);
     });
@@ -89,7 +104,11 @@ describe('RolesGuard', () => {
         id: '1',
         username: 'user',
         email: 'user@example.com',
+<<<<<<< HEAD
         role: UserRole.USER,
+=======
+        role: 'user',
+>>>>>>> faza/2.2.6-implementare-guards-decoratori-autorizare
       };
 
       const context = {
@@ -100,7 +119,11 @@ describe('RolesGuard', () => {
         }),
       } as unknown as ExecutionContext;
 
+<<<<<<< HEAD
       jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue([UserRole.ADMIN]);
+=======
+      jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(['admin']);
+>>>>>>> faza/2.2.6-implementare-guards-decoratori-autorizare
 
       expect(guard.canActivate(context)).toBe(false);
     });
@@ -108,9 +131,15 @@ describe('RolesGuard', () => {
     it('should return true when user has one of the required roles', () => {
       const user = {
         id: '1',
+<<<<<<< HEAD
         username: 'operator',
         email: 'operator@example.com',
         role: UserRole.OPERATOR,
+=======
+        username: 'manager',
+        email: 'manager@example.com',
+        role: 'manager',
+>>>>>>> faza/2.2.6-implementare-guards-decoratori-autorizare
       };
 
       const context = {
@@ -121,9 +150,13 @@ describe('RolesGuard', () => {
         }),
       } as unknown as ExecutionContext;
 
+<<<<<<< HEAD
       jest
         .spyOn(reflector, 'getAllAndOverride')
         .mockReturnValue([UserRole.ADMIN, UserRole.OPERATOR]);
+=======
+      jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(['admin', 'manager']);
+>>>>>>> faza/2.2.6-implementare-guards-decoratori-autorizare
 
       expect(guard.canActivate(context)).toBe(true);
     });
