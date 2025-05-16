@@ -34,10 +34,12 @@ import { HealthModule } from './health/health.module';
     ThrottlerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        ttl: configService.get<number>('security.rateLimiting.ttl') || 60,
-        limit: configService.get<number>('security.rateLimiting.limit') || 10,
-      }),
+      useFactory: (configService: ConfigService) => {
+        return {
+          ttl: configService.get<number>('security.rateLimiting.ttl') || 60,
+          limit: configService.get<number>('security.rateLimiting.limit') || 10,
+        };
+      },
     }),
     UsersModule,
     ProfilesModule,
