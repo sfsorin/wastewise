@@ -176,11 +176,16 @@
 - [ ] Implementare decorator Public
 - [ ] Testare guards și decoratori
 
-### 2.2.7 Testare și securizare autentificare 🔴 (2 zile)
+### 2.2.7 Testare și securizare autentificare 🔴 (3 zile)
 
+- [ ] Eliminarea secretului JWT hardcodat
+- [ ] Corectarea tipului pentru algoritm JWT
+- [ ] Implementarea verificării explicite a semnăturii JWT
+- [ ] Adăugarea protecției împotriva atacurilor CSRF
 - [ ] Implementare rate limiting
-- [ ] Implementare protecție CSRF
-- [ ] Implementare validare token JWT
+- [ ] Optimizarea încărcării relațiilor în autentificare
+- [ ] Implementarea curățării automate a token-urilor expirate
+- [ ] Adăugarea unui mecanism de caching pentru autentificare
 - [ ] Implementare logging pentru autentificare
 - [ ] Implementare detecție activitate suspectă
 - [ ] Testare securitate
