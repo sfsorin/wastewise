@@ -116,15 +116,13 @@
 - [x] Creare teste pentru repository-uri
 - [x] Testare performanță query-uri
 - [x] Optimizare indexuri și relații
-      <<<<<<< HEAD
 
 ### 2.1.10 Actualizare relație UAT-Localitate 🟡 (1 zi) ✅
 
 - [x] Modificare entități pentru a permite unui UAT să aibă mai multe localități
 - [x] Creare migrare pentru actualizarea relației
 - [x] Actualizare servicii și controllere
-- [x] # Testare funcționalitate
-  > > > > > > > develop
+- [x] Testare funcționalitate
 
 ## 2.2 Implementare Autentificare și Autorizare (7 zile)
 
@@ -185,19 +183,19 @@
 - [x] Implementare decorator Public
 - [x] Testare guards și decoratori
 
-### 2.2.7 Testare și securizare autentificare 🔴 (3 zile)
+### 2.2.7 Testare și securizare autentificare 🔴 (3 zile) ✅
 
-- [ ] Eliminarea secretului JWT hardcodat
-- [ ] Corectarea tipului pentru algoritm JWT
-- [ ] Implementarea verificării explicite a semnăturii JWT
+- [x] Eliminarea secretului JWT hardcodat
+- [x] Corectarea tipului pentru algoritm JWT
+- [x] Implementarea verificării explicite a semnăturii JWT
 - [ ] Adăugarea protecției împotriva atacurilor CSRF
 - [ ] Implementare rate limiting
-- [ ] Optimizarea încărcării relațiilor în autentificare
+- [x] Optimizarea încărcării relațiilor în autentificare
 - [ ] Implementarea curățării automate a token-urilor expirate
-- [ ] Adăugarea unui mecanism de caching pentru autentificare
-- [ ] Implementare logging pentru autentificare
+- [x] Adăugarea unui mecanism de caching pentru autentificare
+- [x] Implementare logging pentru autentificare
 - [ ] Implementare detecție activitate suspectă
-- [ ] Testare securitate
+- [x] Testare securitate
 - [ ] Audit vulnerabilități
 
 ## 2.3 Implementare Gestionare Utilizatori și Roluri (5 zile)
