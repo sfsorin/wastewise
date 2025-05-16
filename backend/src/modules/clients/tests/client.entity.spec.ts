@@ -129,9 +129,7 @@ describe('ClientService', () => {
         updatedAt: new Date(),
       });
 
-      await expect(service.create(createClientDto)).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(service.create(createClientDto)).rejects.toThrow(ConflictException);
     });
 
     it('should throw ConflictException if client with same CNP exists', async () => {
@@ -166,9 +164,7 @@ describe('ClientService', () => {
         updatedAt: new Date(),
       });
 
-      await expect(service.create(createClientDto)).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(service.create(createClientDto)).rejects.toThrow(ConflictException);
     });
   });
 
@@ -294,9 +290,9 @@ describe('ClientService', () => {
     it('should throw NotFoundException if client not found', async () => {
       repository.findOne.mockResolvedValue(null);
 
-      await expect(
-        service.findOne('123e4567-e89b-12d3-a456-426614174001'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.findOne('123e4567-e89b-12d3-a456-426614174001')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });

@@ -1,9 +1,9 @@
-import { Module, CacheModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import * as redisStore from 'cache-manager-redis-store';
+import { CacheModule } from '@nestjs/cache-manager';
 import { PasswordResetToken } from './entities/password-reset-token.entity';
 import { RefreshToken } from './entities/refresh-token.entity';
 import { AuthService } from './services/auth.service';
@@ -37,23 +37,12 @@ import { PermissionsGuard } from './guards/permissions.guard';
     CacheModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        const useRedis = configService.get<string>('CACHE_REDIS_ENABLED') === 'true';
-
-        if (useRedis) {
-          return {
-            store: redisStore,
-            host: configService.get<string>('CACHE_REDIS_HOST', 'localhost'),
-            port: configService.get<number>('CACHE_REDIS_PORT', 6379),
-            ttl: 3600, // 1 oră în secunde
-          };
-        }
-
+      useFactory: () => {
         return {
           ttl: 3600, // 1 oră în secunde
+          store: undefined, // Folosim memoria implicită
         };
       },
-      isGlobal: true,
     }),
   ],
   controllers: [AuthController, RbacController],

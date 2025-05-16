@@ -28,4 +28,4 @@ export * from './dto/reset-password.dto';
 export * from './dto/refresh-token.dto';
 
 // Exportăm modulul
-export * from './auth.module';
+// export * from './auth.module';

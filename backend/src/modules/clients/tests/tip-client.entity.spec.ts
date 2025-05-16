@@ -81,9 +81,7 @@ describe('TipClientService', () => {
 
       repository.findOne.mockResolvedValue(existingTipClient);
 
-      await expect(service.create(createTipClientDto)).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(service.create(createTipClientDto)).rejects.toThrow(ConflictException);
     });
   });
 
@@ -135,9 +133,9 @@ describe('TipClientService', () => {
     it('should throw NotFoundException if tip client not found', async () => {
       repository.findOne.mockResolvedValue(null);
 
-      await expect(
-        service.findOne('123e4567-e89b-12d3-a456-426614174000'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.findOne('123e4567-e89b-12d3-a456-426614174000')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -165,7 +163,10 @@ describe('TipClientService', () => {
       repository.findOne.mockResolvedValueOnce(null);
       repository.save.mockResolvedValue(updatedTipClient);
 
-      const result = await service.update('123e4567-e89b-12d3-a456-426614174000', updateTipClientDto);
+      const result = await service.update(
+        '123e4567-e89b-12d3-a456-426614174000',
+        updateTipClientDto,
+      );
       expect(result).toEqual(updatedTipClient);
       expect(repository.save).toHaveBeenCalledWith(updatedTipClient);
     });

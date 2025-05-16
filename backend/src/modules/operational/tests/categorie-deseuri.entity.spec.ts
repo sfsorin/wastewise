@@ -87,9 +87,7 @@ describe('CategorieDeseuriService', () => {
 
       repository.findOne.mockResolvedValueOnce(existingCategorieDeseuri);
 
-      await expect(service.create(createCategorieDeseuriDto)).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(service.create(createCategorieDeseuriDto)).rejects.toThrow(ConflictException);
     });
 
     it('should throw ConflictException if categorie deseuri with same codDeseu exists', async () => {
@@ -111,9 +109,7 @@ describe('CategorieDeseuriService', () => {
         predictiiCantitati: [],
       });
 
-      await expect(service.create(createCategorieDeseuriDto)).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(service.create(createCategorieDeseuriDto)).rejects.toThrow(ConflictException);
     });
   });
 
@@ -170,9 +166,9 @@ describe('CategorieDeseuriService', () => {
     it('should throw NotFoundException if categorie deseuri not found', async () => {
       repository.findOne.mockResolvedValue(null);
 
-      await expect(
-        service.findOne('123e4567-e89b-12d3-a456-426614174000'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.findOne('123e4567-e89b-12d3-a456-426614174000')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -203,7 +199,10 @@ describe('CategorieDeseuriService', () => {
       repository.findOne.mockResolvedValueOnce(null);
       repository.save.mockResolvedValue(updatedCategorieDeseuri);
 
-      const result = await service.update('123e4567-e89b-12d3-a456-426614174000', updateCategorieDeseuriDto);
+      const result = await service.update(
+        '123e4567-e89b-12d3-a456-426614174000',
+        updateCategorieDeseuriDto,
+      );
       expect(result).toEqual(updatedCategorieDeseuri);
       expect(repository.save).toHaveBeenCalledWith(updatedCategorieDeseuri);
     });

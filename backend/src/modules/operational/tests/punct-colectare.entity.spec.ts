@@ -164,7 +164,9 @@ describe('PunctColectareService', () => {
       const result = await service.create(createPunctColectareDto);
       expect(result).toEqual(punctColectare);
       expect(judeteService.findOne).toHaveBeenCalledWith('123e4567-e89b-12d3-a456-426614174000');
-      expect(localitatiService.findOne).toHaveBeenCalledWith('123e4567-e89b-12d3-a456-426614174001');
+      expect(localitatiService.findOne).toHaveBeenCalledWith(
+        '123e4567-e89b-12d3-a456-426614174001',
+      );
       expect(clientService.findOne).toHaveBeenCalledWith('123e4567-e89b-12d3-a456-426614174002');
       expect(repository.create).toHaveBeenCalledWith({
         ...createPunctColectareDto,
@@ -356,9 +358,9 @@ describe('PunctColectareService', () => {
     it('should throw NotFoundException if punct colectare not found', async () => {
       repository.findOne.mockResolvedValue(null);
 
-      await expect(
-        service.findOne('123e4567-e89b-12d3-a456-426614174003'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.findOne('123e4567-e89b-12d3-a456-426614174003')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });

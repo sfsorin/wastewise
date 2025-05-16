@@ -125,9 +125,7 @@ describe('LocalitatiService', () => {
         updatedAt: new Date(),
       });
 
-      await expect(service.create(createLocalitateDto)).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(service.create(createLocalitateDto)).rejects.toThrow(ConflictException);
     });
   });
 
@@ -241,9 +239,9 @@ describe('LocalitatiService', () => {
     it('should throw NotFoundException if localitate not found', async () => {
       repository.findOne.mockResolvedValue(null);
 
-      await expect(
-        service.findOne('123e4567-e89b-12d3-a456-426614174001'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.findOne('123e4567-e89b-12d3-a456-426614174001')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -281,7 +279,10 @@ describe('LocalitatiService', () => {
       repository.findOne.mockResolvedValue(localitate);
       repository.save.mockResolvedValue(updatedLocalitate);
 
-      const result = await service.update('123e4567-e89b-12d3-a456-426614174001', updateLocalitateDto);
+      const result = await service.update(
+        '123e4567-e89b-12d3-a456-426614174001',
+        updateLocalitateDto,
+      );
       expect(result).toEqual(updatedLocalitate);
       expect(repository.save).toHaveBeenCalledWith(updatedLocalitate);
     });

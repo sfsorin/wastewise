@@ -25,7 +25,7 @@ describe('Entity Relations (e2e)', () => {
   let uatService: UATService;
   let zoneADIService: ZoneADIService;
   let zoneIridexService: ZoneIridexService;
-  
+
   let judetRepository: Repository<Judet>;
   let localitateRepository: Repository<Localitate>;
   let uatRepository: Repository<UAT>;
@@ -61,13 +61,7 @@ describe('Entity Relations (e2e)', () => {
         }),
         TypeOrmModule.forFeature([Judet, Localitate, UAT, ZonaADI, ZonaIridex]),
       ],
-      providers: [
-        JudeteService,
-        LocalitatiService,
-        UATService,
-        ZoneADIService,
-        ZoneIridexService,
-      ],
+      providers: [JudeteService, LocalitatiService, UATService, ZoneADIService, ZoneIridexService],
     }).compile();
 
     judeteService = module.get<JudeteService>(JudeteService);

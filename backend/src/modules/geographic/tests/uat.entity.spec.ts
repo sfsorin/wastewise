@@ -180,7 +180,9 @@ describe('UATService', () => {
       const result = await service.create(createUATDto);
       expect(result).toEqual(uat);
       expect(judeteService.findOne).toHaveBeenCalledWith('123e4567-e89b-12d3-a456-426614174000');
-      expect(localitatiService.findOne).toHaveBeenCalledWith('123e4567-e89b-12d3-a456-426614174002');
+      expect(localitatiService.findOne).toHaveBeenCalledWith(
+        '123e4567-e89b-12d3-a456-426614174002',
+      );
       expect(repository.create).toHaveBeenCalledWith(createUATDto);
       expect(repository.save).toHaveBeenCalledWith(uat);
     });
@@ -212,9 +214,7 @@ describe('UATService', () => {
         updatedAt: new Date(),
       });
 
-      await expect(service.create(createUATDto)).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(service.create(createUATDto)).rejects.toThrow(ConflictException);
     });
   });
 
@@ -290,9 +290,9 @@ describe('UATService', () => {
     it('should throw NotFoundException if UAT not found', async () => {
       repository.findOne.mockResolvedValue(null);
 
-      await expect(
-        service.findOne('123e4567-e89b-12d3-a456-426614174001'),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.findOne('123e4567-e89b-12d3-a456-426614174001')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });

@@ -22,7 +22,7 @@ export class CreateRefreshTokensTable1747173160491 implements MigrationInterface
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`DROP INDEX IF EXISTS "IDX_refresh_tokens_token"`);
-    await queryRunner.query(`DROP TABLE IF EXISTS "refresh_tokens"`);
+    await queryRunner.query('DROP INDEX IF EXISTS "IDX_refresh_tokens_token"');
+    await queryRunner.query('DROP TABLE IF EXISTS "refresh_tokens"');
   }
 }

@@ -9,7 +9,7 @@ export const PERMISSIONS_KEY = 'permissions';
  * Decorator pentru specificarea permisiunilor necesare pentru accesarea unui endpoint
  * @param permissions Lista de permisiuni necesare
  * @returns Decorator pentru metadate
- * 
+ *
  * @example
  * ```typescript
  * @Permissions('create:users', 'update:users')

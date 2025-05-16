@@ -1,18 +1,11 @@
-import {
-  Injectable,
-  NotFoundException,
-  ConflictException,
-  Logger,
-  CACHE_MANAGER,
-} from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, Logger, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Inject } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { Permission } from '../entities/permission.entity';
 import { CreatePermissionDto } from '../dto/create-permission.dto';
 import { UpdatePermissionDto } from '../dto/update-permission.dto';
-import { Role } from '../entities/role.entity';
 
 @Injectable()
 export class PermissionsService {
@@ -116,7 +109,7 @@ export class PermissionsService {
 
     if (cachedResult !== undefined) {
       this.logger.debug(`Rezultat din cache pentru ${cacheKey}: ${cachedResult}`);
-      return cachedResult;
+      return cachedResult === true;
     }
 
     try {
@@ -137,7 +130,8 @@ export class PermissionsService {
 
       return hasPermission;
     } catch (error) {
-      this.logger.error(`Eroare la verificarea permisiunii: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.logger.error(`Eroare la verificarea permisiunii: ${errorMessage}`);
       return false;
     }
   }
@@ -180,7 +174,8 @@ export class PermissionsService {
 
       return permissionNames;
     } catch (error) {
-      this.logger.error(`Eroare la obținerea permisiunilor utilizatorului: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.logger.error(`Eroare la obținerea permisiunilor utilizatorului: ${errorMessage}`);
       return [];
     }
   }

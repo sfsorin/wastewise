@@ -52,18 +52,18 @@ export class PermissionsGuard implements CanActivate {
 
     // Dacă nu există utilizator sau nu are permisiuni, blocăm accesul
     if (!user || !user.permissions) {
-      this.logger.warn(`Acces refuzat: utilizator fără permisiuni sau neautentificat`);
+      this.logger.warn('Acces refuzat: utilizator fără permisiuni sau neautentificat');
       return false;
     }
 
     // Verificăm dacă utilizatorul are cel puțin una dintre permisiunile necesare
-    const hasPermission = requiredPermissions.some(permission => 
-      user.permissions.includes(permission)
+    const hasPermission = requiredPermissions.some(
+      permission => user.permissions?.includes(permission) || false,
     );
 
     if (!hasPermission) {
       this.logger.warn(
-        `Acces refuzat pentru utilizatorul ${user.username}: lipsesc permisiunile ${requiredPermissions.join(', ')}`
+        `Acces refuzat pentru utilizatorul ${user.username}: lipsesc permisiunile ${requiredPermissions.join(', ')}`,
       );
     }
 

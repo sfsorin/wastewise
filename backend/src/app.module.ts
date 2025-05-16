@@ -11,7 +11,7 @@ import { ClientsModule } from '@modules/clients/clients.module';
 import { OperationalModule } from '@modules/operational/operational.module';
 import { ContractsModule } from '@modules/contracts/contracts.module';
 import { MLModule } from '@modules/ml/ml.module';
-import { AuthModule } from '@modules/auth/auth.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { HealthModule } from './health/health.module';
 
 @Module({

@@ -7,7 +7,7 @@ export const IS_PUBLIC_KEY = 'isPublic';
 
 /**
  * Decorator pentru a marca o rută ca fiind publică (nu necesită autentificare)
- * 
+ *
  * @example
  * ```typescript
  * @Public()

@@ -133,7 +133,7 @@ export class RbacController {
   ): Promise<{ userId: string; permissionName: string; hasPermission: boolean }> {
     const hasPermission = await this.permissionsService.hasPermission(userId, permissionName);
     this.logger.log(`Verificare permisiune: ${userId} - ${permissionName} - ${hasPermission}`);
-    
+
     return {
       userId,
       permissionName,
@@ -159,9 +159,9 @@ export class RbacController {
       type: 'object',
       properties: {
         userId: { type: 'string' },
-        permissions: { 
+        permissions: {
           type: 'array',
-          items: { type: 'string' }
+          items: { type: 'string' },
         },
       },
     },
@@ -171,7 +171,7 @@ export class RbacController {
   ): Promise<{ userId: string; permissions: string[] }> {
     const permissions = await this.permissionsService.getUserPermissions(userId);
     this.logger.log(`Permisiuni utilizator ${userId}: ${permissions.length}`);
-    
+
     return {
       userId,
       permissions,
