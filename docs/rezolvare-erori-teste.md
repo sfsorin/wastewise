@@ -9,6 +9,7 @@ Acest document descrie erorile identificate în testele proiectului WasteWise ș
 ### 1.1. Conflicte de merge nerezolvate
 
 **Fișiere afectate:**
+
 - `backend/src/modules/auth/guards/roles.guard.spec.ts`
 - `backend/src/modules/auth/guards/jwt-auth.guard.spec.ts`
 
@@ -21,6 +22,7 @@ Am rezolvat conflictele manual, păstrând implementarea care folosește `UserRo
 ### 1.2. Erori de tipuri TypeScript în mock-uri
 
 **Fișiere afectate:**
+
 - `backend/src/modules/entities/tests/tip-client.entity.spec.ts`
 - `backend/src/modules/entities/tests/client.entity.spec.ts`
 - `backend/src/modules/contracts/tests/serviciu.entity.spec.ts`
@@ -30,14 +32,18 @@ Tipul `MockRepository<T = any>` nu avea constrângerea `ObjectLiteral` necesară
 
 **Soluția:**
 Am adăugat constrângerea `ObjectLiteral` la tipul `MockRepository`:
+
 ```typescript
-import { ObjectLiteral } from 'typeorm';
-type MockRepository<T extends ObjectLiteral = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
+import { ObjectLiteral } from "typeorm";
+type MockRepository<T extends ObjectLiteral = any> = Partial<
+  Record<keyof Repository<T>, jest.Mock>
+>;
 ```
 
 ### 1.3. Erori în testele pentru relații între entități
 
 **Fișiere afectate:**
+
 - `backend/src/modules/geographic/tests/entity-relations.spec.ts`
 
 **Problema:**
@@ -49,6 +55,7 @@ Am actualizat testele pentru a reflecta noua structură a relațiilor, unde UAT 
 ### 1.4. Erori în injectarea mock-urilor pentru Logger
 
 **Fișiere afectate:**
+
 - `backend/src/modules/auth/controllers/rbac.controller.spec.ts`
 
 **Problema:**
@@ -57,21 +64,34 @@ Mock-ul pentru Logger nu era injectat corect în controller.
 **Soluția:**
 Am modificat modul de injectare a Logger-ului și am adăugat cod pentru a înlocui logger-ul intern al controller-ului cu mock-ul nostru.
 
-### 1.5. Erori în testele pentru componente frontend
+### 1.5. Erori în testele pentru componente frontend și hooks
 
 **Fișiere afectate:**
+
 - `frontend/src/pages/Auth/ResetPasswordPage.test.tsx`
+- `frontend/src/pages/Auth/ResetPasswordPage.tsx`
+- `frontend/src/hooks/useLocalStorage.test.ts`
+- `frontend/src/hooks/useLocalStorage.ts`
 
 **Problema:**
-Selectori ambigui pentru elementele din formular și așteptări sincrone pentru operații asincrone.
+
+- Selectori ambigui pentru elementele din formular și așteptări sincrone pentru operații asincrone
+- Probleme cu evenimentele de submit în formulare
+- Probleme cu mock-urile pentru console.warn în testele pentru useLocalStorage
 
 **Soluția:**
+
 - Am făcut selectori mai specifici folosind expresii regulate exacte: `/^Parolă nouă$/i` în loc de `/Parolă nouă/i`
-- Am înlocuit verificările sincrone cu `waitFor` pentru a aștepta ca elementele să apară în DOM
+- Am înlocuit verificările sincrone cu `waitFor` și `findByText` pentru a aștepta ca elementele să apară în DOM
+- Am adăugat atributul `role="form"` la formulare pentru a le putea selecta mai ușor în teste
+- Am modificat testele pentru a declanșa evenimentul de submit direct pe formular în loc de click pe buton
+- Am modificat implementarea hook-ului useLocalStorage pentru a asigura că console.warn este apelat în mod consistent
+- Am simplificat testele pentru a verifica doar funcționalitatea esențială, fără a depinde de detalii de implementare
 
 ### 1.6. Erori în testele pentru authStore
 
 **Fișiere afectate:**
+
 - `frontend/src/stores/authStore.test.ts`
 
 **Problema:**
@@ -107,6 +127,7 @@ Am actualizat testele pentru a reflecta schimbările în modelul de date, în sp
 ## 4. Concluzii
 
 Majoritatea erorilor din teste au fost cauzate de:
+
 - Conflicte de merge nerezolvate
 - Schimbări în modelul de date fără actualizarea testelor corespunzătoare
 - Probleme de timing în testele asincrone
