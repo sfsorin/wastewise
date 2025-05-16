@@ -170,7 +170,7 @@ const ResetPasswordPage = () => {
 
       {error && <div className="bg-danger-50 text-danger-700 p-3 rounded-md mb-4">{error}</div>}
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} role="form">
         <div className="mb-4">
           <label
             htmlFor="password"
