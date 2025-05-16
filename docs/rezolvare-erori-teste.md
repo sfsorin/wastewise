@@ -124,7 +124,67 @@ Am actualizat testele pentru a reflecta schimbările în modelul de date, în sp
 
 4. **Utilizarea test-driven development (TDD)**: Scrierea testelor înainte de implementare ar putea preveni multe dintre problemele identificate.
 
-## 4. Concluzii
+## 4. Rezolvarea erorilor în testele backend
+
+### 4.1. Corectarea tipurilor pentru MockRepository
+
+Am adăugat constrângerea `ObjectLiteral` la tipul `MockRepository` în toate fișierele de test pentru entități:
+
+```typescript
+import { ObjectLiteral } from "typeorm";
+type MockRepository<T extends ObjectLiteral = any> = Partial<
+  Record<keyof Repository<T>, jest.Mock>
+>;
+```
+
+### 4.2. Corectarea erorilor în testele pentru UsersService
+
+Am actualizat testele pentru a reflecta noua structură a metodei `findOne`, care include câmpuri suplimentare în selecția de coloane:
+
+```typescript
+expect(mockUserRepository.findOne).toHaveBeenCalledWith({
+  where: { id: "123" },
+  select: [
+    "id",
+    "username",
+    "email",
+    "fullName",
+    "role",
+    "status",
+    "lastLogin",
+    "createdAt",
+    "updatedAt",
+  ],
+});
+```
+
+### 4.3. Corectarea erorilor în testele pentru CategorieDeseuri
+
+Am actualizat mock-urile pentru a reflecta noua structură a entității CategorieDeseuri, înlocuind `codDeseu` cu `cod`:
+
+```typescript
+jest.spyOn(categorieDeseuriService, "findOne").mockResolvedValue({
+  id: "123e4567-e89b-12d3-a456-426614174000",
+  nume: "Deșeuri menajere",
+  descriere: "Deșeuri generate de activitățile casnice",
+  cod: "20 03 01", // în loc de codDeseu
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  dateIstorice: [],
+  predictiiCantitati: [],
+});
+```
+
+### 4.4. Rezolvarea conflictelor de merge în fișierele de test pentru guards
+
+Am rezolvat conflictele de merge din fișierele:
+
+- `backend/src/modules/auth/guards/roles.guard.spec.ts`
+- `backend/src/modules/auth/guards/jwt-auth.guard.spec.ts`
+
+Aceste conflicte erau cauzate de marcaje de merge nerezolvate (`<<<<<<< HEAD`, `=======`, `>>>>>>> faza/2.2.6-implementare-guards-decoratori-autorizare`). Am păstrat implementarea care folosește `UserRole` din enum în loc de string-uri literale pentru roluri.
+
+## 5. Concluzii
 
 Majoritatea erorilor din teste au fost cauzate de:
 
@@ -132,5 +192,6 @@ Majoritatea erorilor din teste au fost cauzate de:
 - Schimbări în modelul de date fără actualizarea testelor corespunzătoare
 - Probleme de timing în testele asincrone
 - Mock-uri care nu reflectau structura actuală a serviciilor
+- Tipuri TypeScript incompatibile cu versiunea actuală a TypeORM
 
-Rezolvarea acestor probleme a îmbunătățit semnificativ stabilitatea și fiabilitatea testelor.
+Rezolvarea acestor probleme a îmbunătățit semnificativ stabilitatea și fiabilitatea testelor. Totuși, mai există unele erori în testele backend care necesită o analiză mai detaliată și posibil modificări mai substanțiale în codul sursă, nu doar în testele în sine.
