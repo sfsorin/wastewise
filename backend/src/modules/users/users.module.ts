@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common';
+import { Module, CacheModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './entities/user.entity';
 import { Role } from './entities/role.entity';
 import { Permission } from './entities/permission.entity';
@@ -10,7 +11,16 @@ import { PermissionsService } from './services/permissions.service';
 import { UsersController } from './users.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Role, Permission, PasswordResetToken])],
+  imports: [
+    TypeOrmModule.forFeature([User, Role, Permission, PasswordResetToken]),
+    CacheModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        ttl: 3600, // 1 oră în secunde
+      }),
+    }),
+  ],
   controllers: [UsersController],
   providers: [UsersService, RolesService, PermissionsService],
   exports: [TypeOrmModule, UsersService, RolesService, PermissionsService],

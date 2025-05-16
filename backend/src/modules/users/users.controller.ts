@@ -8,6 +8,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -22,6 +23,12 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { Permissions } from '../auth/decorators/permissions.decorator';
+import { Public } from '../auth/decorators/public.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
 
 @ApiTags('users')
 @ApiExtraModels(User)
@@ -57,6 +64,9 @@ export class UsersController {
     status: HttpStatus.CONFLICT,
     description: 'Adresa de email este deja utilizată.',
   })
+  @ApiBearerAuth('JWT-auth')
+  @Roles('admin')
+  @Permissions('create:users')
   create(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersService.create(createUserDto);
   }
@@ -84,6 +94,8 @@ export class UsersController {
     },
   })
   @ApiBearerAuth('JWT-auth')
+  @Roles('admin', 'manager')
+  @Permissions('read:users')
   findAll(): Promise<User[]> {
     return this.usersService.findAll();
   }
@@ -117,6 +129,8 @@ export class UsersController {
     description: 'Utilizatorul nu a fost găsit.',
   })
   @ApiBearerAuth('JWT-auth')
+  @Roles('admin', 'manager', 'user')
+  @Permissions('read:users')
   findOne(@Param('id') id: string): Promise<User> {
     return this.usersService.findOne(id);
   }
@@ -155,6 +169,8 @@ export class UsersController {
     description: 'Date invalide. Verificați datele introduse.',
   })
   @ApiBearerAuth('JWT-auth')
+  @Roles('admin')
+  @Permissions('update:users')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<User> {
     return this.usersService.update(id, updateUserDto);
   }
@@ -177,6 +193,8 @@ export class UsersController {
     description: 'Utilizatorul nu a fost găsit.',
   })
   @ApiBearerAuth('JWT-auth')
+  @Roles('admin')
+  @Permissions('delete:users')
   remove(@Param('id') id: string): Promise<void> {
     return this.usersService.remove(id);
   }

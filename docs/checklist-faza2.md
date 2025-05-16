@@ -157,14 +157,14 @@
 - [x] Implementare resetare parolă
 - [x] Testare funcționalitate
 
-### 2.2.5 Implementare RBAC (Role-Based Access Control) 🔴 (2 zile)
+### 2.2.5 Implementare RBAC (Role-Based Access Control) 🔴 (2 zile) ✅
 
-- [ ] Implementare decorator pentru roluri
-- [ ] Implementare guard pentru verificare roluri
-- [ ] Implementare service pentru gestionare permisiuni
-- [ ] Implementare verificare permisiuni dinamice
-- [ ] Implementare cache pentru permisiuni
-- [ ] Testare funcționalitate cu diferite roluri
+- [x] Implementare decorator pentru roluri
+- [x] Implementare guard pentru verificare roluri
+- [x] Implementare service pentru gestionare permisiuni
+- [x] Implementare verificare permisiuni dinamice
+- [x] Implementare cache pentru permisiuni
+- [x] Testare funcționalitate cu diferite roluri
 
 ### 2.2.6 Implementare guards și decoratori pentru autorizare 🟡 (1 zi)
 

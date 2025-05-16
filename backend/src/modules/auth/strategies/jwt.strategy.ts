@@ -11,6 +11,7 @@ interface JwtPayload {
   username: string;
   email: string;
   role: string;
+  permissions?: string[];
   iat?: number;
   exp?: number;
 }
@@ -31,6 +32,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     username: string;
     email: string;
     role: string;
+    permissions?: string[];
   }> {
     // Simulăm o operație asincronă pentru a justifica async
     await Promise.resolve();
@@ -40,6 +42,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       username: payload.username,
       email: payload.email,
       role: payload.role,
+      permissions: payload.permissions || [],
     };
   }
 }
