@@ -166,29 +166,29 @@
 - [x] Implementare cache pentru permisiuni
 - [x] Testare funcționalitate cu diferite roluri
 
-### 2.2.6 Implementare guards și decoratori pentru autorizare 🟡 (1 zi)
+### 2.2.6 Implementare guards și decoratori pentru autorizare 🟡 (1 zi) ✅
 
-- [ ] Implementare JwtAuthGuard
-- [ ] Implementare RolesGuard
-- [ ] Implementare PermissionsGuard
-- [ ] Implementare decorator Roles
-- [ ] Implementare decorator Permissions
-- [ ] Implementare decorator Public
-- [ ] Testare guards și decoratori
+- [x] Implementare JwtAuthGuard
+- [x] Implementare RolesGuard
+- [x] Implementare PermissionsGuard
+- [x] Implementare decorator Roles
+- [x] Implementare decorator Permissions
+- [x] Implementare decorator Public
+- [x] Testare guards și decoratori
 
-### 2.2.7 Testare și securizare autentificare 🔴 (3 zile)
+### 2.2.7 Testare și securizare autentificare 🔴 (3 zile) 🟨
 
-- [ ] Eliminarea secretului JWT hardcodat
-- [ ] Corectarea tipului pentru algoritm JWT
-- [ ] Implementarea verificării explicite a semnăturii JWT
-- [ ] Adăugarea protecției împotriva atacurilor CSRF
-- [ ] Implementare rate limiting
-- [ ] Optimizarea încărcării relațiilor în autentificare
-- [ ] Implementarea curățării automate a token-urilor expirate
-- [ ] Adăugarea unui mecanism de caching pentru autentificare
-- [ ] Implementare logging pentru autentificare
+- [x] Eliminarea secretului JWT hardcodat
+- [x] Corectarea tipului pentru algoritm JWT
+- [x] Implementarea verificării explicite a semnăturii JWT
+- [x] Adăugarea protecției împotriva atacurilor CSRF
+- [x] Implementare rate limiting
+- [x] Optimizarea încărcării relațiilor în autentificare
+- [x] Implementarea curățării automate a token-urilor expirate
+- [x] Adăugarea unui mecanism de caching pentru autentificare
+- [x] Implementare logging pentru autentificare
 - [ ] Implementare detecție activitate suspectă
-- [ ] Testare securitate
+- [x] Testare securitate
 - [ ] Audit vulnerabilități
 
 ## 2.3 Implementare Gestionare Utilizatori și Roluri (5 zile)

@@ -10,6 +10,7 @@ import {
   Query,
   Req,
 } from '@nestjs/common';
+import { Public } from '../decorators/public.decorator';
 import {
   ApiTags,
   ApiOperation,
@@ -36,6 +37,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
+  @Public()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Autentificare utilizator' })
   @ApiBody({ type: LoginDto })
@@ -81,6 +83,7 @@ export class AuthController {
   }
 
   @Post('register')
+  @Public()
   @ApiOperation({ summary: 'Înregistrare utilizator nou' })
   @ApiBody({ type: RegisterDto })
   @ApiResponse({
@@ -160,6 +163,7 @@ export class AuthController {
   }
 
   @Post('forgot-password')
+  @Public()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Solicitare resetare parolă' })
   @ApiBody({ type: ForgotPasswordDto })
@@ -177,6 +181,7 @@ export class AuthController {
   }
 
   @Post('reset-password')
+  @Public()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Resetare parolă' })
   @ApiBody({ type: ResetPasswordDto })
@@ -194,6 +199,7 @@ export class AuthController {
   }
 
   @Get('validate-reset-token')
+  @Public()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Validare token de resetare parolă' })
   @ApiQuery({ name: 'token', description: 'Token-ul de resetare a parolei' })
@@ -207,6 +213,7 @@ export class AuthController {
   }
 
   @Post('refresh-token')
+  @Public()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Reîmprospătare token de acces' })
   @ApiBody({ type: RefreshTokenDto })
