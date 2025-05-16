@@ -74,11 +74,7 @@ describe('JwtAuthGuard', () => {
         context.getClass(),
       ]);
       expect(superCanActivate).toHaveBeenCalledWith(context);
-<<<<<<< HEAD
 
-=======
-
->>>>>>> faza/2.2.6-implementare-guards-decoratori-autorizare
       // Restore original prototype
       Object.setPrototypeOf(JwtAuthGuard.prototype, originalPrototype);
     });

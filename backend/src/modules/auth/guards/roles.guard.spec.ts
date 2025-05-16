@@ -79,11 +79,7 @@ describe('RolesGuard', () => {
         }),
       } as unknown as ExecutionContext;
 
-<<<<<<< HEAD
       jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue([UserRole.ADMIN]);
-=======
-      jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(['admin']);
->>>>>>> faza/2.2.6-implementare-guards-decoratori-autorizare
 
       expect(guard.canActivate(context)).toBe(true);
     });
